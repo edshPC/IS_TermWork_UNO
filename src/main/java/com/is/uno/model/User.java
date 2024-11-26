@@ -19,10 +19,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class User implements UserDetails {
     @Id
-    @Column(name = "login", unique = true, nullable = false)
-    private String login;
-
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
