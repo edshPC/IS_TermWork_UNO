@@ -21,10 +21,10 @@ public class Player implements Serializable {
     private String inGameName;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "username", nullable = false)
     private User userId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "current_room_id", nullable = false)
+    @JoinColumn(name = "game_room_id", nullable = false)
     private GameRoom currentRoomId;
 }

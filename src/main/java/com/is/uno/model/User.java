@@ -31,7 +31,7 @@ public class User implements UserDetails {
     @ManyToMany
     @JoinTable(
             name = "user_achievements",
-            joinColumns = @JoinColumn(name = "user_login"),
+            joinColumns = @JoinColumn(name = "username"),
             inverseJoinColumns = @JoinColumn(name = "achievement_id")
     )
     private List<Achievement> achievements;

@@ -29,6 +29,6 @@ public class Message implements Serializable {
     private GameRoom roomId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "sender_id", nullable = false)
+    @JoinColumn(name = "player_id", nullable = false)
     private Player senderId;
 }

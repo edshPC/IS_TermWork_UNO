@@ -30,7 +30,7 @@ public class Game implements Serializable {
     private LocalDateTime endTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "winner_id", nullable = false)
+    @JoinColumn(name = "player_id", nullable = false)
     private Player winnerId;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -1,6 +1,7 @@
 package com.is.uno.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
@@ -24,5 +25,6 @@ public class Deck implements Serializable {
 
     @Column(name = "weight", nullable = false)
     @Min(value = 1, message = "Больше 0")
+    @Max(value = 4, message = "Меньше 4")
     private Integer weight;
 }

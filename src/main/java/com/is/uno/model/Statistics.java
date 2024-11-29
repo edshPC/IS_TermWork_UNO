@@ -20,7 +20,7 @@ public class Statistics implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "username", nullable = false)
     private User userId;
 
     @Column(name = "rating", nullable = false)

@@ -31,6 +31,6 @@ public class GameRoom implements Serializable {
     private Integer maxPlayers;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner", nullable = false)
+    @JoinColumn(name = "username", nullable = false)
     private User owner;
 }
