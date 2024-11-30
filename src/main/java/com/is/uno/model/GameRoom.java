@@ -8,11 +8,10 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "game_room")
+@Table(name = "uno_game_room")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder(toBuilder = true)
 public class GameRoom implements Serializable {
     @Id

@@ -7,11 +7,10 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "game_score")
+@Table(name = "uno_game_score")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder(toBuilder = true)
 public class GameScore implements Serializable {
     @Id
@@ -20,11 +19,11 @@ public class GameScore implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_id", nullable = false)
-    private Player playerId;
+    private Player player;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id", nullable = false)
-    private Game gameId;
+    private Game game;
 
     @Column(name = "score", nullable = false)
     @Min(value = 0, message = "Счет может быть 0 или больше")

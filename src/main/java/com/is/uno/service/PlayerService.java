@@ -32,8 +32,8 @@ public class PlayerService {
 
         Player player = Player.builder()
                 .inGameName(playerDTO.getInGameName())
-                .userId(user)
-                .currentRoomId(gameRoom)
+                .user(user)
+                .currentRoom(gameRoom)
                 .build();
 
         player = playerRepository.save(player);
@@ -41,7 +41,7 @@ public class PlayerService {
     }
 
     public PlayerDTO updatePlayerInGameName(String username, String newInGameName) {
-        Player player = playerRepository.findByUserIdUsername(username)
+        Player player = playerRepository.findByUserUsername(username)
                 .orElseThrow(() -> new PlayerNotFoundException(
                         String.format("Player %s not found", username)
                 ));
@@ -52,7 +52,7 @@ public class PlayerService {
     }
 
     public PlayerDTO getPlayerByUsername(String username) {
-        Player player = playerRepository.findByUserIdUsername(username)
+        Player player = playerRepository.findByUserUsername(username)
                 .orElseThrow(() -> new PlayerNotFoundException(
                         String.format("Player %s not found", username)
                 ));
@@ -62,8 +62,8 @@ public class PlayerService {
     private PlayerDTO toPlayerDTO(Player player) {
         return PlayerDTO.builder()
                 .inGameName(player.getInGameName())
-                .username(player.getUserId().getUsername())
-                .roomId(player.getCurrentRoomId().getId())
+                .username(player.getUser().getUsername())
+                .roomId(player.getCurrentRoom().getId())
                 .build();
     }
 }

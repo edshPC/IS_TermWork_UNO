@@ -8,11 +8,10 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "card")
+@Table(name = "uno_card")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder(toBuilder = true)
 public class Card implements Serializable {
     @Id
@@ -27,7 +26,6 @@ public class Card implements Serializable {
     @Enumerated(EnumType.STRING)
     private Color color_of_card;
 
-    @Column(name = "value")
     @Min(value = 0, message = "Цифра карты может быть 0 или больше")
     @Max(value = 9, message = "Цифра карты может быть 9 или меньше")
     private Integer value;

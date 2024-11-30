@@ -52,8 +52,8 @@ public class GameRoomService {
 
         Player player = Player.builder()
                 .inGameName(joinGameRoomDTO.getInGameName() != null ? joinGameRoomDTO.getInGameName() : user.getUsername())
-                .userId(user)
-                .currentRoomId(gameRoom)
+                .user(user)
+                .currentRoom(gameRoom)
                 .build();
 
         playerRepository.save(player);

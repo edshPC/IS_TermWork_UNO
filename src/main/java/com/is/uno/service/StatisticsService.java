@@ -32,12 +32,12 @@ public class StatisticsService {
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("Username %s not found", username)
                 ));
-        Statistics statistics = statisticsRepository.findByUsername(username)
+        Statistics statistics = statisticsRepository.findByUserUsername(username)
                 .orElseGet(() -> initializeStatistics(user));
 
         statistics.setPlayCount(statistics.getPlayCount() + 1);
         statistics.setWinCount(statistics.getWinCount() + (gameScore.getScore() > 0 ? 1 : 0));
-        Duration gameDuration = Duration.between(gameScore.getGameId().getStartTime(), gameScore.getGameId().getEndTime());
+        Duration gameDuration = Duration.between(gameScore.getGame().getStartTime(), gameScore.getGame().getEndTime());
         statistics.setTimePlayed(statistics.getTimePlayed().plus(gameDuration));
         statisticsRepository.save(statistics);
     }
@@ -48,7 +48,7 @@ public class StatisticsService {
                 .playCount(0)
                 .winCount(0)
                 .timePlayed(Duration.ZERO)
-                .userId(user)
+                .user(user)
                 .build();
         return statisticsRepository.save(newStatistics);
     }
@@ -56,7 +56,7 @@ public class StatisticsService {
     private StatisticsDTO toStatisticsDTO(Statistics statistics) {
         return StatisticsDTO
                 .builder()
-                .username(statistics.getUserId().getUsername())
+                .username(statistics.getUser().getUsername())
                 .rating(statistics.getRating())
                 .playCount(statistics.getPlayCount())
                 .winCount(statistics.getWinCount())

@@ -7,11 +7,10 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "achievement")
+@Table(name = "uno_achievement")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder(toBuilder = true)
 public class Achievement implements Serializable {
     @Id

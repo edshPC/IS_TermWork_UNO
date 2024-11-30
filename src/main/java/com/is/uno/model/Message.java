@@ -7,11 +7,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "message")
+@Table(name = "uno_message")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder(toBuilder = true)
 public class Message implements Serializable {
     @Id
@@ -26,9 +25,9 @@ public class Message implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_id", nullable = false)
-    private GameRoom roomId;
+    private GameRoom room;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_id", nullable = false)
-    private Player senderId;
+    private Player sender;
 }

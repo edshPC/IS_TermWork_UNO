@@ -6,11 +6,10 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "player")
+@Table(name = "uno_player")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder(toBuilder = true)
 public class Player implements Serializable {
     @Id
@@ -22,9 +21,9 @@ public class Player implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "username", nullable = false)
-    private User userId;
+    private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_room_id", nullable = false)
-    private GameRoom currentRoomId;
+    private GameRoom currentRoom;
 }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.is</groupId>
     <artifactId>IS_TermWork_UNO</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>IS_TermWork_UNO</name>
     <description>IS_TermWork_UNO</description>
     <url/>

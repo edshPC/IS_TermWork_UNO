@@ -8,11 +8,10 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "deck")
+@Table(name = "uno_deck")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder(toBuilder = true)
 public class Deck implements Serializable {
     @Id
@@ -21,7 +20,7 @@ public class Deck implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "card_id", nullable = false)
-    private Card cardId;
+    private Card card;
 
     @Column(name = "weight", nullable = false)
     @Min(value = 1, message = "Больше 0")

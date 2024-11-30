@@ -8,11 +8,10 @@ import java.io.Serializable;
 import java.time.Duration;
 
 @Entity
-@Table(name = "statistics")
+@Table(name = "uno_statistics")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder(toBuilder = true)
 public class Statistics implements Serializable {
     @Id
@@ -21,7 +20,7 @@ public class Statistics implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "username", nullable = false)
-    private User userId;
+    private User user;
 
     @Column(name = "rating", nullable = false)
     @Min(value = 0, message = "Рейтинг может быть 0 или больше")

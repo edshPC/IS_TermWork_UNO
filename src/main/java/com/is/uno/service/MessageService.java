@@ -36,8 +36,8 @@ public class MessageService {
         Message message = Message.builder()
                 .text(text)
                 .time(LocalDateTime.now())
-                .roomId(gameRoom)
-                .senderId(player)
+                .room(gameRoom)
+                .sender(player)
                 .build();
 
         message = messageRepository.save(message);
@@ -45,7 +45,7 @@ public class MessageService {
     }
 
     public List<MessageDTO> getMessagesByRoomId(Long roomId) {
-        List<Message> messages = messageRepository.findByRoomId(roomId);
+        List<Message> messages = messageRepository.findAllByRoomId(roomId);
         return messages.stream()
                 .map(this::toMessageDTO)
                 .collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class MessageService {
 
     private MessageDTO toMessageDTO(Message message) {
         return MessageDTO.builder()
-                .senderName(message.getSenderId().getInGameName())
+                .senderName(message.getSender().getInGameName())
                 .text(message.getText())
                 .time(message.getTime())
                 .build();
