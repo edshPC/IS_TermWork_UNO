@@ -5,12 +5,14 @@ import com.is.uno.dao.PlayerRepository;
 import com.is.uno.dao.UserRepository;
 import com.is.uno.dto.GameRoom.GameRoomDTO;
 import com.is.uno.dto.GameRoom.JoinGameRoomDTO;
+import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.Player;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class GameRoomService {
     private final GameRoomRepository gameRoomRepository;
     private final PlayerRepository playerRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     public GameRoom findById(Long id) {
         return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
@@ -31,10 +35,12 @@ public class GameRoomService {
     public GameRoomDTO createGameRoom(GameRoomDTO gameRoomDTO, User owner) {
         GameRoom gameRoom = GameRoom.builder()
                 .roomName(gameRoomDTO.getRoomName())
-                .password(gameRoomDTO.getPassword())
                 .maxPlayers(gameRoomDTO.getMaxPlayers())
                 .owner(owner)
                 .build();
+        if (gameRoomDTO.getPassword() != null) {
+            gameRoom.setPassword(passwordEncoder.encode(gameRoomDTO.getPassword()));
+        }
 
         gameRoom = gameRoomRepository.save(gameRoom);
         return toGameRoomDTO(gameRoom);
@@ -42,6 +48,10 @@ public class GameRoomService {
 
     public GameRoomDTO joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
         GameRoom gameRoom = findById(joinGameRoomDTO.getRoomId());
+        if (gameRoom.getPassword() != null &&
+            !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
+            throw new ForbiddenException("Incorrect password");
+        }
 
         Player player = Player.builder()
                 .inGameName(joinGameRoomDTO.getInGameName() != null ? joinGameRoomDTO.getInGameName() : user.getUsername())
