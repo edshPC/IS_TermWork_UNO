@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class JoinGameRoomDTO {
-    private String username;
+    private String password;
     private String inGameName;
     private Long roomId;
 }

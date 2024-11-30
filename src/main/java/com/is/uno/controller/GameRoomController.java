@@ -2,8 +2,10 @@ package com.is.uno.controller;
 
 import com.is.uno.dto.GameRoom.GameRoomDTO;
 import com.is.uno.dto.GameRoom.JoinGameRoomDTO;
+import com.is.uno.model.User;
 import com.is.uno.service.GameRoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,13 +18,15 @@ public class GameRoomController {
     private final GameRoomService gameRoomService;
 
     @PostMapping
-    public GameRoomDTO createGameRoom(@RequestBody GameRoomDTO gameRoomDTO) {
-        return gameRoomService.createGameRoom(gameRoomDTO);
+    public GameRoomDTO createGameRoom(@RequestBody GameRoomDTO gameRoomDTO,
+                                      @AuthenticationPrincipal User user) {
+        return gameRoomService.createGameRoom(gameRoomDTO, user);
     }
 
     @PostMapping("/join")
-    public GameRoomDTO joinGameRoom(@RequestBody JoinGameRoomDTO joinGameRoomDTO) {
-        return gameRoomService.joinGameRoom(joinGameRoomDTO);
+    public GameRoomDTO joinGameRoom(@RequestBody JoinGameRoomDTO joinGameRoomDTO,
+                                    @AuthenticationPrincipal User user) {
+        return gameRoomService.joinGameRoom(joinGameRoomDTO, user);
     }
 
     @GetMapping

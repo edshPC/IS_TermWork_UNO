@@ -20,15 +20,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GameRoomService {
     private final GameRoomRepository gameRoomRepository;
-    private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
 
-    public GameRoomDTO createGameRoom(GameRoomDTO gameRoomDTO) {
-        User owner = userRepository.findById(gameRoomDTO.getOwner())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("Username %s not found", gameRoomDTO.getOwner())
-                ));
+    public GameRoom findById(Long id) {
+        return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
+                String.format("Game room %s not found", id)
+        ));
+    }
 
+    public GameRoomDTO createGameRoom(GameRoomDTO gameRoomDTO, User owner) {
         GameRoom gameRoom = GameRoom.builder()
                 .roomName(gameRoomDTO.getRoomName())
                 .password(gameRoomDTO.getPassword())
@@ -40,15 +40,8 @@ public class GameRoomService {
         return toGameRoomDTO(gameRoom);
     }
 
-    public GameRoomDTO joinGameRoom(JoinGameRoomDTO joinGameRoomDTO) {
-        User user = userRepository.findByUsername(joinGameRoomDTO.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("Username %s not found", joinGameRoomDTO.getUsername())
-                ));
-        GameRoom gameRoom = gameRoomRepository.findById(joinGameRoomDTO.getRoomId())
-                .orElseThrow(() -> new GameRoomNotFoundException(
-                        String.format("Game room %s not found", joinGameRoomDTO.getRoomId())
-                ));
+    public GameRoomDTO joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
+        GameRoom gameRoom = findById(joinGameRoomDTO.getRoomId());
 
         Player player = Player.builder()
                 .inGameName(joinGameRoomDTO.getInGameName() != null ? joinGameRoomDTO.getInGameName() : user.getUsername())

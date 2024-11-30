@@ -17,7 +17,7 @@ public class JwtUtils {
 
     private static final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    private static final long expirationMs = 3600000; // Время действия токена: 1 час
+    private static final long expirationMs = 1000 * 60 * 60 * 6; // Время действия токена: 6 час
 
     public String generateJwtToken(String username) {
         Date now = new Date();
