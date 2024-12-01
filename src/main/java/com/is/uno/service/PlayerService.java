@@ -24,9 +24,12 @@ public class PlayerService {
                 new PlayerNotFoundException(String.format("Player %s not found", id)));
     }
 
-    public Player findByUsername(String username) {
-        return playerRepository.findByUserUsername(username).orElseThrow(() ->
-                new PlayerNotFoundException(String.format("Player %s not found", username)));
+    public List<Player> findByUsername(String username) {
+        List<Player> players = playerRepository.findByUserUsername(username);
+        if (players.isEmpty()) {
+            throw new PlayerNotFoundException(String.format("Player with username %s not found", username));
+        }
+        return players;
     }
 
     public PlayerDTO createPlayer(PlayerDTO playerDTO) {
@@ -43,18 +46,22 @@ public class PlayerService {
         return toPlayerDTO(player);
     }
 
-    public void updatePlayerInGameName(String username, String newInGameName) {
-        Player player = findByUsername(username);
+    public Player findByInGameNameAndRoomId(String inGameName, Long roomId) {
+        return playerRepository.findByInGameNameAndRoomId(inGameName, roomId).orElseThrow(() ->
+                new PlayerNotFoundException(String.format("Player %s not found", inGameName)));
+    }
+
+    public void updatePlayerInGameName(String inGameName, Long roomId, String newInGameName) {
+        Player player = findByInGameNameAndRoomId(inGameName, roomId);
         player.setInGameName(newInGameName);
         playerRepository.save(player);
     }
 
-    public PlayerDTO getPlayerByUsername(String username) {
-        Player player = findByUsername(username);
-//        return players.stream()
-//                .map(this::toPlayerDTO)
-//                .collect(Collectors.toList());
-        return toPlayerDTO(player);
+    public List<PlayerDTO> getPlayerByUsername(String username) {
+        List<Player> players = findByUsername(username);
+        return players.stream()
+                .map(this::toPlayerDTO)
+                .collect(Collectors.toList());
     }
 
     private PlayerDTO toPlayerDTO(Player player) {

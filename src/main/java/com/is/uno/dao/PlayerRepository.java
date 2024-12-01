@@ -10,5 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
-    Optional<Player> findByUserUsername(String name);
+    List<Player> findByUserUsername(String name);
+
+    @Query("SELECT p FROM Player p WHERE p.inGameName = :inGameName AND p.currentRoom.id = :roomId")
+    Optional<Player> findByInGameNameAndRoomId(String inGameName, Long roomId);
 }
