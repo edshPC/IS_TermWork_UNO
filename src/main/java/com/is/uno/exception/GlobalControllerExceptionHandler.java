@@ -1,6 +1,7 @@
 package com.is.uno.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -56,5 +57,13 @@ public class GlobalControllerExceptionHandler {
       return new ErrorResponse(
             "Ошибка валидации",
             String.join("\n", errors));
+   }
+
+   @ExceptionHandler(Exception.class)
+   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+   public ErrorResponse handleGlobalException(Exception e) {
+      return new ErrorResponse(
+              e.getClass().getCanonicalName(),
+              e.getMessage());
    }
 }

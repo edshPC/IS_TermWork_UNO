@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Deprecated
+@Deprecated // сообщения буду через сокеты
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5175")
 @RequestMapping("/api/message")
 public class MessageController {
     private final MessageService messageService;

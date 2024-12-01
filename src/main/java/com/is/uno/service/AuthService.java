@@ -21,7 +21,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponseDTO register(RegisterUserDTO registerUserDto) {
+    public AuthResponse register(RegisterUserDTO registerUserDto) {
         if (userRepository.existsByUsername(registerUserDto.getUsername()))
             throw new UserAlreadyExistException(
                     String.format("Username %s already exists", registerUserDto.getUsername())
@@ -37,14 +37,14 @@ public class AuthService {
         user = userRepository.save(user);
 
         String token = jwtUtils.generateJwtToken(user.getUsername());
-        return new AuthResponseDTO(
+        return new AuthResponse(
                 user.getUsername(),
                 user.getRegistrationDate(),
                 token
         );
     }
 
-    public AuthResponseDTO login(LoginUserDTO loginUserDto) {
+    public AuthResponse login(LoginUserDTO loginUserDto) {
         User user = userRepository.findByUsername(loginUserDto.getUsername())
                 .orElseThrow(() -> new UserNotFoundException(
                         String.format("Username %s not found", loginUserDto.getUsername())
@@ -55,7 +55,7 @@ public class AuthService {
         );
 
         String token = jwtUtils.generateJwtToken(user.getUsername());
-        return new AuthResponseDTO(
+        return new AuthResponse(
                 user.getUsername(),
                 user.getRegistrationDate(),
                 token
