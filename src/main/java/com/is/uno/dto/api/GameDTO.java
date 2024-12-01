@@ -1,12 +1,11 @@
 package com.is.uno.dto.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class GameDTO {

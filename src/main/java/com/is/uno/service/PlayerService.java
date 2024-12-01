@@ -9,6 +9,9 @@ import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
@@ -43,11 +46,14 @@ public class PlayerService {
     public void updatePlayerInGameName(String username, String newInGameName) {
         Player player = findByUsername(username);
         player.setInGameName(newInGameName);
-        player = playerRepository.save(player);
+        playerRepository.save(player);
     }
 
     public PlayerDTO getPlayerByUsername(String username) {
         Player player = findByUsername(username);
+//        return players.stream()
+//                .map(this::toPlayerDTO)
+//                .collect(Collectors.toList());
         return toPlayerDTO(player);
     }
 

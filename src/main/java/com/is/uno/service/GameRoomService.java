@@ -39,7 +39,7 @@ public class GameRoomService {
             gameRoom.setPassword(passwordEncoder.encode(gameRoomDTO.getPassword()));
         }
 
-        gameRoom = gameRoomRepository.save(gameRoom);
+        gameRoomRepository.save(gameRoom);
     }
 
     public void joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
