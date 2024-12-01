@@ -62,6 +62,7 @@ public class GlobalControllerExceptionHandler {
    @ExceptionHandler(Exception.class)
    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
    public ErrorResponse handleGlobalException(Exception e) {
+      //e.printStackTrace();
       return new ErrorResponse(
               e.getClass().getCanonicalName(),
               e.getMessage());

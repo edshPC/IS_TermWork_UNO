@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = TextPacket.class, name = "TEXT_PACKET"),
-        // Добавьте другие подклассы пакетов здесь
 })
 public abstract class Packet {
 

@@ -7,6 +7,10 @@
 </head>
 <body>
 <ul id="messages"></ul>
+<form onsubmit="connect(); return false;">
+  <input id="username" autocomplete="off" />
+  <input id="password" autocomplete="off" /><button>connect</button>
+</form>
 <form onsubmit="return setId();">
   <input id="setid" autocomplete="off" /><button>setid</button>
 </form>
@@ -18,11 +22,24 @@
   var stompClient = null;
   var id = 0;
 
-  function connect() {
-    var socket = new SockJS('/ws');
+  async function connect() {
+    stompClient?.disconnect();
+    let res = await fetch('api/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json;charset=utf-8'},
+      body: JSON.stringify({
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+      }),
+    });
+    res = await res.json();
+    let token = res.token;
+
+    var socket = new SockJS('/ws?token=' + token);
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-      console.log('Connected: ' + frame);
+    stompClient.connect({
+      Authorization: 'Bearer ' + token
+    }, function (frame) {
       stompClient.subscribe('/topic/updates/' + id, function (update) {
         let packet = JSON.parse(update.body);
         showMessage(packet);
@@ -42,7 +59,6 @@
   }
 
   function setId() {
-    stompClient?.disconnect();
     id = +document.getElementById('setid').value;
     connect();
     return false;
@@ -54,7 +70,7 @@
     document.getElementById('messages').appendChild(item);
   }
 
-  connect();
+  //connect();
 </script>
 </body>
 </html>

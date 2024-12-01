@@ -3,10 +3,12 @@ package com.is.uno.dto.api;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class RegisterUserDTO {
     @NotBlank
     @Size(min = 5, max = 20)

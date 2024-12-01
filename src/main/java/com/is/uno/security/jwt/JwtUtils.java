@@ -1,10 +1,16 @@
 package com.is.uno.security.jwt;
 
+import com.is.uno.security.service.AuthUserDetailsService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -12,12 +18,14 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     private static final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
     private static final long expirationMs = 1000 * 60 * 60 * 6; // Время действия токена: 6 час
+
+    private final AuthUserDetailsService authUserDetailsService;
 
     public String generateJwtToken(String username) {
         Date now = new Date();
@@ -63,13 +71,28 @@ public class JwtUtils {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(authToken);
     }
 
-    public String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
+    public String parseJwt(String authHeader) {
+        //String headerAuth = request.getHeader("Authorization");
         String bearerPrefix = "Bearer ";
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(bearerPrefix)) {
-            return headerAuth.substring(bearerPrefix.length());
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(bearerPrefix)) {
+            return authHeader.substring(bearerPrefix.length());
         }
 
         return null;
     }
+
+    public UserDetails getUserDetails(String token) {
+        if (token == null || !validateJwtToken(token))
+            return null;
+
+        String login = getUserNameFromJwtToken(token);
+        return authUserDetailsService.loadUserByUsername(login);
+    }
+
+    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        var userDetails = getUserDetails(token);
+        if (userDetails == null) return null;
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
 }
