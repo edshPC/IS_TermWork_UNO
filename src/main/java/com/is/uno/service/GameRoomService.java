@@ -2,7 +2,6 @@ package com.is.uno.service;
 
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.PlayerRepository;
-import com.is.uno.dao.UserRepository;
 import com.is.uno.dto.GameRoom.GameRoomDTO;
 import com.is.uno.dto.GameRoom.JoinGameRoomDTO;
 import com.is.uno.exception.ForbiddenException;
@@ -11,7 +10,6 @@ import com.is.uno.model.GameRoom;
 import com.is.uno.model.Player;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +23,13 @@ public class GameRoomService {
     private final PlayerRepository playerRepository;
     private final PasswordEncoder passwordEncoder;
 
-
     public GameRoom findById(Long id) {
         return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
                 String.format("Game room %s not found", id)
         ));
     }
 
-    public GameRoomDTO createGameRoom(GameRoomDTO gameRoomDTO, User owner) {
+    public void createGameRoom(GameRoomDTO gameRoomDTO, User owner) {
         GameRoom gameRoom = GameRoom.builder()
                 .roomName(gameRoomDTO.getRoomName())
                 .maxPlayers(gameRoomDTO.getMaxPlayers())
@@ -43,10 +40,9 @@ public class GameRoomService {
         }
 
         gameRoom = gameRoomRepository.save(gameRoom);
-        return toGameRoomDTO(gameRoom);
     }
 
-    public GameRoomDTO joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
+    public void joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
         GameRoom gameRoom = findById(joinGameRoomDTO.getRoomId());
         if (gameRoom.getPassword() != null &&
             !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
@@ -60,7 +56,6 @@ public class GameRoomService {
                 .build();
 
         playerRepository.save(player);
-        return toGameRoomDTO(gameRoom);
     }
 
     public List<GameRoomDTO> getAllGameRooms() {

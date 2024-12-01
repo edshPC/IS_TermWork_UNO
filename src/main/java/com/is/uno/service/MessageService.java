@@ -1,11 +1,7 @@
 package com.is.uno.service;
 
-import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.MessageRepository;
-import com.is.uno.dao.PlayerRepository;
 import com.is.uno.dto.MessageDTO;
-import com.is.uno.exception.GameRoomNotFoundException;
-import com.is.uno.exception.PlayerNotFoundException;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.Message;
 import com.is.uno.model.Player;
@@ -20,18 +16,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MessageService {
     private final MessageRepository messageRepository;
-    private final PlayerRepository playerRepository;
-    private final GameRoomRepository gameRoomRepository;
+    private final GameRoomService gameRoomService;
+    private final PlayerService playerService;
 
     public MessageDTO sendMessage(Long roomId, Long senderId, String text) {
-        GameRoom gameRoom = gameRoomRepository.findById(roomId)
-                .orElseThrow(() -> new GameRoomNotFoundException(
-                        String.format("Game room %s not found", roomId)
-                ));
-        Player player = playerRepository.findById(senderId)
-                .orElseThrow(() -> new PlayerNotFoundException(
-                        String.format("Player %s not found", senderId)
-                ));
+        GameRoom gameRoom = gameRoomService.findById(roomId);
+        Player player = playerService.findById(senderId);
 
         Message message = Message.builder()
                 .text(text)

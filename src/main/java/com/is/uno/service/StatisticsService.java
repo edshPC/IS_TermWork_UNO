@@ -1,13 +1,11 @@
 package com.is.uno.service;
 
 import com.is.uno.dao.StatisticsRepository;
-import com.is.uno.dao.UserRepository;
 import com.is.uno.dto.StatisticsDTO;
 import com.is.uno.model.GameScore;
 import com.is.uno.model.Statistics;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -18,7 +16,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StatisticsService {
     private final StatisticsRepository statisticsRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
+
+    private Statistics findByUser(User user) {
+        return statisticsRepository.findByUserUsername(user.getUsername())
+                .orElseGet(() -> initializeStatistics(user));
+    }
 
     public List<StatisticsDTO> getGlobalStatistics() {
         List<Statistics> statisticsList = statisticsRepository.findAll();
@@ -28,12 +31,8 @@ public class StatisticsService {
     }
 
     public void updatePlayerStatistics(String username, GameScore gameScore) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("Username %s not found", username)
-                ));
-        Statistics statistics = statisticsRepository.findByUserUsername(username)
-                .orElseGet(() -> initializeStatistics(user));
+        User user = userService.findByUsername(username);
+        Statistics statistics = findByUser(user);
 
         statistics.setPlayCount(statistics.getPlayCount() + 1);
         statistics.setWinCount(statistics.getWinCount() + (gameScore.getScore() > 0 ? 1 : 0));

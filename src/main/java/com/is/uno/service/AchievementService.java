@@ -6,7 +6,6 @@ import com.is.uno.dto.AchievementDTO;
 import com.is.uno.model.Achievement;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,22 +16,17 @@ import java.util.stream.Collectors;
 public class AchievementService {
     private final AchievementRepository achievementRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     public List<AchievementDTO> getPlayerAchievements(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("Username %s not found", username)
-                ));
+        User user = userService.findByUsername(username);
         return user.getAchievements().stream()
                 .map(this::toAchievementDTO)
                 .collect(Collectors.toList());
     }
 
     public void addAchievementToUser(String username, Achievement achievement) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("Username %s not found", username)
-                ));
+        User user = userService.findByUsername(username);
         user.getAchievements().add(achievement);
         userRepository.save(user);
     }

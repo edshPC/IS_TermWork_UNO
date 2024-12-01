@@ -20,6 +20,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
     public AuthResponse register(RegisterUserDTO registerUserDto) {
         if (userRepository.existsByUsername(registerUserDto.getUsername()))
@@ -27,8 +28,7 @@ public class AuthService {
                     String.format("Username %s already exists", registerUserDto.getUsername())
             );
 
-        User user = User
-                .builder()
+        User user = User.builder()
                 .username(registerUserDto.getUsername())
                 .password(passwordEncoder.encode(registerUserDto.getPassword()))
                 .registrationDate(LocalDateTime.now())
@@ -45,11 +45,7 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginUserDTO loginUserDto) {
-        User user = userRepository.findByUsername(loginUserDto.getUsername())
-                .orElseThrow(() -> new UserNotFoundException(
-                        String.format("Username %s not found", loginUserDto.getUsername())
-                ));
-
+        User user = userService.findByUsername(loginUserDto.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getUsername(), loginUserDto.getPassword())
         );

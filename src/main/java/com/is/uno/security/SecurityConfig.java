@@ -42,10 +42,10 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/favicon.ico", "/static/**").permitAll()
                         .requestMatchers("/api/auth/**", "/ws/**").permitAll()
+                        .requestMatchers("/api/**").authenticated()
                         .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
 
                 .authenticationProvider(authenticationProvider)
                 .userDetailsService(userDetailsService)

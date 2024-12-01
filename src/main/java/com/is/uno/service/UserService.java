@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("Username %s not found", username)));
+    }
+
     public User getUserProfile(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("Username %s not found", username)
-                ));
+        return findByUsername(username);
     }
 
 
