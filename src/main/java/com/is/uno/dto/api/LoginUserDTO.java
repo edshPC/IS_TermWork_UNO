@@ -1,4 +1,4 @@
-package com.is.uno.dto;
+package com.is.uno.dto.api;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RegisterUserDTO {
+public class LoginUserDTO {
     @NotBlank
     @Size(min = 5, max = 20)
     private String username;

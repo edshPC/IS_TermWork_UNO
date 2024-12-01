@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class AuthResponse extends BaseResponse<AuthResponse> {
+public class AuthResponse extends Response<AuthResponse> {
     private String username;
     private LocalDateTime registrationDate;
     private String token;

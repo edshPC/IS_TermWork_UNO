@@ -1,6 +1,6 @@
 package com.is.uno.controller;
 
-import com.is.uno.dto.MessageDTO;
+import com.is.uno.dto.api.MessageDTO;
 import com.is.uno.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

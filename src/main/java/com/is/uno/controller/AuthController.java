@@ -1,6 +1,7 @@
 package com.is.uno.controller;
 
-import com.is.uno.dto.*;
+import com.is.uno.dto.api.LoginUserDTO;
+import com.is.uno.dto.api.RegisterUserDTO;
 import com.is.uno.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

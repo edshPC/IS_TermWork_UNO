@@ -23,15 +23,20 @@
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
       console.log('Connected: ' + frame);
-      stompClient.subscribe('/topic/updates/' + id, function (message) {
-        showMessage(message.body);
+      stompClient.subscribe('/topic/updates/' + id, function (update) {
+        let packet = JSON.parse(update.body);
+        showMessage(packet);
       });
     });
   }
 
   function sendMessage() {
     var message = document.getElementById('message').value;
-    stompClient.send("/app/room/" + id, {}, message);
+    var packet = {
+      type: 'TEXT_PACKET',
+      text: message
+    };
+    stompClient.send("/app/room/" + id, {}, JSON.stringify(packet));
     document.getElementById('message').value = '';
     return false;
   }
@@ -43,9 +48,9 @@
     return false;
   }
 
-  function showMessage(message) {
+  function showMessage(packet) {
     var item = document.createElement('li');
-    item.textContent = message;
+    item.textContent = `${packet.sender}: ${packet.text}`;
     document.getElementById('messages').appendChild(item);
   }
 

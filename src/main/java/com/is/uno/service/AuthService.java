@@ -2,6 +2,8 @@ package com.is.uno.service;
 
 import com.is.uno.dao.*;
 import com.is.uno.dto.*;
+import com.is.uno.dto.api.LoginUserDTO;
+import com.is.uno.dto.api.RegisterUserDTO;
 import com.is.uno.exception.*;
 import com.is.uno.model.*;
 import com.is.uno.security.jwt.JwtUtils;

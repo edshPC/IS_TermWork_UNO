@@ -1,4 +1,4 @@
-package com.is.uno.dto;
+package com.is.uno.dto.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

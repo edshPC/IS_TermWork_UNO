@@ -1,7 +1,7 @@
 package com.is.uno.service;
 
 import com.is.uno.dao.StatisticsRepository;
-import com.is.uno.dto.StatisticsDTO;
+import com.is.uno.dto.api.StatisticsDTO;
 import com.is.uno.model.GameScore;
 import com.is.uno.model.Statistics;
 import com.is.uno.model.User;

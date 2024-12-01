@@ -1,7 +1,7 @@
 package com.is.uno.service;
 
 import com.is.uno.dao.PlayerRepository;
-import com.is.uno.dto.PlayerDTO;
+import com.is.uno.dto.api.PlayerDTO;
 import com.is.uno.exception.PlayerNotFoundException;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.Player;

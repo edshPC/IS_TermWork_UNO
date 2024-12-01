@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 @Data
 @AllArgsConstructor
-public class DataResponse<T> extends BaseResponse<DataResponse<T>> {
+public class DataResponse<T> extends Response<DataResponse<T>> {
     private T data;
 
     public static <T> ResponseEntity<?> success(T data) {

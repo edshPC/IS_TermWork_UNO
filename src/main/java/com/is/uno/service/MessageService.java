@@ -1,7 +1,7 @@
 package com.is.uno.service;
 
 import com.is.uno.dao.MessageRepository;
-import com.is.uno.dto.MessageDTO;
+import com.is.uno.dto.api.MessageDTO;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.Message;
 import com.is.uno.model.Player;

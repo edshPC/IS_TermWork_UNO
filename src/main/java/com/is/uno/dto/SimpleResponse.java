@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @NoArgsConstructor
-public class SimpleResponse extends BaseResponse<SimpleResponse> {
+public class SimpleResponse extends Response<SimpleResponse> {
 
     public SimpleResponse(String message, boolean success) {
         super(message, success);

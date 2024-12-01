@@ -2,8 +2,8 @@ package com.is.uno.service;
 
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.PlayerRepository;
-import com.is.uno.dto.GameRoom.GameRoomDTO;
-import com.is.uno.dto.GameRoom.JoinGameRoomDTO;
+import com.is.uno.dto.api.GameRoomDTO;
+import com.is.uno.dto.api.JoinGameRoomDTO;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
 import com.is.uno.model.GameRoom;

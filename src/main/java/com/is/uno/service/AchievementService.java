@@ -2,7 +2,7 @@ package com.is.uno.service;
 
 import com.is.uno.dao.AchievementRepository;
 import com.is.uno.dao.UserRepository;
-import com.is.uno.dto.AchievementDTO;
+import com.is.uno.dto.api.AchievementDTO;
 import com.is.uno.model.Achievement;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;

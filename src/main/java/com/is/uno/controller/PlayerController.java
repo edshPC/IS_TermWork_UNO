@@ -1,7 +1,7 @@
 package com.is.uno.controller;
 
 import com.is.uno.dto.DataResponse;
-import com.is.uno.dto.PlayerDTO;
+import com.is.uno.dto.api.PlayerDTO;
 import com.is.uno.dto.SimpleResponse;
 import com.is.uno.service.PlayerService;
 import lombok.RequiredArgsConstructor;

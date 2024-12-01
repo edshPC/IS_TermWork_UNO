@@ -1,4 +1,4 @@
-package com.is.uno.dto.GameRoom;
+package com.is.uno.dto.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class GameRoomDTO {
-    private String roomName;
+public class JoinGameRoomDTO {
     private String password;
-    private Integer maxPlayers;
-    private String owner;
+    private String inGameName;
+    private Long roomId;
 }

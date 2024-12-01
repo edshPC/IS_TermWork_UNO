@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class BaseResponse<T> {
+public abstract class Response<T> {
     private String message;
     private boolean success = true;
 
