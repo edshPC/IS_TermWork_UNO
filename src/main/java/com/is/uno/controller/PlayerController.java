@@ -20,9 +20,9 @@ public class PlayerController {
         return playerService.createPlayer(playerDTO);
     }
 
-    @PutMapping("/{inGameName}/{roomId}/inGameName")
-    public ResponseEntity<?> updatePlayerInGameName(@PathVariable String inGameName, Long roomId, @RequestBody String newInGameName) {
-        playerService.updatePlayerInGameName(inGameName, roomId, newInGameName);
+    @PutMapping("/{id}/inGameName")
+    public ResponseEntity<?> updatePlayerInGameName(@PathVariable Long id, @RequestBody String newInGameName) {
+        playerService.updatePlayerInGameName(id, newInGameName);
         return SimpleResponse.success();
     }
 

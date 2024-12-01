@@ -46,13 +46,8 @@ public class PlayerService {
         return toPlayerDTO(player);
     }
 
-    public Player findByInGameNameAndRoomId(String inGameName, Long roomId) {
-        return playerRepository.findByInGameNameAndRoomId(inGameName, roomId).orElseThrow(() ->
-                new PlayerNotFoundException(String.format("Player %s not found", inGameName)));
-    }
-
-    public void updatePlayerInGameName(String inGameName, Long roomId, String newInGameName) {
-        Player player = findByInGameNameAndRoomId(inGameName, roomId);
+    public void updatePlayerInGameName(Long id, String newInGameName) {
+        Player player = findById(id);
         player.setInGameName(newInGameName);
         playerRepository.save(player);
     }
