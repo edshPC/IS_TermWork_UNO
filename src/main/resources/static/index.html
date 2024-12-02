@@ -40,7 +40,7 @@
     stompClient.connect({
       Authorization: 'Bearer ' + token
     }, function (frame) {
-      stompClient.subscribe('/topic/updates/' + id, function (update) {
+      stompClient.subscribe('/topic/room/' + id, function (update) {
         let packet = JSON.parse(update.body);
         showMessage(packet);
       });

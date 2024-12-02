@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class PlayerActionPacket extends Packet {
 
-    private Long playerId;
+    private String username;
     private Action action;
 
     public PlayerActionPacket() {

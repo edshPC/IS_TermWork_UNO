@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class PlayerJoinPacket extends Packet {
 
-    private Long playerId;
+    private String username;
     private String inGameName;
 
     public PlayerJoinPacket() {
