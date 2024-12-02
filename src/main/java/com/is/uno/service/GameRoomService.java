@@ -34,6 +34,7 @@ public class GameRoomService {
         GameRoom gameRoom = GameRoom.builder()
                 .roomName(gameRoomDTO.getRoomName())
                 .maxPlayers(gameRoomDTO.getMaxPlayers())
+                .maxScore(gameRoomDTO.getMaxScore())
                 .owner(owner)
                 .visible(true)
                 .build();
@@ -75,6 +76,7 @@ public class GameRoomService {
                 .roomName(gameRoom.getRoomName())
                 //.password(gameRoom.getPassword())
                 .maxPlayers(gameRoom.getMaxPlayers())
+                .maxScore(gameRoom.getMaxScore())
                 .owner(gameRoom.getOwner().getUsername())
                 .build();
     }

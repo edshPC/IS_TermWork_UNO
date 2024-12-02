@@ -18,10 +18,6 @@ public class Game implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "max_score")
-    @Min(value = 0, message = "Максимальный счет может быть 0 или больше")
-    private Integer maxScore;
-
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
