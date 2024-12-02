@@ -29,6 +29,10 @@ public class GameRoom implements Serializable {
     @Max(value = 8, message = "Максимальное количество игроков: 8")
     private Integer maxPlayers;
 
+    @Column(name = "max_score")
+    @Min(value = 0, message = "Максимальный счет может быть 0 или больше")
+    private Integer maxScore;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "username", nullable = false)
     private User owner;
