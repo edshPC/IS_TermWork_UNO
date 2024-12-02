@@ -10,6 +10,13 @@ import lombok.RequiredArgsConstructor;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = TextPacket.class, name = "TEXT_PACKET"),
+        @JsonSubTypes.Type(value = ActionPacket.class, name = "ACTION_PACKET"),
+        @JsonSubTypes.Type(value = GameStatePacket.class, name = "GAME_STATE_PACKET"),
+        @JsonSubTypes.Type(value = GameOverPacket.class, name = "GAME_OVER_PACKET"),
+        @JsonSubTypes.Type(value = TakeCardPacket.class, name = "TAKE_CARD_PACKET"),
+        @JsonSubTypes.Type(value = PutCardPacket.class, name = "PUT_CARD_PACKET"),
+        @JsonSubTypes.Type(value = PlayerJoinPacket.class, name = "PLAYER_JOIN_PACKET"),
+        @JsonSubTypes.Type(value = PlayerActionPacket.class, name = "PLAYER_ACTION_PACKET"),
 })
 public abstract class Packet {
 

@@ -32,6 +32,14 @@ public class PlayerService {
         return players;
     }
 
+    public Player findByRoomAndUserOrCreate(GameRoom gameRoom, User user) {
+        return playerRepository.findByUserAndCurrentRoom(user, gameRoom)
+                .orElseGet(() -> Player.builder()
+                        .user(user)
+                        .currentRoom(gameRoom)
+                        .build());
+    }
+
     public PlayerDTO createPlayer(PlayerDTO playerDTO) {
         User user = userService.findByUsername(playerDTO.getUsername());
         GameRoom gameRoom = gameRoomService.findById(playerDTO.getRoomId());

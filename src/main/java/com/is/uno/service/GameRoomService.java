@@ -22,6 +22,7 @@ public class GameRoomService {
     private final GameRoomRepository gameRoomRepository;
     private final PlayerRepository playerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PlayerService playerService;
 
     public GameRoom findById(Long id) {
         return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
@@ -34,12 +35,17 @@ public class GameRoomService {
                 .roomName(gameRoomDTO.getRoomName())
                 .maxPlayers(gameRoomDTO.getMaxPlayers())
                 .owner(owner)
+                .visible(true)
                 .build();
         if (gameRoomDTO.getPassword() != null) {
             gameRoom.setPassword(passwordEncoder.encode(gameRoomDTO.getPassword()));
         }
 
-        gameRoomRepository.save(gameRoom);
+        gameRoom = gameRoomRepository.save(gameRoom);
+        joinGameRoom(JoinGameRoomDTO.builder()
+                .roomId(gameRoom.getId())
+                .password(gameRoomDTO.getPassword())
+                .build(), owner);
     }
 
     public void joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
@@ -49,11 +55,10 @@ public class GameRoomService {
             throw new ForbiddenException("Incorrect password");
         }
 
-        Player player = Player.builder()
-                .inGameName(joinGameRoomDTO.getInGameName() != null ? joinGameRoomDTO.getInGameName() : user.getUsername())
-                .user(user)
-                .currentRoom(gameRoom)
-                .build();
+        Player player = playerService.findByRoomAndUserOrCreate(gameRoom, user);
+        if (joinGameRoomDTO.getInGameName() != null) {
+            player.setInGameName(joinGameRoomDTO.getInGameName());
+        }
 
         playerRepository.save(player);
     }
@@ -68,7 +73,7 @@ public class GameRoomService {
     private GameRoomDTO toGameRoomDTO(GameRoom gameRoom) {
         return GameRoomDTO.builder()
                 .roomName(gameRoom.getRoomName())
-                .password(gameRoom.getPassword())
+                //.password(gameRoom.getPassword())
                 .maxPlayers(gameRoom.getMaxPlayers())
                 .owner(gameRoom.getOwner().getUsername())
                 .build();
