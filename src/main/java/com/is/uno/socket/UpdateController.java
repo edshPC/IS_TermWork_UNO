@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class UpdateController {
 
-    private final SimpMessagingTemplate messagingTemplate;
     private final PacketHandler packetHandler;
 
     @MessageMapping("/room/{roomId}")
@@ -25,15 +24,11 @@ public class UpdateController {
                              Packet packet) {
         Authentication authentication = (Authentication) headerAccessor.getUser();
         User user = authentication != null ? (User) authentication.getPrincipal() : null;
-        Packet response;
         switch (packet.getType()) {
             case TEXT_PACKET ->
-                    response = packetHandler.handleTextPacket((TextPacket) packet, user);
+                    packetHandler.handleTextPacket((TextPacket) packet, user);
             //case
             default -> throw new IllegalArgumentException("Invalid packet type");
-        }
-        if (response != null) {
-            messagingTemplate.convertAndSend("/topic/updates/" + roomId, response);
         }
     }
 

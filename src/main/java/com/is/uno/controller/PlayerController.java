@@ -14,12 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class PlayerController {
     private final PlayerService playerService;
 
-    @PostMapping
-    @Deprecated // создание игрока должно происходить автоматически
-    public PlayerDTO createPlayer(@RequestBody PlayerDTO playerDTO) {
-        return playerService.createPlayer(playerDTO);
-    }
-
     @PutMapping("/{id}/inGameName")
     public ResponseEntity<?> updatePlayerInGameName(@PathVariable Long id, @RequestBody String newInGameName) {
         playerService.updatePlayerInGameName(id, newInGameName);
