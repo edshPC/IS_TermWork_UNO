@@ -13,10 +13,17 @@ import lombok.RequiredArgsConstructor;
 })
 public abstract class Packet {
 
-    private final Type type;
+    private final PacketType type;
 
-    public enum Type {
+    public enum PacketType {
         TEXT_PACKET,
+        ACTION_PACKET,
+        GAME_STATE_PACKET,
+        GAME_OVER_PACKET,
+        TAKE_CARD_PACKET,
+        PUT_CARD_PACKET,
+        PLAYER_JOIN_PACKET,
+        PLAYER_ACTION_PACKET,
     }
 
 }

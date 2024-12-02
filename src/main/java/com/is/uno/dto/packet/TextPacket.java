@@ -11,6 +11,6 @@ public class TextPacket extends Packet {
     private String sender;
 
     public TextPacket() {
-        super(Type.TEXT_PACKET);
+        super(PacketType.TEXT_PACKET);
     }
 }

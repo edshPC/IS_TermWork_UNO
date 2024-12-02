@@ -27,7 +27,9 @@ public class UpdateController {
         User user = authentication != null ? (User) authentication.getPrincipal() : null;
         Packet response;
         switch (packet.getType()) {
-            case TEXT_PACKET -> response = packetHandler.handleTextPacket((TextPacket) packet, user);
+            case TEXT_PACKET ->
+                    response = packetHandler.handleTextPacket((TextPacket) packet, user);
+            //case
             default -> throw new IllegalArgumentException("Invalid packet type");
         }
         if (response != null) {
