@@ -2,6 +2,7 @@ package com.is.uno.socket;
 
 import com.is.uno.dto.packet.Packet;
 import com.is.uno.dto.packet.TextPacket;
+import com.is.uno.model.GameRoom;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -22,6 +23,7 @@ public class UpdateController {
     public void handlePacket(@DestinationVariable Long roomId,
                              SimpMessageHeaderAccessor headerAccessor,
                              Packet packet) {
+        packetHandler.setRoom(GameRoom.builder().id(roomId).build());
         Authentication authentication = (Authentication) headerAccessor.getUser();
         User user = authentication != null ? (User) authentication.getPrincipal() : null;
         switch (packet.getType()) {

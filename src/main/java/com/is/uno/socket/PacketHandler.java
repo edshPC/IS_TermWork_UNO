@@ -8,12 +8,13 @@ import com.is.uno.model.User;
 import com.is.uno.service.MessageService;
 import com.is.uno.service.PlayerService;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-@Scope("session")
+//@Scope("session")
 @RequiredArgsConstructor
 public class PacketHandler {
 
@@ -21,6 +22,7 @@ public class PacketHandler {
     private final MessageService messageService;
     private final PlayerService playerService;
     private GameCore game = new GameCore();
+    @Setter
     private GameRoom room;
 
     public void sendPacketToAllPlayers(Packet packet) {

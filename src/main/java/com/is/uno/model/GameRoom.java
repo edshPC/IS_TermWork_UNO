@@ -24,7 +24,7 @@ public class GameRoom implements Serializable {
     @Column(name = "password")
     private String password;
 
-    private boolean visible;
+    private Boolean visible;
 
     @Column(name = "max_players", nullable = false)
     @Min(value = 2, message = "Минимальное количество игроков: 2")

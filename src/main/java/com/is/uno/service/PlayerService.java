@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlayerService {
     private final PlayerRepository playerRepository;
-    private final GameRoomService gameRoomService;
-    private final UserService userService;
 
     public Player findById(Long id) {
         return playerRepository.findById(id).orElseThrow(() ->
@@ -38,20 +36,6 @@ public class PlayerService {
                         .user(user)
                         .currentRoom(gameRoom)
                         .build());
-    }
-
-    public PlayerDTO createPlayer(PlayerDTO playerDTO) {
-        User user = userService.findByUsername(playerDTO.getUsername());
-        GameRoom gameRoom = gameRoomService.findById(playerDTO.getRoomId());
-
-        Player player = Player.builder()
-                .inGameName(playerDTO.getInGameName())
-                .user(user)
-                .currentRoom(gameRoom)
-                .build();
-
-        player = playerRepository.save(player);
-        return toPlayerDTO(player);
     }
 
     public void updatePlayerInGameName(Long id, String newInGameName) {
