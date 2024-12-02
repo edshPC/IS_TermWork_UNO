@@ -16,7 +16,7 @@ public class Player implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "in_game_name", nullable = false)
+    @Column(name = "in_game_name")
     private String inGameName;
 
     @ManyToOne(fetch = FetchType.EAGER)

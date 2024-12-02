@@ -35,6 +35,7 @@ public class PlayerService {
                 .orElseGet(() -> Player.builder()
                         .user(user)
                         .currentRoom(gameRoom)
+                        .inGameName(user.getUsername())
                         .build());
     }
 
