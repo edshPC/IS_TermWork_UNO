@@ -13,4 +13,10 @@ public class ActionPacket extends Packet {
         super(PacketType.ACTION_PACKET);
     }
 
+    public static ActionPacket create(Action action) {
+        ActionPacket packet = new ActionPacket();
+        packet.setAction(action);
+        return packet;
+    }
+
 }

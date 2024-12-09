@@ -1,14 +1,13 @@
 package com.is.uno.socket;
 
+import com.is.uno.core.GameCoreProvider;
 import com.is.uno.dto.packet.Packet;
-import com.is.uno.dto.packet.TextPacket;
-import com.is.uno.model.GameRoom;
+import com.is.uno.exception.ForbiddenException;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
@@ -16,22 +15,21 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class UpdateController {
 
-    private final PacketHandler packetHandler;
+    private final GameCoreProvider gameCoreProvider;
 
-    @MessageMapping("/room/{roomId}")
     //@SendTo("/topic/updates/{roomId}")
+    @MessageMapping("/room/{roomId}")
     public void handlePacket(@DestinationVariable Long roomId,
                              SimpMessageHeaderAccessor headerAccessor,
                              Packet packet) {
-        packetHandler.setRoom(GameRoom.builder().id(roomId).build());
         Authentication authentication = (Authentication) headerAccessor.getUser();
-        User user = authentication != null ? (User) authentication.getPrincipal() : null;
-        switch (packet.getType()) {
-            case TEXT_PACKET ->
-                    packetHandler.handleTextPacket((TextPacket) packet, user);
-            //case
-            default -> throw new IllegalArgumentException("Invalid packet type");
+        if (authentication == null) {
+            throw new ForbiddenException("You are not logged");
         }
+        User user = (User) authentication.getPrincipal();
+
+        PacketHandler packetHandler = gameCoreProvider.provideGameCore(roomId).getPacketHandler();
+        packetHandler.handle(packet, user);
     }
 
 }

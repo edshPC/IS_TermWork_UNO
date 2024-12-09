@@ -1,57 +1,46 @@
 package com.is.uno.socket;
 
 import com.is.uno.core.GameCore;
+import com.is.uno.core.GamePlayer;
 import com.is.uno.dto.packet.*;
-import com.is.uno.model.GameRoom;
 import com.is.uno.model.Player;
 import com.is.uno.model.User;
-import com.is.uno.service.MessageService;
-import com.is.uno.service.PlayerService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.context.annotation.Scope;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
 
-@Service
-//@Scope("session")
 @RequiredArgsConstructor
 public class PacketHandler {
+    private final double idid = Math.random();
 
+    private final Long roomId;
     private final SimpMessagingTemplate messagingTemplate;
-    private final MessageService messageService;
-    private final PlayerService playerService;
-    private GameCore game = new GameCore();
-    @Setter
-    private GameRoom room;
+    private final GameCore game;
 
     public void sendPacketToAllPlayers(Packet packet) {
-        messagingTemplate.convertAndSend("/topic/updates/" + room.getId(), packet);
+        messagingTemplate.convertAndSend("/topic/room/" + roomId, packet);
     }
 
-    public void handleTextPacket(TextPacket packet, User user) {
-        if (user != null) {
-            packet.setSender(user.getUsername());
+    public void sendPacketToPlayer(Packet packet, GamePlayer player) {
+        messagingTemplate.convertAndSend("/topic/player/" + player.getUuid(), packet);
+    }
+
+    public void handle(Packet packet, User user) {
+        GamePlayer player = game.getPlayerByUser(user);
+        switch (packet.getType()) {
+            case TEXT_PACKET -> handle((TextPacket) packet, player);
+            case ACTION_PACKET -> handle((ActionPacket) packet, player);
+            default -> throw new IllegalArgumentException("Invalid packet type");
         }
-        else packet.setSender("Unknown");
+    }
+
+    public void handle(TextPacket packet, GamePlayer player) {
+        packet.setSender(player.getInGameName());
         sendPacketToAllPlayers(packet);
     }
 
-    public void handleActionPacket(ActionPacket packet, User user) {
-        Player player = playerService.findByRoomAndUserOrCreate(room, user);
-        var actionPacket = new PlayerActionPacket();
-        actionPacket.setAction(packet.getAction());
-        actionPacket.setPlayerId(player.getId());
+    public void handle(ActionPacket packet, GamePlayer player) {
         switch (packet.getAction()) {
-            case READY -> {
-                boolean gameStarted = game.onPlayerReady(player.getId());
-                sendPacketToAllPlayers(actionPacket);
-                if (gameStarted) {
-                    var gameStartPacket = new ActionPacket();
-                    gameStartPacket.setAction(Action.GAME_START);
-                    sendPacketToAllPlayers(gameStartPacket);
-                }
-            }
+            case READY -> game.onPlayerReady(player);
             default -> {}
         }
     }
