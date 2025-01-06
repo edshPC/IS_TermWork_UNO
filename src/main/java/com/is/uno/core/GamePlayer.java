@@ -23,7 +23,8 @@ public class GamePlayer extends Player {
     private final Map<Long, CardDTO> cards = new HashMap<>();
 
     @Getter
-    boolean ready = false;
+    private boolean ready = false;
+    private boolean UNOCalled = false;
 
     public PlayerActionPacket getActionPacket(Action action) {
         PlayerActionPacket packet = new PlayerActionPacket();
@@ -53,6 +54,13 @@ public class GamePlayer extends Player {
         cards.put(card.getId(), card);
     }
 
+    public void callUNO() {
+        if (UNOCalled) throw new IllegalStateException("Вы уже сказали UNO");
+        if (cards.size() != 2)
+            throw new IllegalStateException("Вы можете говорить UNO только перед предпоследним ходом");
+        UNOCalled = true;
+    }
+
     @Override
     public String getInGameName() {
         return player.getInGameName();
@@ -60,6 +68,12 @@ public class GamePlayer extends Player {
 
     public String getUsername() {
         return player.getUser().getUsername();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof GamePlayer other_player &&
+               getUsername().equals(other_player.getUsername());
     }
 
 }

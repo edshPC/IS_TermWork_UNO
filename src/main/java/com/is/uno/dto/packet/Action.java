@@ -7,4 +7,5 @@ public enum Action {
     LEAVE,
     PUT_CARD,
     TAKE_CARD,
+    SKIP,
 }

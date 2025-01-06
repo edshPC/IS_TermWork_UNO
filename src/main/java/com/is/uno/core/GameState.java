@@ -8,7 +8,7 @@ public class GameState {
 
     private CardDTO currentCard;
     private boolean orderReversed;
-    private Long currentPlayerId;
+    private GamePlayer currentPlayer;
     private CardDeck deck;
 
 }

@@ -10,7 +10,7 @@ public class GameStatePacket extends Packet {
 
     private CardDTO currentCard;
     private boolean orderReversed;
-    private Long currentPlayerId;
+    private String currentPlayer;
 
     public GameStatePacket() {
         super(PacketType.GAME_STATE_PACKET);

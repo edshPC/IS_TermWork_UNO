@@ -1,7 +1,9 @@
 package com.is.uno.core;
 
+import com.is.uno.dto.api.CardDTO;
 import com.is.uno.dto.packet.Action;
 import com.is.uno.dto.packet.ActionPacket;
+import com.is.uno.dto.packet.PlayerActionPacket;
 import com.is.uno.dto.packet.PlayerJoinPacket;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.User;
@@ -31,7 +33,7 @@ public class GameCore {
     private GameRoom room;
     private GameState state;
     // username -> player
-    private Map<String, GamePlayer> players = new ConcurrentHashMap<>();
+    private final Map<String, GamePlayer> players = new ConcurrentHashMap<>();
 
     void init() {
         room = gameRoomService.findById(roomId);
@@ -50,6 +52,11 @@ public class GameCore {
         return player;
     }
 
+    public void checkPlayerTurn(GamePlayer player) {
+        if (!state.getCurrentPlayer().equals(player))
+            throw new IllegalStateException("Сейчас не ваш ход");
+    }
+
     public void onPlayerJoin(GamePlayer player) {
         var pkt = new PlayerJoinPacket();
         pkt.setUsername(player.getUsername());
@@ -57,15 +64,39 @@ public class GameCore {
         packetHandler.sendPacketToAllPlayers(pkt);
     }
 
+    public void onPlayerLeave(GamePlayer player) {
+        players.remove(player.getUsername());
+        packetHandler.sendPacketToAllPlayers(PlayerActionPacket.create(player, Action.LEAVE));
+    }
+
     public void onPlayerReady(GamePlayer player) {
+        if (state != null) throw new IllegalStateException("Игра уже началась");
         player.onReady();
         boolean allReady = players.size() >= 2;
         for (var pl : players.values()) {
             allReady &= pl.isReady();
         }
-        if (allReady && state == null) {
+        if (allReady) {
             startGame();
         }
+    }
+
+    public void onPlayerPutCard(GamePlayer player, CardDTO card) {
+
+    }
+
+    public void onPlayerTakeCard(GamePlayer player) {
+
+    }
+
+    public void onPlayerCallUNO(GamePlayer player) {
+        checkPlayerTurn(player);
+        player.callUNO();
+        packetHandler.sendPacketToAllPlayers(PlayerActionPacket.create(player, Action.CALL_UNO));
+    }
+
+    public void onPlayerSkip(GamePlayer player) {
+        checkPlayerTurn(player);
     }
 
     public void startGame() {

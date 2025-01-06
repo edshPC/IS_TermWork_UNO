@@ -41,7 +41,11 @@ public class PacketHandler {
     public void handle(ActionPacket packet, GamePlayer player) {
         switch (packet.getAction()) {
             case READY -> game.onPlayerReady(player);
-            default -> {}
+            case LEAVE -> game.onPlayerLeave(player);
+            case CALL_UNO -> game.onPlayerCallUNO(player);
+            case TAKE_CARD -> game.onPlayerTakeCard(player);
+            case SKIP -> game.onPlayerSkip(player);
+            default -> throw new IllegalArgumentException("Invalid action type");
         }
     }
 
