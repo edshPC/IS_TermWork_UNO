@@ -16,7 +16,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GamePlayer extends Player {
     private final Player player;
-    private final PacketHandler packetHandler;
 
     @Getter
     private final UUID uuid = UUID.randomUUID();
@@ -33,13 +32,8 @@ public class GamePlayer extends Player {
         return packet;
     }
 
-    public void sendPacket(Packet packet) {
-        packetHandler.sendPacketToPlayer(packet, this);
-    }
-
     public void onReady() {
         ready = !ready;
-        packetHandler.sendPacketToAllPlayers(getActionPacket(Action.READY));
     }
 
     public boolean hasCard(Long id) {
