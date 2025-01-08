@@ -125,7 +125,7 @@ public class GameCore {
         deck.fillDeck(deckService.getActualDeck());
         state = new GameState();
         state.setCurrentPlayer(playerOrder.next());
-        state.setCurrentCard(deck.takeCard());
+        state.setCurrentCard(deck.takeNumberCard());
         state.setDeck(deck);
 
         packetHandler.sendPacketToAllPlayers(ActionPacket.create(Action.GAME_START));
