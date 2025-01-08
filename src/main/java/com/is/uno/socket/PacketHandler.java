@@ -3,14 +3,12 @@ package com.is.uno.socket;
 import com.is.uno.core.GameCore;
 import com.is.uno.core.GamePlayer;
 import com.is.uno.dto.packet.*;
-import com.is.uno.model.Player;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RequiredArgsConstructor
 public class PacketHandler {
-    private final double idid = Math.random();
 
     private final Long roomId;
     private final SimpMessagingTemplate messagingTemplate;
@@ -37,6 +35,7 @@ public class PacketHandler {
     public void handle(TextPacket packet, GamePlayer player) {
         packet.setSender(player.getInGameName());
         sendPacketToAllPlayers(packet);
+        game.saveMessage(player, packet.getText());
     }
 
     public void handle(ActionPacket packet, GamePlayer player) {

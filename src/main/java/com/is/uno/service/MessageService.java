@@ -17,21 +17,18 @@ import java.util.stream.Collectors;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final GameRoomService gameRoomService;
-    private final PlayerService playerService;
 
-    public MessageDTO sendMessage(Long roomId, Long senderId, String text) {
+    public void saveMessage(Long roomId, Player sender, String text) {
         GameRoom gameRoom = gameRoomService.findById(roomId);
-        Player player = playerService.findById(senderId);
 
         Message message = Message.builder()
                 .text(text)
                 .time(LocalDateTime.now())
                 .room(gameRoom)
-                .sender(player)
+                .sender(sender)
                 .build();
 
-        message = messageRepository.save(message);
-        return toMessageDTO(message);
+        messageRepository.save(message);
     }
 
     public List<MessageDTO> getMessagesByRoomId(Long roomId) {

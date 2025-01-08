@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class GamePlayer extends Player {
+    @Getter
     private final Player player;
 
     @Getter

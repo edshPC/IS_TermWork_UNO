@@ -147,6 +147,10 @@ public class GameCore {
         packetHandler.sendPacketToAllPlayers(pkt);
     }
 
+    public void saveMessage(GamePlayer player, String message) {
+        messageService.saveMessage(roomId, player.getPlayer(), message);
+    }
+
     private void startGame() {
         var deck = new CardDeck();
         deck.fillDeck(deckService.getActualDeck());
@@ -193,5 +197,6 @@ public class GameCore {
         var nextPlayer = state.isOrderReversed() ? playerOrder.previous() : playerOrder.next();
         state.setCurrentPlayer(nextPlayer);
     }
+
 
 }
