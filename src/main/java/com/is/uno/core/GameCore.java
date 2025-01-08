@@ -5,6 +5,7 @@ import com.is.uno.dto.packet.*;
 import com.is.uno.model.Deck;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.User;
+import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
 import com.is.uno.service.MessageService;
 import com.is.uno.service.PlayerService;
@@ -25,6 +26,7 @@ public class GameCore {
     private final GameRoomService gameRoomService;
     private final MessageService messageService;
     private final PlayerService playerService;
+    private final DeckService deckService;
 
     @Getter
     private PacketHandler packetHandler;
@@ -33,6 +35,9 @@ public class GameCore {
     // username -> player
     private final Map<String, GamePlayer> players = new ConcurrentHashMap<>();
     private final CircularList<GamePlayer> playerOrder = new CircularList<>();
+
+    private final static int MIN_PLAYERS = 2;
+    private final static int INITIAL_CARDS = 7;
 
     void init() {
         room = gameRoomService.findById(roomId);
@@ -72,7 +77,7 @@ public class GameCore {
         if (state != null) throw new IllegalStateException("Игра уже началась");
         player.onReady();
         packetHandler.sendPacketToAllPlayers(player.getActionPacket(Action.READY));
-        boolean allReady = players.size() >= 2;
+        boolean allReady = players.size() >= MIN_PLAYERS;
         for (var pl : players.values()) {
             allReady &= pl.isReady();
         }
@@ -84,6 +89,7 @@ public class GameCore {
     public void onPlayerPutCard(GamePlayer player, CardDTO card) {
         checkPlayerTurn(player);
         // TODO
+        onPlayerTurnEnd(player);
     }
 
     public void onPlayerTakeCard(GamePlayer player) {
@@ -115,14 +121,18 @@ public class GameCore {
     }
 
     private void startGame() {
-        state = new GameState();
         var deck = new CardDeck();
-        //deck.fillDeck(); // TODO
+        deck.fillDeck(deckService.getActualDeck());
+        state = new GameState();
         state.setCurrentPlayer(playerOrder.next());
         state.setCurrentCard(deck.takeCard());
         state.setDeck(deck);
 
         packetHandler.sendPacketToAllPlayers(ActionPacket.create(Action.GAME_START));
+        // раздача карт
+        for (int i = 0; i < INITIAL_CARDS * players.size(); i++) {
+            onPlayerTakeCard(state.getCurrentPlayer());
+        }
 
     }
 

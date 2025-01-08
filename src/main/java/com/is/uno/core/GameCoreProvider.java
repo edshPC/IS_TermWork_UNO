@@ -1,5 +1,6 @@
 package com.is.uno.core;
 
+import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
 import com.is.uno.service.MessageService;
 import com.is.uno.service.PlayerService;
@@ -18,6 +19,7 @@ public class GameCoreProvider {
     private final MessageService messageService;
     private final PlayerService playerService;
     private final GameRoomService gameRoomService;
+    private final DeckService deckService;
 
     // ID -> game
     private final Map<Long, GameCore> gameCores = new ConcurrentHashMap<>();
@@ -29,7 +31,8 @@ public class GameCoreProvider {
                     messagingTemplate,
                     gameRoomService,
                     messageService,
-                    playerService
+                    playerService,
+                    deckService
             );
             gameCore.init();
             return gameCore;
