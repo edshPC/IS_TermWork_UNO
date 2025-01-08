@@ -2,12 +2,11 @@ package com.is.uno.core;
 
 import com.is.uno.dto.api.CardDTO;
 import com.is.uno.dto.packet.Action;
-import com.is.uno.dto.packet.Packet;
 import com.is.uno.dto.packet.PlayerActionPacket;
 import com.is.uno.model.Player;
-import com.is.uno.socket.PacketHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +22,8 @@ public class GamePlayer extends Player {
 
     @Getter
     private boolean ready = false;
+    @Getter
+    @Setter
     private boolean UNOCalled = false;
 
     public PlayerActionPacket getActionPacket(Action action) {
@@ -36,8 +37,24 @@ public class GamePlayer extends Player {
         ready = !ready;
     }
 
+    public int getCardCount() {
+        return cards.size();
+    }
+
+    public long getTotalCardScore() {
+        long sum = 0;
+        for (var card : cards.values()) {
+            sum += card.getValue();
+        }
+        return sum;
+    }
+
     public boolean hasCard(Long id) {
         return cards.containsKey(id);
+    }
+
+    public CardDTO getCard(Long id) {
+        return cards.get(id);
     }
 
     public CardDTO removeCard(Long id) {
@@ -53,6 +70,12 @@ public class GamePlayer extends Player {
         if (cards.size() != 2)
             throw new IllegalStateException("Вы можете говорить UNO только перед предпоследним ходом");
         UNOCalled = true;
+    }
+
+    public void reset() {
+        cards.clear();
+        UNOCalled = false;
+        ready = false;
     }
 
     @Override

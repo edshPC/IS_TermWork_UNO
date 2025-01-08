@@ -29,6 +29,7 @@ public class PacketHandler {
         switch (packet.getType()) {
             case TEXT_PACKET -> handle((TextPacket) packet, player);
             case ACTION_PACKET -> handle((ActionPacket) packet, player);
+            case PUT_CARD_PACKET -> handle((PutCardPacket) packet, player);
             default -> throw new IllegalArgumentException("Invalid packet type");
         }
     }
@@ -46,6 +47,10 @@ public class PacketHandler {
             case TAKE_CARD -> game.onPlayerTakeCard(player);
             default -> throw new IllegalArgumentException("Invalid action type");
         }
+    }
+
+    public void handle(PutCardPacket packet, GamePlayer player) {
+        game.onPlayerPutCard(player, player.getCard(packet.getCardId()), packet.getNewColor());
     }
 
 }
