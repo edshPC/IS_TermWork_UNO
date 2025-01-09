@@ -5,7 +5,7 @@ import { PhaserGame } from './game/PhaserGame';
 
 function App ()
 {
-    // The sprite can only be moved in the MainMenu Scene
+    // The sprite can only be moved in the Lobby Scene
     const [canMoveSprite, setCanMoveSprite] = useState(true);
     
     //  References to the PhaserGame component (game and scene are exposed)

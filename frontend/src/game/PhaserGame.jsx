@@ -44,9 +44,7 @@ export const PhaserGame = forwardRef(function PhaserGame ({ currentActiveScene }
         });
 
         return () => {
-
             EventBus.removeListener('current-scene-ready');
-
         }
         
     }, [currentActiveScene, ref])

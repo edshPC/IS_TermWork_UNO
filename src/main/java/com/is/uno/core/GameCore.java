@@ -3,7 +3,6 @@ package com.is.uno.core;
 import com.is.uno.dto.api.CardDTO;
 import com.is.uno.dto.packet.*;
 import com.is.uno.model.Color;
-import com.is.uno.model.Deck;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.User;
 import com.is.uno.service.DeckService;
