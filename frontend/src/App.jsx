@@ -7,8 +7,10 @@ function App() {
     //  References to the PhaserGame component (game and scene are exposed)
     const phaserRef = useRef();
 
-    const roomId = 1, token = "";
-    const packetHandler = useMemo(() => new PacketHandler(roomId, token), []);
+    const roomId = 1; // TODO
+    const token = "";
+    const uuid = "";
+    const packetHandler = useMemo(() => new PacketHandler(roomId, token, uuid), []);
 
     useEffect(() => {
         try {

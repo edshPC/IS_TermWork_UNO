@@ -19,7 +19,7 @@ public class PacketHandler {
     }
 
     public void sendPacketToPlayer(Packet packet, GamePlayer player) {
-        messagingTemplate.convertAndSend("/topic/player/" + player.getUuid(), packet);
+        messagingTemplate.convertAndSend("/topic/private/" + player.getUuid(), packet);
     }
 
     public void handle(Packet packet, User user) {

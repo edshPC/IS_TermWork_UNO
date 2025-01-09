@@ -4,9 +4,10 @@ import Stomp from 'stompjs'
 export default class PacketHandler {
     stompClient = null;
 
-    constructor(roomId, token) {
+    constructor(roomId, token, uuid) {
         this.id = roomId;
         this.token = token;
+        this.uuid = uuid;
     }
 
     connect() {
@@ -17,8 +18,12 @@ export default class PacketHandler {
             Authorization: 'Bearer ' + this.token
         }, () => {
             this.stompClient.subscribe('/topic/room/' + this.id, this.onUpdateRecieved);
-            this.stompClient.subscribe('/topic/private/' + this.token, this.onUpdateRecieved);
+            this.stompClient.subscribe('/topic/private/' + this.uuid, this.onUpdateRecieved);
         });
+    }
+    
+    sendPacket(packet) {
+        this.stompClient.send("/app/room/" + this.id, {}, JSON.stringify(packet));
     }
 
     onUpdateRecieved = (update) => {
