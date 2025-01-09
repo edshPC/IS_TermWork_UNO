@@ -1,6 +1,5 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
-import {Card} from "../sprites/Card.js";
 
 export class Lobby extends Scene {
     logoTween;
@@ -10,13 +9,8 @@ export class Lobby extends Scene {
     }
 
     create() {
-        this.add.image(512, 384, 'background');
-        let card = new Card(this, 200, 300, -1, 'NUMBER', 'GREEN', 7);
 
-        this.logo = this.add.image(512, 300, 'logo').setDepth(100);
-        
-
-        this.add.text(512, 460, 'Main Menu', {
+        this.add.text(640, 460, 'Main Menu', {
             fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'

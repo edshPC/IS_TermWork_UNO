@@ -29,7 +29,9 @@
     "dependencies": {
         "phaser": "^3.87.0",
         "react": "^18.3.1",
-        "react-dom": "^18.3.1"
+        "react-dom": "^18.3.1",
+        "sockjs-client": "^1.6.1",
+        "stompjs": "^2.3.3"
     },
     "devDependencies": {
         "@types/react": "^18.3.3",
