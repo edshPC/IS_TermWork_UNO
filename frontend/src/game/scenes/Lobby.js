@@ -34,9 +34,20 @@ export class Lobby extends Scene {
     }
     
     createPlayer(username, name, ready) {
-        let player = new Player(this, 640, 200, username, name);
+        let player = new Player(this, 640, 360, username, name);
         if (ready) player.onReady();
         this.players[username] = player;
+
+        const radius = 240; // Радиус окружности
+        const centerX = this.cameras.main.centerX;
+        const centerY = this.cameras.main.centerY;
+        const playerCount = Object.values(this.players).length;
+        Object.values(this.players).forEach((pl, i) => {
+            const angle = (i / playerCount) * (2 * Math.PI) + (Math.PI / 2); // Угол в радианах
+            const x = centerX + radius * Math.cos(angle); // Вычисляем X координату
+            const y = centerY + radius * Math.sin(angle); // Вычисляем Y координату
+            pl.move(x, y);
+        });
     }
 
     changeScene() {

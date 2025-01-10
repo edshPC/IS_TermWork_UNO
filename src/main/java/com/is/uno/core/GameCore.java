@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.parameters.P;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -75,6 +76,7 @@ public class GameCore {
             var pkt = new PlayerJoinPacket();
             pkt.setUsername(pl.getUsername());
             pkt.setInGameName(pl.getInGameName());
+            pkt.setReady(pl.isReady());
             packetHandler.sendPacketToPlayer(pkt, player);
         }
         playerOrder.add(player);
@@ -82,7 +84,13 @@ public class GameCore {
 
     public void onPlayerLeave(GamePlayer player) {
         players.remove(player.getUsername());
+        if (players.isEmpty()) {
+            // TODO remove game
+            return;
+        }
+        if(state.getCurrentPlayer().equals(player)) switchPlayer();
         playerOrder.remove(player);
+        playerOrder.startFrom(state.getCurrentPlayer());
         packetHandler.sendPacketToAllPlayers(player.getActionPacket(Action.LEAVE));
     }
 
