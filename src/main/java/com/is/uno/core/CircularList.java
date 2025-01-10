@@ -26,11 +26,15 @@ public class CircularList<T> extends LinkedList<T> {
         return iterator.previous();
     }
 
+    public void startFrom(int pos) {
+        iterator = listIterator(pos);
+    }
+
     public void startFrom(T elem) {
         int pos = 0;
         for (T t : this) {
             if (t.equals(elem)) {
-                iterator = listIterator(pos);
+                startFrom(pos);
                 return;
             }
             pos++;

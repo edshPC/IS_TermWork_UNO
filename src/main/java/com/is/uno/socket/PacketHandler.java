@@ -39,6 +39,7 @@ public class PacketHandler {
 
     public void handle(ActionPacket packet, GamePlayer player) {
         switch (packet.getAction()) {
+            case JOIN -> game.onPlayerJoin(player);
             case READY -> game.onPlayerReady(player);
             case LEAVE -> game.onPlayerLeave(player);
             case CALL_UNO -> game.onPlayerCallUNO(player);

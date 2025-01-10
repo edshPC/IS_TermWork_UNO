@@ -25,6 +25,7 @@ export default class PacketHandler {
             stompClient.subscribe('/topic/game/' + this.gameUUID, this.onUpdateRecieved);
             stompClient.subscribe('/topic/private/' + this.privateUUID, this.onUpdateRecieved);
             this.stompClient = stompClient;
+            this.sendAction('JOIN');
         });
     }
     

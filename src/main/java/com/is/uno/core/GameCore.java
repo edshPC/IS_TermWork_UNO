@@ -52,7 +52,7 @@ public class GameCore {
             return players.get(user.getUsername());
         }
         GamePlayer player = new GamePlayer(playerService.findByRoomAndUserOrCreate(room, user));
-        onPlayerJoin(player);
+        onPlayerPreJoin(player);
         return player;
     }
 
@@ -61,14 +61,23 @@ public class GameCore {
             throw new IllegalStateException("Сейчас не ваш ход");
     }
 
-    public void onPlayerJoin(GamePlayer player) {
+    public void onPlayerPreJoin(GamePlayer player) {
         if (state != null) throw new IllegalStateException("Игра уже идёт");
         players.put(player.getUsername(), player);
-        playerOrder.add(player);
         var pkt = new PlayerJoinPacket();
         pkt.setUsername(player.getUsername());
         pkt.setInGameName(player.getInGameName());
         packetHandler.sendPacketToAllPlayers(pkt);
+    }
+
+    public void onPlayerJoin(GamePlayer player) {
+        for (var pl : playerOrder) {
+            var pkt = new PlayerJoinPacket();
+            pkt.setUsername(pl.getUsername());
+            pkt.setInGameName(pl.getInGameName());
+            packetHandler.sendPacketToPlayer(pkt, player);
+        }
+        playerOrder.add(player);
     }
 
     public void onPlayerLeave(GamePlayer player) {
@@ -156,6 +165,7 @@ public class GameCore {
         var deck = new CardDeck();
         deck.fillDeck(deckService.getActualDeck());
         state = new GameState();
+        playerOrder.startFrom(0);
         state.setCurrentPlayer(playerOrder.next());
         state.setCurrentCard(deck.takeNumberCard());
         state.setDeck(deck);

@@ -20,6 +20,9 @@ export class Lobby extends Scene {
     }
     
     initEvents() {
+        EventBus.on('packet-PLAYER_JOIN_PACKET', packet => {
+            this.createPlayer(packet.username, packet.inGameName, packet.ready);
+        });
         EventBus.on('action-READY', packet => {
             this.getPlayerFromPacket(packet).onReady();
         });
@@ -29,8 +32,15 @@ export class Lobby extends Scene {
         this.mainPlayer = new MainPlayer(this, username, name);
         this.players[username] = this.mainPlayer;
     }
+    
+    createPlayer(username, name, ready) {
+        let player = new Player(this, 640, 200, username, name);
+        if (ready) player.onReady();
+        this.players[username] = player;
+    }
 
     changeScene() {
+        EventBus.removeListener('packet-PLAYER_JOIN_PACKET');
         EventBus.removeListener('action-READY');
 
         this.scene.start('Game');
