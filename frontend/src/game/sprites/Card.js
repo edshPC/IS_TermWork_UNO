@@ -28,7 +28,8 @@ export class Card extends GameObjects.Sprite {
         scene.add.existing(this);
 
         this.setOrigin(0.5, 0.5); // Устанавливаем точку привязки в центр
-        this.setInteractive(); // Делаем карту интерактивной
+        this.setInteractive() // Делаем карту интерактивной
+            .on();
         this.update();
     }
 

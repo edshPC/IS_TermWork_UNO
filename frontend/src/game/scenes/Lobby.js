@@ -1,8 +1,11 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
+import {TEXT_STYLE} from "../PhaserGame.jsx";
+import {Player} from "../sprites/Player.js";
+import {MainPlayer} from "../sprites/MainPlayer.js";
 
 export class Lobby extends Scene {
-    logoTween;
+    players = {};
 
     constructor() {
         super('Lobby');
@@ -10,22 +13,31 @@ export class Lobby extends Scene {
 
     create() {
 
-        this.add.text(640, 460, 'Main Menu', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
-        }).setDepth(100).setOrigin(0.5);
+        this.add.text(640, 360, 'Main Menu', TEXT_STYLE).setDepth(100).setOrigin(0.5);
 
+        this.initEvents();
         EventBus.emit('current-scene-ready', this);
+    }
+    
+    initEvents() {
+        EventBus.on('action-READY', packet => {
+            this.getPlayerFromPacket(packet).onReady();
+        });
+    }
+    
+    createMainPlayer(username, name) {
+        this.mainPlayer = new MainPlayer(this, username, name);
+        this.players[username] = this.mainPlayer;
     }
 
     changeScene() {
-        if (this.logoTween) {
-            this.logoTween.stop();
-            this.logoTween = null;
-        }
+        EventBus.removeListener('action-READY');
 
         this.scene.start('Game');
+    }
+    
+    getPlayerFromPacket = (packet) => {
+        return packet.username? this.players[packet.username] : this.mainPlayer;
     }
 
     moveLogo(reactCallback) {

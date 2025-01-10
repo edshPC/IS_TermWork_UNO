@@ -1,9 +1,15 @@
-import PropTypes from 'prop-types';
 import {forwardRef, useEffect, useLayoutEffect, useRef} from 'react';
 import StartGame from './main';
 import {EventBus} from './EventBus';
 
-export const PhaserGame = forwardRef(function PhaserGame({currentActiveScene}, ref) {
+export const TEXT_STYLE = {
+    fontFamily: 'Arial Black', fontSize: 24, color: '#ffffff',
+    stroke: '#000000', strokeThickness: 6,
+    align: 'center'
+};
+
+function PhaserGameFunc({packetHandler, username, name}, ref) {
+    
     const game = useRef();
 
     // Create the game inside a useLayoutEffect hook to avoid the game being created outside the DOM
@@ -26,27 +32,23 @@ export const PhaserGame = forwardRef(function PhaserGame({currentActiveScene}, r
     useEffect(() => {
 
         EventBus.on('current-scene-ready', (currentScene) => {
-
-            if (currentActiveScene instanceof Function) {
-                currentActiveScene(currentScene);
-            }
             ref.current.scene = currentScene;
-
+            currentScene.createMainPlayer(username, name);
         });
+
+        EventBus.on('ready-pressed', () => packetHandler.sendAction('READY'));
 
         return () => {
             EventBus.removeListener('current-scene-ready');
+            EventBus.removeListener('ready-pressed');
         }
-
-    }, [currentActiveScene, ref])
+        
+    }, [packetHandler, ref])
 
     return (
         <div id="game-container"></div>
     );
 
-});
-
-// Props definitions
-PhaserGame.propTypes = {
-    currentActiveScene: PropTypes.func
 }
+
+export const PhaserGame = forwardRef(PhaserGameFunc);

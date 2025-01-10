@@ -43,7 +43,7 @@ We have provided a default project structure to get you started. This is as foll
 - `index.html` - A basic HTML page to contain the game.
 - `src` - Contains the React client source code.
 - `src/main.jsx` - The main **React** entry point. This bootstraps the React application.
-- `src/App.jsx` - The main React component.
+- `src/GameApp.jsx` - The main React component.
 - `src/game/PhaserGame.jsx` - The React component that initializes the Phaser Game and serve like a bridge between React and Phaser.
 - `src/game/EventBus.js` - A simple event bus to communicate between React and Phaser.
 - `src/game` - Contains the game source code.
