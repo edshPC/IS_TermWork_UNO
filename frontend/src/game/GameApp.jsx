@@ -26,7 +26,6 @@ export default function GameApp({gameUUID, privateUUID, token, username}) {
             <PhaserGame ref={phaserRef} packetHandler={packetHandler} username={username} name={username}/>
             <div>
                 <div>
-                    <button className="button" onClick={changeScene}>Change Scene</button>
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ import {Scene} from 'phaser';
 import {TEXT_STYLE} from "../PhaserGame.jsx";
 import {Player} from "../sprites/Player.js";
 import {MainPlayer} from "../sprites/MainPlayer.js";
+import {Card} from "../sprites/Card.js";
 
 export class Lobby extends Scene {
     players = {};
@@ -12,7 +13,11 @@ export class Lobby extends Scene {
     }
 
     create() {
-
+        new Card(this, 600, 550);
+        new Card(this, 620, 550);
+        new Card(this, 640, 550);
+        new Card(this, 660, 550);
+        new Card(this, 680, 550);
         this.add.text(640, 360, 'Main Menu', TEXT_STYLE).setDepth(100).setOrigin(0.5);
 
         this.initEvents();
@@ -32,6 +37,9 @@ export class Lobby extends Scene {
             delete this.players[packet.username];
             this.rearrangePlayers();
         });
+        EventBus.on('action-TAKE_CARD', packet => {
+            this.getPlayerFromPacket(packet)?.giveCard();
+        })
     }
     
     createMainPlayer(username, name) {

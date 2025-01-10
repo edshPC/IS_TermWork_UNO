@@ -27,13 +27,15 @@ export class Card extends GameObjects.Sprite {
 
         scene.add.existing(this);
 
-        this.setOrigin(0.5, 0.5); // Устанавливаем точку привязки в центр
+        this.setOrigin(0.5, 1); // Устанавливаем точку привязки в центр
+        this.setScale(.3)
         this.setInteractive() // Делаем карту интерактивной
-            .on();
-        this.update();
+            .on('pointerover', this.onHoverState)
+            .on('pointerout', this.onRestState);
+        this.updateTexture();
     }
 
-    update() {
+    updateTexture() {
         if (this.type) {
             let frame = COLOR_OFFSETS[this.color] + TYPE_OFFSETS[this.type] + this.value;
             this.setTexture('cards', frame);
@@ -41,4 +43,15 @@ export class Card extends GameObjects.Sprite {
             this.setTexture('card_back');
         }
     }
+    
+    onHoverState = () => {
+        this.setScale(.4);
+        //this.setDepth(1);
+    }
+    
+    onRestState = () => {
+        this.setScale(.3);
+        //this.setDepth(0);
+    }
+    
 }
