@@ -26,12 +26,16 @@ export default class PacketHandler {
             stompClient.subscribe('/topic/private/' + this.privateUUID, this.onUpdateRecieved);
             this.stompClient = stompClient;
             this.sendAction('JOIN');
+            window.addEventListener('beforeunload', this.disconnect);
         });
     }
     
-    disconnect() {
-        this.stompClient?.disconnect();
+    disconnect = () => {
+        if (!this.stompClient) return;
+        this.sendAction('LEAVE');
+        this.stompClient.disconnect();
         this.stompClient = null;
+        return true;
     }
     
     sendPacket(packet) {
@@ -47,24 +51,6 @@ export default class PacketHandler {
         EventBus.emit('packet-' + packet.type, packet);
         if (packet.type.includes('ACTION_PACKET'))
             EventBus.emit('action-' + packet.action, packet);
-        const cbs = this.subscribers[packet.type] || [];
-        cbs.forEach(cb => cb(packet));
     }
     
-    subscribeOnPacket(packet_type, callback) {
-        const cbs = this.subscribers[packet_type] || [];
-        cbs.push(callback);
-        this.subscribers[packet_type] = cbs;
-    }
-    
-    subscribeOnAction(action, callback) {
-        const cb = (packet) => {
-            if (packet.action === action) {
-                callback(packet);
-            }
-        }
-        this.subscribeOnPacket('ACTION_PACKET', cb);
-        this.subscribeOnPacket('PLAYER_ACTION_PACKET', cb);
-    }
-
 }

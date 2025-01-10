@@ -21,32 +21,43 @@ export class Lobby extends Scene {
     
     initEvents() {
         EventBus.on('packet-PLAYER_JOIN_PACKET', packet => {
-            this.createPlayer(packet.username, packet.inGameName, packet.ready);
+            if (!(packet.username in this.players))
+                this.createPlayer(packet.username, packet.inGameName, packet.ready);
         });
         EventBus.on('action-READY', packet => {
-            this.getPlayerFromPacket(packet).onReady();
+            this.getPlayerFromPacket(packet)?.onReady();
+        });
+        EventBus.on('action-LEAVE', packet => {
+            this.getPlayerFromPacket(packet)?.destroy(true);
+            delete this.players[packet.username];
+            this.rearrangePlayers();
         });
     }
     
     createMainPlayer(username, name) {
         this.mainPlayer = new MainPlayer(this, username, name);
         this.players[username] = this.mainPlayer;
+        this.rearrangePlayers();
     }
     
     createPlayer(username, name, ready) {
-        let player = new Player(this, 640, 360, username, name);
+        let player = new Player(this, username, name);
         if (ready) player.onReady();
         this.players[username] = player;
-
-        const radius = 240; // Радиус окружности
+        this.rearrangePlayers();
+    }
+    
+    rearrangePlayers() {
         const centerX = this.cameras.main.centerX;
         const centerY = this.cameras.main.centerY;
+
+        const radius = 240; // Радиус окружности
         const playerCount = Object.values(this.players).length;
         Object.values(this.players).forEach((pl, i) => {
             const angle = (i / playerCount) * (2 * Math.PI) + (Math.PI / 2); // Угол в радианах
             const x = centerX + radius * Math.cos(angle); // Вычисляем X координату
             const y = centerY + radius * Math.sin(angle); // Вычисляем Y координату
-            pl.move(x, y);
+            pl.move(x, y, (angle - Math.PI/2));
         });
     }
 
@@ -60,30 +71,5 @@ export class Lobby extends Scene {
     getPlayerFromPacket = (packet) => {
         return packet.username? this.players[packet.username] : this.mainPlayer;
     }
-
-    moveLogo(reactCallback) {
-        if (this.logoTween) {
-            if (this.logoTween.isPlaying()) {
-                this.logoTween.pause();
-            } else {
-                this.logoTween.play();
-            }
-        } else {
-            this.logoTween = this.tweens.add({
-                targets: this.logo,
-                x: {value: 750, duration: 3000, ease: 'Back.easeInOut'},
-                y: {value: 80, duration: 1500, ease: 'Sine.easeOut'},
-                yoyo: true,
-                repeat: -1,
-                onUpdate: () => {
-                    if (reactCallback) {
-                        reactCallback({
-                            x: Math.floor(this.logo.x),
-                            y: Math.floor(this.logo.y)
-                        });
-                    }
-                }
-            });
-        }
-    }
+    
 }

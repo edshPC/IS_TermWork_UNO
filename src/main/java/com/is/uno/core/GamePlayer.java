@@ -22,6 +22,9 @@ public class GamePlayer extends Player {
     private final Map<Long, CardDTO> cards = new HashMap<>();
 
     @Getter
+    @Setter
+    private boolean loaded = false;
+    @Getter
     private boolean ready = false;
     @Getter
     @Setter

@@ -72,6 +72,7 @@ public class GameCore {
     }
 
     public void onPlayerJoin(GamePlayer player) {
+        if (player.isLoaded()) return;
         for (var pl : playerOrder) {
             var pkt = new PlayerJoinPacket();
             pkt.setUsername(pl.getUsername());
@@ -80,6 +81,7 @@ public class GameCore {
             packetHandler.sendPacketToPlayer(pkt, player);
         }
         playerOrder.add(player);
+        player.setLoaded(true);
     }
 
     public void onPlayerLeave(GamePlayer player) {
@@ -88,9 +90,9 @@ public class GameCore {
             // TODO remove game
             return;
         }
-        if(state.getCurrentPlayer().equals(player)) switchPlayer();
+        if(state != null && state.getCurrentPlayer().equals(player)) switchPlayer();
         playerOrder.remove(player);
-        playerOrder.startFrom(state.getCurrentPlayer());
+        if (state != null) playerOrder.startFrom(state.getCurrentPlayer());
         packetHandler.sendPacketToAllPlayers(player.getActionPacket(Action.LEAVE));
     }
 

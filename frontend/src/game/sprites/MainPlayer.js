@@ -3,7 +3,7 @@ import {EventBus} from "../EventBus.js";
 
 export class MainPlayer extends Player {
     constructor(scene, username, name) {
-        super(scene, 640, 600, username, name);
+        super(scene, username, name);
         this.readySprite
             .setInteractive({ useHandCursor: true })
             .on('pointerup', () => {
