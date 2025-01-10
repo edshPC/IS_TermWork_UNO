@@ -33,6 +33,8 @@ public class GameCore {
     private PacketHandler packetHandler;
     private GameRoom room;
     private GameState state;
+    @Getter
+    private final UUID uuid = UUID.randomUUID();
     // username -> player
     private final Map<String, GamePlayer> players = new ConcurrentHashMap<>();
     private final CircularList<GamePlayer> playerOrder = new CircularList<>();
@@ -42,7 +44,7 @@ public class GameCore {
 
     void init() {
         room = gameRoomService.findById(roomId);
-        packetHandler = new PacketHandler(roomId, messagingTemplate, this);
+        packetHandler = new PacketHandler(messagingTemplate, this);
     }
 
     public GamePlayer getPlayerByUser(User user) {

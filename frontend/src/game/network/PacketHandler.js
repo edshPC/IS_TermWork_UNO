@@ -8,10 +8,10 @@ export default class PacketHandler {
     stompClient = null;
     subscribers = {};
 
-    constructor(roomId, token, uuid) {
-        this.id = roomId;
+    constructor(gameUUID, privateUUID, token) {
+        this.gameUUID = gameUUID;
+        this.privateUUID = privateUUID;
         this.token = token;
-        this.uuid = uuid;
         this.connect();
     }
 
@@ -22,11 +22,9 @@ export default class PacketHandler {
         stompClient.connect({
             Authorization: 'Bearer ' + this.token
         }, () => {
-            console.log(this);
-            stompClient.subscribe('/topic/room/' + this.id, this.onUpdateRecieved);
-            stompClient.subscribe('/topic/private/' + this.uuid, this.onUpdateRecieved);
+            stompClient.subscribe('/topic/game/' + this.gameUUID, this.onUpdateRecieved);
+            stompClient.subscribe('/topic/private/' + this.privateUUID, this.onUpdateRecieved);
             this.stompClient = stompClient;
-            console.log(this);
         });
     }
     
@@ -36,7 +34,7 @@ export default class PacketHandler {
     }
     
     sendPacket(packet) {
-        this.stompClient.send("/app/room/" + this.id, {}, JSON.stringify(packet));
+        this.stompClient.send("/app/game/" + this.gameUUID, {}, JSON.stringify(packet));
     }
     
     sendAction(action) {

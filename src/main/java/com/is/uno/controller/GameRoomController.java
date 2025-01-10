@@ -27,8 +27,8 @@ public class GameRoomController {
     @PostMapping("/join")
     public ResponseEntity<?> joinGameRoom(@RequestBody JoinGameRoomDTO joinGameRoomDTO,
                                           @AuthenticationPrincipal User user) {
-        gameRoomService.joinGameRoom(joinGameRoomDTO, user);
-        return SimpleResponse.success();
+        var response = gameRoomService.joinGameRoom(joinGameRoomDTO, user);
+        return DataResponse.success(response);
     }
 
     @GetMapping

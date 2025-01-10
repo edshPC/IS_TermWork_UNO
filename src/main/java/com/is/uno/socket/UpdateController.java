@@ -11,6 +11,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
+import java.util.UUID;
+
 @Controller
 @RequiredArgsConstructor
 public class UpdateController {
@@ -18,8 +20,8 @@ public class UpdateController {
     private final GameCoreProvider gameCoreProvider;
 
     //@SendTo("/topic/updates/{roomId}")
-    @MessageMapping("/room/{roomId}")
-    public void handlePacket(@DestinationVariable Long roomId,
+    @MessageMapping("/game/{uuid}")
+    public void handlePacket(@DestinationVariable UUID uuid,
                              SimpMessageHeaderAccessor headerAccessor,
                              Packet packet) {
         Authentication authentication = (Authentication) headerAccessor.getUser();
@@ -28,7 +30,7 @@ public class UpdateController {
         }
         User user = (User) authentication.getPrincipal();
 
-        PacketHandler packetHandler = gameCoreProvider.provideGameCore(roomId).getPacketHandler();
+        PacketHandler packetHandler = gameCoreProvider.provideGameCore(uuid).getPacketHandler();
         packetHandler.handle(packet, user);
     }
 

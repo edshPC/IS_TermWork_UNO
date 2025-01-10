@@ -1,15 +1,22 @@
 package com.is.uno.service;
 
+import com.is.uno.core.GameCore;
+import com.is.uno.core.GameCoreProvider;
+import com.is.uno.core.GamePlayer;
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.PlayerRepository;
 import com.is.uno.dto.api.GameRoomDTO;
 import com.is.uno.dto.api.JoinGameRoomDTO;
+import com.is.uno.dto.api.JoinRoomResponse;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.Player;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +30,9 @@ public class GameRoomService {
     private final PlayerRepository playerRepository;
     private final PasswordEncoder passwordEncoder;
     private final PlayerService playerService;
+
+    @Setter(onMethod_ = {@Autowired, @Lazy})
+    private GameCoreProvider gameCoreProvider;
 
     public GameRoom findById(Long id) {
         return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
@@ -49,7 +59,7 @@ public class GameRoomService {
                 .build(), owner);
     }
 
-    public void joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
+    public JoinRoomResponse joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
         GameRoom gameRoom = findById(joinGameRoomDTO.getRoomId());
         if (gameRoom.getPassword() != null &&
             !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
@@ -60,8 +70,15 @@ public class GameRoomService {
         if (joinGameRoomDTO.getInGameName() != null) {
             player.setInGameName(joinGameRoomDTO.getInGameName());
         }
-
         playerRepository.save(player);
+
+        GameCore game = gameCoreProvider.provideGameCore(gameRoom.getId());
+        GamePlayer gamePlayer = game.getPlayerByUser(user);
+
+        return JoinRoomResponse.builder()
+                .gameUUID(game.getUuid())
+                .privateUUID(gamePlayer.getUuid())
+                .build();
     }
 
     public List<GameRoomDTO> getAllGameRooms() {

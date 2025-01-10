@@ -3,12 +3,12 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import {PhaserGame} from './PhaserGame.jsx';
 import PacketHandler from "./network/PacketHandler.js";
 
-export default function GameApp({roomId, token, uuid, username}) {
+export default function GameApp({gameUUID, privateUUID, token, username}) {
     //  References to the PhaserGame component (game and scene are exposed)
     const phaserRef = useRef();
 
     const packetHandler = useMemo(() =>
-        new PacketHandler(roomId, token, uuid), [roomId, token, uuid]);
+        new PacketHandler(gameUUID, privateUUID, token), [gameUUID, privateUUID, token]);
 
     useEffect(() => {
         return () => packetHandler.disconnect();

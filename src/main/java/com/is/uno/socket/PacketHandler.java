@@ -10,12 +10,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @RequiredArgsConstructor
 public class PacketHandler {
 
-    private final Long roomId;
     private final SimpMessagingTemplate messagingTemplate;
     private final GameCore game;
 
     public void sendPacketToAllPlayers(Packet packet) {
-        messagingTemplate.convertAndSend("/topic/room/" + roomId, packet);
+        messagingTemplate.convertAndSend("/topic/game/" + game.getUuid(), packet);
     }
 
     public void sendPacketToPlayer(Packet packet, GamePlayer player) {

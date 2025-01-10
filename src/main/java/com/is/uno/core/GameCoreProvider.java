@@ -5,10 +5,13 @@ import com.is.uno.service.GameRoomService;
 import com.is.uno.service.MessageService;
 import com.is.uno.service.PlayerService;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -16,16 +19,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameCoreProvider {
 
     private final SimpMessagingTemplate messagingTemplate;
-    private final MessageService messageService;
     private final PlayerService playerService;
     private final GameRoomService gameRoomService;
     private final DeckService deckService;
+    private final MessageService messageService;
 
     // ID -> game
-    private final Map<Long, GameCore> gameCores = new ConcurrentHashMap<>();
+    private final Map<Long, GameCore> gameCoreIds = new ConcurrentHashMap<>();
+    // UUID -> game
+    private final Map<UUID, GameCore> gameCoreUuids = new ConcurrentHashMap<>();
 
     public GameCore provideGameCore(Long roomId) {
-        return gameCores.computeIfAbsent(roomId, id -> {
+        return gameCoreIds.computeIfAbsent(roomId, id -> {
             var gameCore = new GameCore(
                     id,
                     messagingTemplate,
@@ -35,8 +40,16 @@ public class GameCoreProvider {
                     deckService
             );
             gameCore.init();
+            gameCoreUuids.put(gameCore.getUuid(), gameCore);
             return gameCore;
         });
+    }
+
+    public GameCore provideGameCore(UUID gameUUID) {
+        if (!gameCoreUuids.containsKey(gameUUID)) {
+            throw new IllegalArgumentException("Invalid gameUUID: " + gameUUID);
+        }
+        return gameCoreUuids.get(gameUUID);
     }
 }
 
