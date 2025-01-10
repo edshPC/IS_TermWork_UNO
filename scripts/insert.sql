@@ -1,4 +1,4 @@
-INSERT INTO Users (login, user_name, password)
+INSERT INTO uno_user (login, user_name, password)
 VALUES ('user1', 'User One', 'password1'),
        ('user2', 'User Two', 'password2'),
        ('user3', 'User Three', 'password3'),
@@ -7,11 +7,11 @@ VALUES ('user1', 'User One', 'password1'),
        ('user6', 'User Six', 'password6'),
        ('user7', 'User Seven', 'password7');
 
-INSERT INTO GameRoom (room_name, is_public, password, max_players, owner)
+INSERT INTO uno_game_room (room_name, is_public, password, max_players, owner)
 VALUES ('Room One', TRUE, NULL, 3, 'user1'),
        ('Room Two', FALSE, 'room2password', 4, 'user4');
 
-INSERT INTO Player (user_id, current_room_id, in_game_name)
+INSERT INTO uno_player (user_id, current_room_id, in_game_name)
 VALUES ('user1', 1, 'Player One'),
        ('user2', 1, 'Player Two'),
        ('user3', 1, 'Player Three'),
@@ -20,11 +20,11 @@ VALUES ('user1', 1, 'Player One'),
        ('user6', 2, 'Player Six'),
        ('user7', 2, 'Player Seven');
 
-INSERT INTO Game (max_score, start_time, end_time, winner_id, room_id)
+INSERT INTO uno_game (max_score, start_time, end_time, winner_id, room_id)
 VALUES (100, now(), NULL, NULL, 1),
        (200, '2023-10-01 10:00:00', '2023-10-01 10:30:00', 5, 2);
 
-INSERT INTO GameScore (player_id, game_id, score)
+INSERT INTO uno_game_score (player_id, game_id, score)
 VALUES (1, 1, 50),
        (2, 1, 75),
        (3, 1, 80),
@@ -33,63 +33,66 @@ VALUES (1, 1, 50),
        (6, 2, 100),
        (7, 2, 120);
 
-INSERT INTO Card (type_of_card, color_of_card, value)
-VALUES ('number', 'red', 0),
-       ('number', 'red', 1),
-       ('number', 'red', 2),
-       ('number', 'red', 3),
-       ('number', 'red', 4),
-       ('number', 'red', 5),
-       ('number', 'red', 6),
-       ('number', 'red', 7),
-       ('number', 'red', 8),
-       ('number', 'red', 9),
-       ('number', 'blue', 0),
-       ('number', 'blue', 1),
-       ('number', 'blue', 2),
-       ('number', 'blue', 3),
-       ('number', 'blue', 4),
-       ('number', 'blue', 5),
-       ('number', 'blue', 6),
-       ('number', 'blue', 7),
-       ('number', 'blue', 8),
-       ('number', 'blue', 9),
-       ('number', 'green', 0),
-       ('number', 'green', 1),
-       ('number', 'green', 2),
-       ('number', 'green', 3),
-       ('number', 'green', 4),
-       ('number', 'green', 5),
-       ('number', 'green', 6),
-       ('number', 'green', 7),
-       ('number', 'green', 8),
-       ('number', 'green', 9),
-       ('number', 'yellow', 0),
-       ('number', 'yellow', 1),
-       ('number', 'yellow', 2),
-       ('number', 'yellow', 3),
-       ('number', 'yellow', 4),
-       ('number', 'yellow', 5),
-       ('number', 'yellow', 6),
-       ('number', 'yellow', 7),
-       ('number', 'yellow', 8),
-       ('number', 'yellow', 9),
-       ('plus_two', 'red', NULL),
-       ('plus_two', 'blue', NULL),
-       ('plus_two', 'green', NULL),
-       ('plus_two', 'yellow', NULL),
-       ('change_direction', 'red', NULL),
-       ('change_direction', 'blue', NULL),
-       ('change_direction', 'green', NULL),
-       ('change_direction', 'yellow', NULL),
-       ('skip', 'red', NULL),
-       ('skip', 'blue', NULL),
-       ('skip', 'green', NULL),
-       ('skip', 'yellow', NULL),
-       ('choose_color', 'black', NULL),
-       ('plus_four', 'black', NULL);
+INSERT INTO uno_card (type_of_card, color_of_card, value)
+VALUES ('NUMBER', 'RED', 0),
+       ('NUMBER', 'RED', 1),
+       ('NUMBER', 'RED', 2),
+       ('NUMBER', 'RED', 3),
+       ('NUMBER', 'RED', 4),
+       ('NUMBER', 'RED', 5),
+       ('NUMBER', 'RED', 6),
+       ('NUMBER', 'RED', 7),
+       ('NUMBER', 'RED', 8),
+       ('NUMBER', 'RED', 9),
+       ('NUMBER', 'BLUE', 0),
+       ('NUMBER', 'BLUE', 1),
+       ('NUMBER', 'BLUE', 2),
+       ('NUMBER', 'BLUE', 3),
+       ('NUMBER', 'BLUE', 4),
+       ('NUMBER', 'BLUE', 5),
+       ('NUMBER', 'BLUE', 6),
+       ('NUMBER', 'BLUE', 7),
+       ('NUMBER', 'BLUE', 8),
+       ('NUMBER', 'BLUE', 9),
+       ('NUMBER', 'GREEN', 0),
+       ('NUMBER', 'GREEN', 1),
+       ('NUMBER', 'GREEN', 2),
+       ('NUMBER', 'GREEN', 3),
+       ('NUMBER', 'GREEN', 4),
+       ('NUMBER', 'GREEN', 5),
+       ('NUMBER', 'GREEN', 6),
+       ('NUMBER', 'GREEN', 7),
+       ('NUMBER', 'GREEN', 8),
+       ('NUMBER', 'GREEN', 9),
+       ('NUMBER', 'YELLOW', 0),
+       ('NUMBER', 'YELLOW', 1),
+       ('NUMBER', 'YELLOW', 2),
+       ('NUMBER', 'YELLOW', 3),
+       ('NUMBER', 'YELLOW', 4),
+       ('NUMBER', 'YELLOW', 5),
+       ('NUMBER', 'YELLOW', 6),
+       ('NUMBER', 'YELLOW', 7),
+       ('NUMBER', 'YELLOW', 8),
+       ('NUMBER', 'YELLOW', 9),
+       ('PLUS_TWO', 'RED', NULL),
+       ('PLUS_TWO', 'BLUE', NULL),
+       ('PLUS_TWO', 'GREEN', NULL),
+       ('PLUS_TWO', 'YELLOW', NULL),
+       ('CHANGE_DIRECTION', 'RED', NULL),
+       ('CHANGE_DIRECTION', 'BLUE', NULL),
+       ('CHANGE_DIRECTION', 'GREEN', NULL),
+       ('CHANGE_DIRECTION', 'YELLOW', NULL),
+       ('SKIP', 'RED', NULL),
+       ('SKIP', 'BLUE', NULL),
+       ('SKIP', 'GREEN', NULL),
+       ('SKIP', 'YELLOW', NULL),
+       ('CHOOSE_COLOR', 'BLACK', NULL),
+       ('PLUS_FOUR', 'BLACK', NULL);
 
-INSERT INTO Deck (card_id, weight)
+alter sequence uno_card_id_seq start with 1;
+delete from uno_card;
+
+INSERT INTO uno_deck (card_id, weight)
 VALUES (1, 1.0),
        (2, 2.0),
        (3, 2.0),
@@ -145,7 +148,7 @@ VALUES (1, 1.0),
        (53, 4.0),
        (54, 4.0);
 
-INSERT INTO Statistics (user_id, rating, play_count, win_count, time_played)
+INSERT INTO uno_statistics (user_id, rating, play_count, win_count, time_played)
 VALUES ('user1', 1500, 10, 5, '05:00:00'),
        ('user2', 1200, 8, 3, '04:00:00'),
        ('user3', 1800, 12, 7, '06:00:00'),
@@ -154,11 +157,11 @@ VALUES ('user1', 1500, 10, 5, '05:00:00'),
        ('user6', 1300, 7, 2, '03:30:00'),
        ('user7', 1700, 13, 8, '07:00:00');
 
-INSERT INTO Achievement (name, description)
+INSERT INTO uno_achievement (name, description)
 VALUES ('First Win', 'Выиграйте свою первую игру.'),
        ('10 Games Played', 'Сыграйте 10 игр.'),
        ('5 Wins', 'Выиграйте 5 игр.'),
-       ('Skip Master', 'Используйте карту "Skip" 10 раз.'),
+       ('SKIP Master', 'Используйте карту "SKIP" 10 раз.'),
        ('Reverse Champion', 'Используйте карту "Change Direction" 10 раз.'),
        ('Draw Two Pro', 'Используйте карту "Plus Two" 10 раз.'),
        ('Wild Card Expert', 'Используйте карту "Wild" 5 раз.'),
@@ -168,7 +171,7 @@ VALUES ('First Win', 'Выиграйте свою первую игру.'),
        ('Marathon Player', 'Сыграйте 50 игр.'),
        ('Uno Champion', 'Выиграйте 20 игр.');
 
-INSERT INTO UserAchievement (user_id, achievement_id, time)
+INSERT INTO user_achievements (user_id, achievement_id, time)
 VALUES ('user1', 1, now()),
        ('user2', 2, now()),
        ('user3', 3, now()),
@@ -177,7 +180,7 @@ VALUES ('user1', 1, now()),
        ('user6', 6, now()),
        ('user7', 7, now());
 
-INSERT INTO Message (text, time, room_id, sender_id)
+INSERT INTO uno_message (text, time, room_id, sender_id)
 VALUES ('Hello everyone!', now(), 1, 1),
        ('Good game!', now(), 1, 2),
        ('Nice move!', now(), 1, 3),
