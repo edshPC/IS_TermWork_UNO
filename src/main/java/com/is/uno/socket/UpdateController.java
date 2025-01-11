@@ -37,6 +37,4 @@ public class UpdateController {
         if (gameCore.getPlayerCount() == 0) gameCoreProvider.destroyGameCore(gameCore);
     }
 
-
-
 }

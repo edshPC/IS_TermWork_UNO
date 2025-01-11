@@ -39,9 +39,10 @@ export class Player extends GameObjects.Container {
     }
     
     async giveCard(card) {
-        await card.move(0, -30)
+        await card.move(this.x, this.y);
         this.cards.push(card);
         this.add(card);
+        card.setPosition(0, -30);
         this.rearrangeCards();
         return card;
     }
@@ -51,8 +52,12 @@ export class Player extends GameObjects.Container {
             this.cards[Math.floor(Math.random() * this.cards.length)] :
             this.cards.find(card => card.id === id);
         if (!card) return;
+        this.remove(card);
+        card.setPosition(this.x, this.y);
         await card.move(this.scene.activeCardX, this.scene.activeCardY);
-        card.setVisible(false);
+        this.cards.splice(this.cards.indexOf(card), 1);
+        card.destroy(true);
+        this.rearrangeCards();
     }
     
     rearrangeCards() {
@@ -66,6 +71,14 @@ export class Player extends GameObjects.Container {
         this.cards.forEach(card => {
            card.move(x); x += space;
         });
+    }
+    
+    onGameStart() {
+        this.readySprite.setVisible(false);
+    }
+    
+    onGameOver() {
+        this.readySprite.setVisible(true);
     }
 
 }

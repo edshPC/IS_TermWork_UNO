@@ -127,8 +127,8 @@ public class GameCore {
 
         switch (card.getType_of_card()) {
             case CHANGE_DIRECTION -> {
-                state.reverseOrder();
                 if (players.size() == 2) switchPlayer();
+                else state.reverseOrder();
             }
             case SKIP -> switchPlayer();
             case PLUS_TWO -> {
@@ -151,7 +151,8 @@ public class GameCore {
     public void onPlayerTakeCard(GamePlayer player) {
         checkPlayerTurn(player);
         giveCardsToPlayer(player, 1);
-        onPlayerTurnEnd();
+        if (!player.canPlaceCardOn(state.getCurrentCard()))
+            onPlayerTurnEnd();
     }
 
     public void onPlayerCallUNO(GamePlayer player) {
@@ -190,7 +191,8 @@ public class GameCore {
         packetHandler.sendPacketToAllPlayers(ActionPacket.create(Action.GAME_START));
         // раздача карт
         for (int i = 0; i < INITIAL_CARDS * players.size(); i++) {
-            onPlayerTakeCard(state.getCurrentPlayer());
+            giveCardsToPlayer(state.getCurrentPlayer(), 1);
+            switchPlayer();
         }
 
     }

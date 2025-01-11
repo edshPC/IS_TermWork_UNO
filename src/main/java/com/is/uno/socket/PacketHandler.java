@@ -23,11 +23,15 @@ public class PacketHandler {
 
     public void handle(Packet packet, User user) {
         GamePlayer player = game.getPlayerByUser(user);
-        switch (packet.getType()) {
-            case TEXT_PACKET -> handle((TextPacket) packet, player);
-            case ACTION_PACKET -> handle((ActionPacket) packet, player);
-            case PUT_CARD_PACKET -> handle((PutCardPacket) packet, player);
-            default -> throw new IllegalArgumentException("Invalid packet type");
+        try {
+            switch (packet.getType()) {
+                case TEXT_PACKET -> handle((TextPacket) packet, player);
+                case ACTION_PACKET -> handle((ActionPacket) packet, player);
+                case PUT_CARD_PACKET -> handle((PutCardPacket) packet, player);
+                default -> throw new IllegalArgumentException("Invalid packet type");
+            }
+        } catch (Exception e) {
+            sendPacketToPlayer(TextPacket.createSystem(e.getMessage()), player);
         }
     }
 

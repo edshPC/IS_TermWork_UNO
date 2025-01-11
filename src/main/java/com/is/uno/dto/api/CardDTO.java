@@ -22,6 +22,8 @@ public class CardDTO {
         if (type_of_card == Type.NUMBER &&
             other.type_of_card == Type.NUMBER &&
             value.equals(other.value)) return true;
+        if (type_of_card != Type.NUMBER &&
+            type_of_card == other.type_of_card) return true;
         return false;
     }
 

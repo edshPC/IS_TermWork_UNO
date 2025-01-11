@@ -82,6 +82,13 @@ public class GamePlayer extends Player {
         ready = false;
     }
 
+    public boolean canPlaceCardOn(CardDTO card) {
+        for (var c : cards.values()) {
+            if (c.canPlaceOn(card)) return true;
+        }
+        return false;
+    }
+
     @Override
     public String getInGameName() {
         return player.getInGameName();

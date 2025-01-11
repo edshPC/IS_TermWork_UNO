@@ -38,7 +38,7 @@ export class Lobby extends Scene {
         EventBus.on('packet-GAME_STATE_PACKET', packet => {
             if (this.activeCard) this.activeCard.destroy(true);
             this.activeCard = Card.fromCardDTO(this, this.activeCardX, this.activeCardY, packet.currentCard);
-            
+            this.activeCard.setDepth(-1);
         });
         EventBus.on('packet-TAKE_CARD_PACKET', packet => {
             const card = Card.fromCardDTO(this, this.deckCardX, this.deckCardY, packet.card);
@@ -47,6 +47,7 @@ export class Lobby extends Scene {
         EventBus.on('action-GAME_START', () => {
             this.waitText.setVisible(false);
             this.deckCard.setVisible(true);
+            Object.values(this.players).forEach(player => player.onGameStart());
         });
         EventBus.on('action-READY', packet => {
             this.getPlayerFromPacket(packet)?.onReady();
