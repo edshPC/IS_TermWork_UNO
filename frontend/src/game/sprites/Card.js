@@ -17,6 +17,7 @@ const TYPE_OFFSETS = {
 };
 
 export class Card extends GameObjects.Sprite {
+    newColor;
     constructor(scene, x, y, id = -1, type = null, color = null, value = null) {
         super(scene, x, y, 'card_back');
 
@@ -27,12 +28,13 @@ export class Card extends GameObjects.Sprite {
 
         scene.add.existing(this);
 
-        this.setOrigin(0.5, 1); // Устанавливаем точку привязки в центр
+        this.setOrigin(0, 1); // Устанавливаем точку привязки в центр
         this.setScale(.3)
-        this.setInteractive() // Делаем карту интерактивной
-            .on('pointerover', this.onHoverState)
-            .on('pointerout', this.onRestState);
         this.updateTexture();
+    }
+    
+    static fromCardDTO(scene, x, y, cardDTO) {
+        return new Card(scene, x, y, cardDTO.id, cardDTO.type_of_card, cardDTO.color_of_card, cardDTO.value);
     }
 
     updateTexture() {
@@ -43,7 +45,25 @@ export class Card extends GameObjects.Sprite {
             this.setTexture('card_back');
         }
     }
+
+    move(x, y = this.y, angle = 0) {
+        return new Promise(resolve => {
+            this.scene.tweens.add({
+                targets: this,
+                x, y, angle: angle / Math.PI * 180,
+                duration: 200,
+                onComplete: resolve,
+            });
+        });
+    }
     
+    setInteractive() {
+        super.setInteractive({ useHandCursor: true })
+            .on('pointerover', this.onHoverState)
+            .on('pointerout', this.onRestState)
+            .on('pointerup', () => this.onClick(this));
+    }
+
     onHoverState = () => {
         this.setScale(.4);
         //this.setDepth(1);
@@ -52,6 +72,10 @@ export class Card extends GameObjects.Sprite {
     onRestState = () => {
         this.setScale(.3);
         //this.setDepth(0);
+    }
+    
+    onClick = card => {
+        
     }
     
 }

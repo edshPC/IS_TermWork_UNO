@@ -7,19 +7,25 @@ import {Card} from "../sprites/Card.js";
 
 export class Lobby extends Scene {
     players = {};
+    activeCardX = 560;
+    activeCardY = 400;
+    activeCard;
+    deckCardX = 720;
+    deckCardY = 400;
+    deckCard;
 
     constructor() {
         super('Lobby');
     }
 
     create() {
-        new Card(this, 600, 550);
-        new Card(this, 620, 550);
-        new Card(this, 640, 550);
-        new Card(this, 660, 550);
-        new Card(this, 680, 550);
-        this.add.text(640, 360, 'Main Menu', TEXT_STYLE).setDepth(100).setOrigin(0.5);
-
+        this.waitText = this.add.text(640, 360, 'Ожидание игроков...', TEXT_STYLE).setDepth(100).setOrigin(0.5);
+        this.deckCard = new Card(this, this.deckCardX, this.deckCardY);
+        this.deckCard.setInteractive();
+        this.deckCard.onClick = () => {
+            
+        }
+        this.deckCard.setVisible(false);
         this.initEvents();
         EventBus.emit('current-scene-ready', this);
     }
@@ -28,6 +34,19 @@ export class Lobby extends Scene {
         EventBus.on('packet-PLAYER_JOIN_PACKET', packet => {
             if (!(packet.username in this.players))
                 this.createPlayer(packet.username, packet.inGameName, packet.ready);
+        });
+        EventBus.on('packet-GAME_STATE_PACKET', packet => {
+            if (this.activeCard) this.activeCard.destroy(true);
+            this.activeCard = Card.fromCardDTO(this, this.activeCardX, this.activeCardY, packet.currentCard);
+            
+        });
+        EventBus.on('packet-TAKE_CARD_PACKET', packet => {
+            const card = Card.fromCardDTO(this, this.deckCardX, this.deckCardY, packet.card);
+            this.mainPlayer.giveCard(card);
+        });
+        EventBus.on('action-GAME_START', () => {
+            this.waitText.setVisible(false);
+            this.deckCard.setVisible(true);
         });
         EventBus.on('action-READY', packet => {
             this.getPlayerFromPacket(packet)?.onReady();
@@ -38,14 +57,18 @@ export class Lobby extends Scene {
             this.rearrangePlayers();
         });
         EventBus.on('action-TAKE_CARD', packet => {
-            this.getPlayerFromPacket(packet)?.giveCard();
-        })
+            const pl = this.getPlayerFromPacket(packet);
+            if (pl !== this.mainPlayer) pl.giveCard(new Card(this, this.deckCardX, this.deckCardY));
+        });
     }
     
     createMainPlayer(username, name) {
         this.mainPlayer = new MainPlayer(this, username, name);
         this.players[username] = this.mainPlayer;
         this.rearrangePlayers();
+        for (let i=0; i<10; i++){
+            this.mainPlayer.giveCard();
+        }
     }
     
     createPlayer(username, name, ready) {
@@ -59,7 +82,7 @@ export class Lobby extends Scene {
         const centerX = this.cameras.main.centerX;
         const centerY = this.cameras.main.centerY;
 
-        const radius = 240; // Радиус окружности
+        const radius = 280; // Радиус окружности
         const playerCount = Object.values(this.players).length;
         Object.values(this.players).forEach((pl, i) => {
             const angle = (i / playerCount) * (2 * Math.PI) + (Math.PI / 2); // Угол в радианах

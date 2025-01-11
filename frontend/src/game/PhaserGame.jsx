@@ -3,7 +3,7 @@ import StartGame from './main';
 import {EventBus} from './EventBus';
 
 export const TEXT_STYLE = {
-    fontFamily: 'Arial Black', fontSize: 24, color: '#ffffff',
+    fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
     stroke: '#000000', strokeThickness: 6,
     align: 'center'
 };
@@ -36,6 +36,11 @@ function PhaserGameFunc({packetHandler, username, name}, ref) {
             currentScene.createMainPlayer(username, name);
         });
         EventBus.on('ready-pressed', () => packetHandler.sendAction('READY'));
+        EventBus.on('put-card', (card) => packetHandler.sendPacket({
+            type: 'PUT_CARD_PACKET',
+            cardId: card.id,
+            newColor: card.newColor,
+        }));
 
         return () => {
             EventBus.removeListener('current-scene-ready');

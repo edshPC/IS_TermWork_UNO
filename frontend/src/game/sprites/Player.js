@@ -28,22 +28,43 @@ export class Player extends GameObjects.Container {
     }
 
     move(x, y, angle = 0) {
-        this.scene.tweens.add({
-            targets: this,
-            x, y, angle: angle / Math.PI * 180,
-            duration: 200,
+        return new Promise(resolve => {
+            this.scene.tweens.add({
+                targets: this,
+                x, y, angle: angle / Math.PI * 180,
+                duration: 200,
+                onComplete: resolve,
+            });
         });
     }
     
-    giveCard(id = -1, type = null, color = null, value = null) {
-        let card = new Card(this.scene, 0, -30, id, type, color, value);
-        card.setScale(.5);
+    async giveCard(card) {
+        await card.move(0, -30)
         this.cards.push(card);
         this.add(card);
+        this.rearrangeCards();
+        return card;
+    }
+    
+    async putAndRemoveCard(id = -1) {
+        const card = id === -1 ? 
+            this.cards[Math.floor(Math.random() * this.cards.length)] :
+            this.cards.find(card => card.id === id);
+        if (!card) return;
+        card.move(this.scene.activeCardX, this.scene.activeCardY);
     }
     
     rearrangeCards() {
-        
+        const cardCount = this.cards.length;
+        const minSpace = 20, maxSpace = 600
+        const normLength = 300, maxLength = 1000;
+        let space = normLength / cardCount;
+        space = Math.min(Math.max(space, minSpace), maxSpace);
+        if (space * cardCount > maxLength) space = maxLength / cardCount;
+        let x = - (space * cardCount / 2);
+        this.cards.forEach(card => {
+           card.move(x); x += space;
+        });
     }
 
 }
