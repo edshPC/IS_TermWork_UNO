@@ -11,6 +11,7 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public class GamePlayer extends Player {
@@ -19,7 +20,7 @@ public class GamePlayer extends Player {
 
     @Getter
     private final UUID uuid = UUID.randomUUID();
-    private final Map<Long, CardDTO> cards = new HashMap<>();
+    private final Map<Long, CardDTO> cards = new ConcurrentHashMap<>();
 
     @Getter
     @Setter

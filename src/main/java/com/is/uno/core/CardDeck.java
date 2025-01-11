@@ -5,11 +5,12 @@ import com.is.uno.model.Deck;
 import com.is.uno.model.Type;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class CardDeck {
 
     private final WeightedRandomBag<CardDTO> deck = new WeightedRandomBag<>();
-    private long lastCardId = 0;
+    private final AtomicLong lastCardId = new AtomicLong(0);
 
     public void fillDeck(List<Deck> deckDB) {
         for (Deck d : deckDB) {
@@ -24,7 +25,7 @@ public class CardDeck {
 
     public CardDTO takeCard() {
         var card = deck.get();
-        card.setId(++lastCardId);
+        card.setId(lastCardId.incrementAndGet());
         return card;
     }
 

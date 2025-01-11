@@ -163,12 +163,7 @@ public class GameCore {
 
     public void onPlayerTurnEnd() {
         switchPlayer();
-
-        var pkt = new GameStatePacket();
-        pkt.setCurrentPlayer(state.getCurrentPlayer().getUsername());
-        pkt.setCurrentCard(state.getCurrentCard());
-        pkt.setOrderReversed(state.isOrderReversed());
-        packetHandler.sendPacketToAllPlayers(pkt);
+        packetHandler.sendPacketToAllPlayers(state.getGameStatePacket());
     }
 
     public void saveMessage(GamePlayer player, String message) {
@@ -180,15 +175,16 @@ public class GameCore {
     }
 
     private void startGame() {
+        state = new GameState();
+        packetHandler.sendPacketToAllPlayers(ActionPacket.create(Action.GAME_START));
         var deck = new CardDeck();
         deck.fillDeck(deckService.getActualDeck());
-        state = new GameState();
         playerOrder.startFrom(0);
         state.setCurrentPlayer(playerOrder.next());
         state.setCurrentCard(deck.takeNumberCard());
         state.setDeck(deck);
+        packetHandler.sendPacketToAllPlayers(state.getGameStatePacket());
 
-        packetHandler.sendPacketToAllPlayers(ActionPacket.create(Action.GAME_START));
         // раздача карт
         for (int i = 0; i < INITIAL_CARDS * players.size(); i++) {
             giveCardsToPlayer(state.getCurrentPlayer(), 1);

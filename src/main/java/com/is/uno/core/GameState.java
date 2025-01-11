@@ -1,6 +1,7 @@
 package com.is.uno.core;
 
 import com.is.uno.dto.api.CardDTO;
+import com.is.uno.dto.packet.GameStatePacket;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,14 @@ public class GameState {
 
     public void reverseOrder() {
         orderReversed = !orderReversed;
+    }
+
+    public GameStatePacket getGameStatePacket() {
+        var pkt = new GameStatePacket();
+        pkt.setCurrentPlayer(currentPlayer.getUsername());
+        pkt.setCurrentCard(currentCard);
+        pkt.setOrderReversed(orderReversed);
+        return pkt;
     }
 
 }
