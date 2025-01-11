@@ -5,8 +5,6 @@ import com.is.uno.service.GameRoomService;
 import com.is.uno.service.MessageService;
 import com.is.uno.service.PlayerService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 

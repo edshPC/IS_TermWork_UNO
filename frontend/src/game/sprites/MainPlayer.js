@@ -2,7 +2,7 @@ import {Player} from "./Player.js";
 import {EventBus} from "../EventBus.js";
 
 export class MainPlayer extends Player {
-    clickedCard;
+    
     constructor(scene, username, name) {
         super(scene, username, name);
         this.readySprite
@@ -17,13 +17,8 @@ export class MainPlayer extends Player {
         card.setInteractive();
         card.onClick = () => {
             EventBus.emit('put-card', card);
-            this.clickedCard = card;
         }
         return card;
-    }
-
-    async putAndRemoveCard() {
-        await super.putAndRemoveCard(this.clickedCard.id);
     }
 
 }

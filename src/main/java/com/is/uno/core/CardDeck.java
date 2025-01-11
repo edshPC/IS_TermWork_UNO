@@ -24,7 +24,7 @@ public class CardDeck {
     }
 
     public CardDTO takeCard() {
-        var card = deck.get();
+        var card = deck.get().clone();
         card.setId(lastCardId.incrementAndGet());
         return card;
     }

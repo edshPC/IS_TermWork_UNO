@@ -44,6 +44,9 @@ export class Lobby extends Scene {
             const card = Card.fromCardDTO(this, this.deckCardX, this.deckCardY, packet.card);
             this.mainPlayer.giveCard(card);
         });
+        EventBus.on('packet-PUT_CARD_PACKET', packet => {
+            this.mainPlayer.putAndRemoveCard(packet.cardId);
+        });
         EventBus.on('action-GAME_START', () => {
             this.waitText.setVisible(false);
             this.deckCard.setVisible(true);
@@ -62,7 +65,7 @@ export class Lobby extends Scene {
             if (pl !== this.mainPlayer) pl.giveCard(new Card(this, this.deckCardX, this.deckCardY));
         });
         EventBus.on('action-PUT_CARD', packet => {
-            this.getPlayerFromPacket(packet)?.putAndRemoveCard();
+            this.getPlayerFromPacket(packet, true)?.putAndRemoveCard();
         });
     }
     
@@ -100,8 +103,10 @@ export class Lobby extends Scene {
         this.scene.start('Game');
     }
     
-    getPlayerFromPacket = (packet) => {
-        return packet.username? this.players[packet.username] : this.mainPlayer;
+    getPlayerFromPacket = (packet, excludeMain) => {
+        const pl = packet.username? this.players[packet.username] : this.mainPlayer;
+        if (excludeMain && pl === this.mainPlayer) return null;
+        return pl;
     }
     
 }
