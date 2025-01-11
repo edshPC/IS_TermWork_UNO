@@ -23,7 +23,7 @@ export class Lobby extends Scene {
         this.deckCard = new Card(this, this.deckCardX, this.deckCardY);
         this.deckCard.setInteractive();
         this.deckCard.onClick = () => {
-            
+            EventBus.emit('take-card');
         }
         this.deckCard.setVisible(false);
         this.initEvents();
@@ -60,15 +60,15 @@ export class Lobby extends Scene {
             const pl = this.getPlayerFromPacket(packet);
             if (pl !== this.mainPlayer) pl.giveCard(new Card(this, this.deckCardX, this.deckCardY));
         });
+        EventBus.on('action-PUT_CARD', packet => {
+            this.getPlayerFromPacket(packet)?.putAndRemoveCard();
+        });
     }
     
     createMainPlayer(username, name) {
         this.mainPlayer = new MainPlayer(this, username, name);
         this.players[username] = this.mainPlayer;
         this.rearrangePlayers();
-        for (let i=0; i<10; i++){
-            this.mainPlayer.giveCard();
-        }
     }
     
     createPlayer(username, name, ready) {

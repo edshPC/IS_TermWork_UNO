@@ -22,5 +22,9 @@ export class MainPlayer extends Player {
         return card;
     }
 
+    async putAndRemoveCard() {
+        await super.putAndRemoveCard(this.clickedCard.id);
+    }
+
 }
 

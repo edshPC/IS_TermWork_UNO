@@ -1,5 +1,6 @@
 package com.is.uno.socket;
 
+import com.is.uno.core.GameCore;
 import com.is.uno.core.GameCoreProvider;
 import com.is.uno.dto.packet.Packet;
 import com.is.uno.exception.ForbiddenException;
@@ -30,8 +31,10 @@ public class UpdateController {
         }
         User user = (User) authentication.getPrincipal();
 
-        PacketHandler packetHandler = gameCoreProvider.provideGameCore(uuid).getPacketHandler();
+        GameCore gameCore = gameCoreProvider.provideGameCore(uuid);
+        PacketHandler packetHandler = gameCore.getPacketHandler();
         packetHandler.handle(packet, user);
+        if (gameCore.getPlayerCount() == 0) gameCoreProvider.destroyGameCore(gameCore);
     }
 
 

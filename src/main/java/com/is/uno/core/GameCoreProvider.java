@@ -51,5 +51,12 @@ public class GameCoreProvider {
         }
         return gameCoreUuids.get(gameUUID);
     }
+
+    public void destroyGameCore(GameCore gameCore) {
+        gameCoreIds.remove(gameCore.getRoomId());
+        gameCoreUuids.remove(gameCore.getUuid());
+        gameCore.destroy();
+    }
+
 }
 

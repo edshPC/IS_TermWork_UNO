@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.parameters.P;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class GameCore {
 
+    @Getter
     private final Long roomId;
     private final SimpMessagingTemplate messagingTemplate;
     private final GameRoomService gameRoomService;
@@ -46,6 +46,10 @@ public class GameCore {
     void init() {
         room = gameRoomService.findById(roomId);
         packetHandler = new PacketHandler(messagingTemplate, this);
+    }
+
+    void destroy() {
+
     }
 
     public GamePlayer getPlayerByUser(User user) {
@@ -87,7 +91,6 @@ public class GameCore {
     public void onPlayerLeave(GamePlayer player) {
         players.remove(player.getUsername());
         if (players.isEmpty()) {
-            // TODO remove game
             return;
         }
         if(state != null && state.getCurrentPlayer().equals(player)) switchPlayer();
@@ -169,6 +172,10 @@ public class GameCore {
 
     public void saveMessage(GamePlayer player, String message) {
         messageService.saveMessage(roomId, player.getPlayer(), message);
+    }
+
+    public int getPlayerCount() {
+        return players.size();
     }
 
     private void startGame() {

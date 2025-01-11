@@ -51,7 +51,8 @@ export class Player extends GameObjects.Container {
             this.cards[Math.floor(Math.random() * this.cards.length)] :
             this.cards.find(card => card.id === id);
         if (!card) return;
-        card.move(this.scene.activeCardX, this.scene.activeCardY);
+        await card.move(this.scene.activeCardX, this.scene.activeCardY);
+        card.setVisible(false);
     }
     
     rearrangeCards() {
