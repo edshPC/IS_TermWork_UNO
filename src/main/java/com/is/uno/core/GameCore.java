@@ -116,7 +116,7 @@ public class GameCore {
         checkPlayerTurn(player);
         var currentCard = state.getCurrentCard();
         if (!card.canPlaceOn(currentCard)) throw new IllegalStateException("Вы не можете положить эту карту сейчас");
-        if (card.getColor_of_card() == Color.BLACK) card.setColor_of_card(requestedColor);
+        if (card.getColor() == Color.BLACK) card.setNewColor(requestedColor);
         state.setCurrentCard(card);
         player.removeCard(card.getId());
 
@@ -125,7 +125,7 @@ public class GameCore {
         packetHandler.sendPacketToPlayer(pkt, player);
         packetHandler.sendPacketToAllPlayers(player.getActionPacket(Action.PUT_CARD));
 
-        switch (card.getType_of_card()) {
+        switch (card.getType()) {
             case CHANGE_DIRECTION -> {
                 if (players.size() == 2) switchPlayer();
                 else state.reverseOrder();

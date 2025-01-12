@@ -4,26 +4,26 @@ import com.is.uno.model.Color;
 import com.is.uno.model.Type;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class CardDTO implements Cloneable {
     private Long id;
-    private Type type_of_card;
-    private Color color_of_card;
+    private Type type;
+    private Color color;
+    private Color newColor;
     private Integer value;
 
     public boolean canPlaceOn(CardDTO other) {
-        if (color_of_card == Color.BLACK) return true;
-        if (color_of_card == other.color_of_card) return true;
-        if (type_of_card == Type.NUMBER &&
-            other.type_of_card == Type.NUMBER &&
+        if (color == Color.BLACK) return true;
+        if (color == other.color ||
+            color == other.newColor) return true;
+        if (type == Type.NUMBER &&
+            other.type == Type.NUMBER &&
             value.equals(other.value)) return true;
-        if (type_of_card != Type.NUMBER &&
-            type_of_card == other.type_of_card) return true;
+        if (type != Type.NUMBER &&
+            type == other.type) return true;
         return false;
     }
 

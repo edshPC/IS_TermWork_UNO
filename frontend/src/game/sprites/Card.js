@@ -34,12 +34,13 @@ export class Card extends GameObjects.Sprite {
     }
     
     static fromCardDTO(scene, x, y, cardDTO) {
-        return new Card(scene, x, y, cardDTO.id, cardDTO.type_of_card, cardDTO.color_of_card, cardDTO.value);
+        return new Card(scene, x, y, cardDTO.id, cardDTO.type, cardDTO.color, cardDTO.value);
     }
 
     updateTexture() {
         if (this.type) {
-            let frame = COLOR_OFFSETS[this.color] + TYPE_OFFSETS[this.type] + this.value;
+            let frame = COLOR_OFFSETS[this.color] + TYPE_OFFSETS[this.type];
+            if (this.type === 'NUMBER') frame += this.value;
             this.setTexture('cards', frame);
         } else {
             this.setTexture('card_back');
@@ -76,6 +77,43 @@ export class Card extends GameObjects.Sprite {
     
     onClick = card => {
         
+    }
+    
+    async requestColor() {
+        return new Promise(resolve => {
+            // Создание черного квадратика
+            const blackSquare = this.scene.add.rectangle(640, 360, 200, 200, 0x111111);
+            blackSquare.setOrigin(0.5, 0.5);
+
+            // Создание цветных квадратиков
+            const colors = {
+                RED: 0xff1111,
+                BLUE: 0x1111ff,
+                YELLOW: 0xffff11,
+                GREEN: 0x11ff11
+            };
+
+            const colorPositions = [
+                { x: 590, y: 310 },
+                { x: 590, y: 410 },
+                { x: 690, y: 310 },
+                { x: 690, y: 410 }
+            ];
+            const squares = [blackSquare];
+            Object.keys(colors).forEach((color, index) => {
+                const colorSquare = this.scene.add.rectangle(colorPositions[index].x, colorPositions[index].y, 80, 80, colors[color]);
+                colorSquare.setOrigin(0.5, 0.5);
+                colorSquare.setInteractive({useHandCursor: true});
+                colorSquare.on('pointerover', () => colorSquare.setScale(1.1))
+                    .on('pointerout', () => colorSquare.setScale(1))
+                    .on('pointerup', () => {
+                    this.newColor = color; // Установка нового цвета
+                    squares.forEach(square => square.destroy(true));
+                    resolve();
+                });
+                squares.push(colorSquare);
+            });
+        });
     }
     
 }

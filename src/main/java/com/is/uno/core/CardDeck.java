@@ -15,8 +15,8 @@ public class CardDeck {
     public void fillDeck(List<Deck> deckDB) {
         for (Deck d : deckDB) {
             deck.addEntry(CardDTO.builder()
-                            .type_of_card(d.getCard().getType_of_card())
-                            .color_of_card(d.getCard().getColor_of_card())
+                            .type(d.getCard().getType_of_card())
+                            .color(d.getCard().getColor_of_card())
                             .value(d.getCard().getValue())
                             .build(),
                     d.getWeight());
@@ -31,7 +31,7 @@ public class CardDeck {
 
     public CardDTO takeNumberCard() {
         var card = takeCard();
-        while (card.getType_of_card() != Type.NUMBER) card = takeCard();
+        while (card.getType() != Type.NUMBER) card = takeCard();
         return card;
     }
 

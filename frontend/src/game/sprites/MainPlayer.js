@@ -15,7 +15,8 @@ export class MainPlayer extends Player {
     async giveCard(card) {
         await super.giveCard(card);
         card.setInteractive();
-        card.onClick = () => {
+        card.onClick = async () => {
+            if (card.color === 'BLACK') await card.requestColor();
             EventBus.emit('put-card', card);
         }
         return card;
