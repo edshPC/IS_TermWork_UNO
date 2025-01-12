@@ -1,5 +1,6 @@
 import {GameObjects} from "phaser";
 import {TEXT_STYLE} from "../PhaserGame.jsx";
+import {CARD_COLORS} from "./Card.js";
 
 export class Player extends GameObjects.Container {
 
@@ -13,6 +14,7 @@ export class Player extends GameObjects.Container {
 
         this.nameSprite = scene.add.text(0, 15, this.name, TEXT_STYLE).setOrigin();
         this.readySprite = scene.add.text(0, -15, 'Не готов', TEXT_STYLE).setOrigin();
+        this.readySprite.setColor('MAGENTA')
 
         this.add([
             this.nameSprite,
@@ -24,6 +26,7 @@ export class Player extends GameObjects.Container {
     onReady() {
         this.ready = !this.ready;
         this.readySprite.setText(this.ready ? 'Готов' : 'Не готов');
+        this.readySprite.setColor(this.ready ? 'LIME' : 'MAGENTA');
     }
 
     move(x, y, angle = 0) {
@@ -35,6 +38,10 @@ export class Player extends GameObjects.Container {
                 onComplete: resolve,
             });
         });
+    }
+    
+    setCurrentTurn(isActive = true) {
+        this.nameSprite.setColor(isActive ? 'LIME' : 'GREY');
     }
     
     async giveCard(card) {

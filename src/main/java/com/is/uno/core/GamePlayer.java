@@ -30,6 +30,9 @@ public class GamePlayer extends Player {
     @Getter
     @Setter
     private boolean UNOCalled = false;
+    @Getter
+    @Setter
+    private boolean cardTaken = false;
 
     public PlayerActionPacket getActionPacket(Action action) {
         PlayerActionPacket packet = new PlayerActionPacket();

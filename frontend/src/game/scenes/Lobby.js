@@ -58,6 +58,8 @@ export class Lobby extends Scene {
                 repeat: -1,
                 ease: 'Linear'
             });
+            Object.values(this.players).forEach(player =>
+                player.setCurrentTurn(packet.currentPlayer === player.username));
         });
         EventBus.on('packet-TAKE_CARD_PACKET', packet => {
             const card = Card.fromCardDTO(this, this.deckCardX, this.deckCardY, packet.card);

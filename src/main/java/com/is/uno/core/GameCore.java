@@ -146,13 +146,20 @@ public class GameCore {
         if (player.getCardCount() == 1 && !player.isUNOCalled()) giveCardsToPlayer(player, 2);
         if (player.getCardCount() == 0) gameOver(player);
         player.setUNOCalled(false);
+        player.setCardTaken(false);
     }
 
     public void onPlayerTakeCard(GamePlayer player) {
         checkPlayerTurn(player);
+        if (player.isCardTaken()) {
+            throw new IllegalStateException("Вы уже взяли карту");
+        }
         giveCardsToPlayer(player, 1);
-        if (!player.canPlaceCardOn(state.getCurrentCard()))
+        if (player.canPlaceCardOn(state.getCurrentCard())) {
+            player.setCardTaken(true);
+        } else {
             onPlayerTurnEnd();
+        }
     }
 
     public void onPlayerCallUNO(GamePlayer player) {
