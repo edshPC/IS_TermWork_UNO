@@ -13,10 +13,11 @@ export class Lobby extends Scene {
     activeCardY = this.centerY + 50;
     activeCard;
     deckCardX = this.centerX + 60;
-    deckCardY = this.centerY + 50;
+    deckCardY = this.activeCardY;
     deckCard;
     loopArrows;
     activeColor;
+    unoButton;
 
     constructor() {
         super('Lobby');
@@ -24,12 +25,19 @@ export class Lobby extends Scene {
 
     create() {
         this.waitText = this.add.text(this.centerX, this.centerY, 'Ожидание игроков...', TEXT_STYLE).setDepth(100).setOrigin(0.5);
-        this.deckCard = new Card(this, this.deckCardX, this.deckCardY);
+        this.deckCard = new Card(this, this.deckCardX, this.deckCardY)
+            .setDepth(1).setVisible(false);
         this.deckCard.setInteractive();
         this.deckCard.onClick = () => {
             EventBus.emit('take-card');
         }
-        this.deckCard.setVisible(false);
+        this.unoButton = this.add.sprite(this.deckCardX + 140, this.centerY, 'uno_button')
+            .setScale(.2).setVisible(false).setInteractive({useHandCursor: true})
+            .on('pointerover', () => this.unoButton.setScale(.25))
+            .on('pointerout', () => this.unoButton.setScale(.2))
+            .on('pointerup', () => {
+                EventBus.emit('uno-called');
+            });
         this.initEvents();
         EventBus.emit('current-scene-ready', this);
     }
@@ -40,14 +48,12 @@ export class Lobby extends Scene {
                 this.createPlayer(packet.username, packet.inGameName, packet.ready);
         });
         EventBus.on('packet-GAME_STATE_PACKET', packet => {
-            if (this.activeCard) this.activeCard.destroy(true);
+            this.destroyAll();
             this.activeCard = Card.fromCardDTO(this, this.activeCardX, this.activeCardY, packet.currentCard);
             this.activeCard.setDepth(-1);
-            if (this.activeColor) this.activeColor.destroy(true);
             const current_color = packet.currentCard.newColor || packet.currentCard.color;
             this.activeColor = this.add.circle(this.centerX - 160, this.centerY, 45, CARD_COLORS[current_color]);
             this.activeColor.setStrokeStyle(5, 0xffffff);
-            if (this.loopArrows) this.loopArrows.destroy(true);
             this.loopArrows = this.add.sprite(this.centerX - 160, this.centerY, 'loop_arrows');
             this.loopArrows.setScale(.11);
             this.loopArrows.setFlipX(packet.orderReversed);
@@ -68,9 +74,43 @@ export class Lobby extends Scene {
         EventBus.on('packet-PUT_CARD_PACKET', packet => {
             this.mainPlayer.putAndRemoveCard(packet.cardId);
         });
+        EventBus.on('packet-TEXT_PACKET', packet => {
+           if (packet.textType === 'SYSTEM') {
+               const txt = this.add.text(this.centerX, -50, packet.text, TEXT_STYLE);
+               txt.setColor('MAGENTA');
+               txt.setOrigin(.5);
+               txt.setDepth(10);
+               this.tweens.add({
+                   targets: txt,
+                   y: this.centerY,
+                   ease: 'sine.inout',
+                   onComplete: () => {
+                       this.tweens.add({
+                           targets: txt,
+                           y: -50,
+                           delay: 1000,
+                           ease: 'sine.inout',
+                           onComplete: () => {
+                                txt.destroy(true);
+                           }
+                       })
+                   }
+               })
+           } 
+        });
+        EventBus.on('packet-GAME_OVER_PACKET',  async packet => {
+            const promises = [];
+            Object.values(this.players).forEach(player => promises.push(player.onGameOver()));
+            await Promise.all(promises);
+            this.destroyAll();
+            this.waitText.setVisible(true);
+            this.deckCard.setVisible(false);
+            this.unoButton.setVisible(false);
+        });
         EventBus.on('action-GAME_START', () => {
             this.waitText.setVisible(false);
             this.deckCard.setVisible(true);
+            this.unoButton.setVisible(true);
             Object.values(this.players).forEach(player => player.onGameStart());
         });
         EventBus.on('action-READY', packet => {
@@ -88,6 +128,9 @@ export class Lobby extends Scene {
         EventBus.on('action-PUT_CARD', packet => {
             this.getPlayerFromPacket(packet, true)?.putAndRemoveCard();
         });
+        EventBus.on('action-CALL_UNO', packet => {
+            this.getPlayerFromPacket(packet)?.callUNO();
+        });
     }
     
     createMainPlayer(username, name) {
@@ -97,8 +140,8 @@ export class Lobby extends Scene {
     }
     
     createPlayer(username, name, ready) {
-        let player = new Player(this, username, name);
-        if (ready) player.onReady();
+        const player = new Player(this, username, name);
+        player.onReady(ready);
         this.players[username] = player;
         this.rearrangePlayers();
     }
@@ -115,6 +158,7 @@ export class Lobby extends Scene {
             const y = centerY + radius * Math.sin(angle); // Вычисляем Y координату
             //pl.move(x, y, (angle - Math.PI/2));
             pl.move(x, y);
+            if (i > 0 && playerCount > 2) pl.setScale(1 / (1.1 ** playerCount));
         });
     }
 
@@ -129,6 +173,15 @@ export class Lobby extends Scene {
         const pl = packet.username? this.players[packet.username] : this.mainPlayer;
         if (excludeMain && pl === this.mainPlayer) return null;
         return pl;
+    }
+    
+    destroyAll() {
+        this.activeCard?.destroy(true);
+        this.activeCard = null;
+        this.activeColor?.destroy(true);
+        this.activeColor = null;
+        this.loopArrows?.destroy(true);
+        this.loopArrows = null;        
     }
     
 }

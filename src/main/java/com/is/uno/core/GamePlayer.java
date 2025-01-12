@@ -76,7 +76,7 @@ public class GamePlayer extends Player {
     public void callUNO() {
         if (UNOCalled) throw new IllegalStateException("Вы уже сказали UNO");
         if (cards.size() != 2)
-            throw new IllegalStateException("Вы можете говорить UNO только перед предпоследним ходом");
+            throw new IllegalStateException("Вы не можете сказать UNO сейчас");
         UNOCalled = true;
     }
 

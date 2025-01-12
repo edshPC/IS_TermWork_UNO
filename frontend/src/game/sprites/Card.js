@@ -24,6 +24,7 @@ export const CARD_COLORS = {
 
 export class Card extends GameObjects.Sprite {
     newColor;
+
     constructor(scene, x, y, id = -1, type = null, color = null, value = null) {
         super(scene, x, y, 'card_back');
 
@@ -38,7 +39,7 @@ export class Card extends GameObjects.Sprite {
         this.setScale(.3)
         this.updateTexture();
     }
-    
+
     static fromCardDTO(scene, x, y, cardDTO) {
         return new Card(scene, x, y, cardDTO.id, cardDTO.type, cardDTO.color, cardDTO.value);
     }
@@ -63,9 +64,9 @@ export class Card extends GameObjects.Sprite {
             });
         });
     }
-    
+
     setInteractive() {
-        super.setInteractive({ useHandCursor: true })
+        return super.setInteractive({useHandCursor: true})
             .on('pointerover', this.onHoverState)
             .on('pointerout', this.onRestState)
             .on('pointerup', () => this.onClick(this));
@@ -75,43 +76,42 @@ export class Card extends GameObjects.Sprite {
         this.setScale(.4);
         //this.setDepth(1);
     }
-    
+
     onRestState = () => {
         this.setScale(.3);
         //this.setDepth(0);
     }
-    
+
     onClick = card => {
-        
+
     }
-    
+
     async requestColor() {
         return new Promise(resolve => {
             // Создание черного квадратика
-            const blackSquare = this.scene.add.rectangle(this.scene.centerX, this.scene.centerY, 200, 200, 0x111111);
-            blackSquare.setOrigin(0.5, 0.5);
-
+            const blackSquare = this.scene.add.rectangle(this.scene.centerX, this.scene.centerY, 200, 200, 0x111111)
+                .setOrigin(.5).setDepth(2);
             const colorPositions = [
-                { x: blackSquare.x - 50, y: blackSquare.y - 50 },
-                { x: blackSquare.x - 50, y: blackSquare.y + 50 },
-                { x: blackSquare.x + 50, y: blackSquare.y - 50 },
-                { x: blackSquare.x + 50, y: blackSquare.y + 50 }
+                {x: blackSquare.x - 50, y: blackSquare.y - 50},
+                {x: blackSquare.x - 50, y: blackSquare.y + 50},
+                {x: blackSquare.x + 50, y: blackSquare.y - 50},
+                {x: blackSquare.x + 50, y: blackSquare.y + 50}
             ];
             const squares = [blackSquare];
             Object.keys(CARD_COLORS).forEach((color, index) => {
-                const colorSquare = this.scene.add.rectangle(colorPositions[index].x, colorPositions[index].y, 80, 80, CARD_COLORS[color]);
-                colorSquare.setOrigin(0.5, 0.5);
+                const colorSquare = this.scene.add.rectangle(colorPositions[index].x, colorPositions[index].y, 80, 80, CARD_COLORS[color])
+                    .setOrigin(.5).setDepth(3);
                 colorSquare.setInteractive({useHandCursor: true});
                 colorSquare.on('pointerover', () => colorSquare.setScale(1.1))
                     .on('pointerout', () => colorSquare.setScale(1))
                     .on('pointerup', () => {
-                    this.newColor = color; // Установка нового цвета
-                    squares.forEach(square => square.destroy(true));
-                    resolve();
-                });
+                        this.newColor = color; // Установка нового цвета
+                        squares.forEach(square => square.destroy(true));
+                        resolve();
+                    });
                 squares.push(colorSquare);
             });
         });
     }
-    
+
 }

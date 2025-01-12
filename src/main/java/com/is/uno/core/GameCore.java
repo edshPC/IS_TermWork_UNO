@@ -143,7 +143,10 @@ public class GameCore {
 
         onPlayerTurnEnd();
 
-        if (player.getCardCount() == 1 && !player.isUNOCalled()) giveCardsToPlayer(player, 2);
+        if (player.getCardCount() == 1 && !player.isUNOCalled()) {
+            giveCardsToPlayer(player, 2);
+            packetHandler.sendPacketToPlayer(TextPacket.createSystem("Вы не сказали UNO и получили 2 карты"), player);
+        }
         if (player.getCardCount() == 0) gameOver(player);
         player.setUNOCalled(false);
         player.setCardTaken(false);

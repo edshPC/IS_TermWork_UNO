@@ -1,6 +1,5 @@
 import {GameObjects} from "phaser";
 import {TEXT_STYLE} from "../PhaserGame.jsx";
-import {CARD_COLORS} from "./Card.js";
 
 export class Player extends GameObjects.Container {
 
@@ -23,10 +22,10 @@ export class Player extends GameObjects.Container {
         scene.add.existing(this);
     }
 
-    onReady() {
-        this.ready = !this.ready;
-        this.readySprite.setText(this.ready ? 'Готов' : 'Не готов');
-        this.readySprite.setColor(this.ready ? 'LIME' : 'MAGENTA');
+    onReady(ready = !this.ready) {
+        this.ready = ready;
+        this.readySprite.setText(ready ? 'Готов' : 'Не готов');
+        this.readySprite.setColor(ready ? 'LIME' : 'MAGENTA');
     }
 
     move(x, y, angle = 0) {
@@ -82,11 +81,29 @@ export class Player extends GameObjects.Container {
         await Promise.all(promises);
     }
     
+    callUNO() {
+        const unoButton = this.scene.add.sprite(0, 0, 'uno_button')
+            .setScale(.3).setDepth(1);
+        this.add(unoButton);
+        this.scene.tweens.add({
+            targets: unoButton,
+            y: -300,
+            delay: 500,
+            ease: 'sine.inout',
+            onComplete: () => {
+                unoButton.destroy(true);
+            }
+        })
+    }
+    
     onGameStart() {
         this.readySprite.setVisible(false);
     }
     
-    onGameOver() {
+    async onGameOver() {
+        while (this.cards.length > 0) await this.putAndRemoveCard();
+        this.nameSprite.setColor('WHITE');
+        this.onReady(false);
         this.readySprite.setVisible(true);
     }
 
