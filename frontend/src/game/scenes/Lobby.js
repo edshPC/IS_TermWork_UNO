@@ -7,6 +7,8 @@ import {Card, CARD_COLORS} from "../sprites/Card.js";
 
 export class Lobby extends Scene {
     players = {};
+    animationQueue = [];
+    animationInProcess = false;
     centerX = 640;
     centerY = 360;
     activeCardX = this.centerX - 60;
@@ -69,7 +71,7 @@ export class Lobby extends Scene {
         });
         EventBus.on('packet-TAKE_CARD_PACKET', packet => {
             const card = Card.fromCardDTO(this, this.deckCardX, this.deckCardY, packet.card);
-            this.mainPlayer.giveCard(card);
+            this.pushAnimation(() => this.mainPlayer.giveCard(card));
         });
         EventBus.on('packet-PUT_CARD_PACKET', packet => {
             this.mainPlayer.putAndRemoveCard(packet.cardId);
@@ -123,7 +125,7 @@ export class Lobby extends Scene {
         });
         EventBus.on('action-TAKE_CARD', packet => {
             const pl = this.getPlayerFromPacket(packet);
-            if (pl !== this.mainPlayer) pl.giveCard(new Card(this, this.deckCardX, this.deckCardY));
+            if (pl !== this.mainPlayer) this.pushAnimation(() => pl.giveCard(new Card(this, this.deckCardX, this.deckCardY)));
         });
         EventBus.on('action-PUT_CARD', packet => {
             this.getPlayerFromPacket(packet, true)?.putAndRemoveCard();
@@ -160,6 +162,22 @@ export class Lobby extends Scene {
             pl.move(x, y);
             if (i > 0 && playerCount > 2) pl.setScale(1 / (1.1 ** playerCount));
         });
+    }
+    
+    pushAnimation(func = async () => {}, ...args) {
+        this.animationQueue.push({func, args});
+        this.playAnimations();
+    }
+    
+    async playAnimations() {
+        if (this.animationInProcess) return;
+        this.animationInProcess = true;
+        while (this.animationQueue.length > 0) {
+            const {func, args} = this.animationQueue[0];
+            await func(...args);
+            this.animationQueue.shift();
+        }
+        this.animationInProcess = false;
     }
 
     changeScene() {
