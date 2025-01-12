@@ -13,10 +13,11 @@ export class Lobby extends Scene {
     activeCardY = this.centerY + 50;
     activeCard;
     deckCardX = this.centerX + 60;
-    deckCardY = this.centerY + 50;
+    deckCardY = this.activeCardY;
     deckCard;
     loopArrows;
     activeColor;
+    unoButton;
 
     constructor() {
         super('Lobby');
@@ -24,13 +25,19 @@ export class Lobby extends Scene {
 
     create() {
         this.waitText = this.add.text(this.centerX, this.centerY, 'Ожидание игроков...', TEXT_STYLE).setDepth(100).setOrigin(0.5);
-        this.deckCard = new Card(this, this.deckCardX, this.deckCardY);
+        this.deckCard = new Card(this, this.deckCardX, this.deckCardY)
+            .setDepth(1).setVisible(false);
         this.deckCard.setInteractive();
         this.deckCard.onClick = () => {
             EventBus.emit('take-card');
         }
-        this.deckCard.setDepth(1);
-        this.deckCard.setVisible(false);
+        this.unoButton = this.add.sprite(this.deckCardX + 140, this.centerY, 'uno_button')
+            .setScale(.2).setVisible(false).setInteractive({useHandCursor: true})
+            .on('pointerover', () => this.unoButton.setScale(.25))
+            .on('pointerout', () => this.unoButton.setScale(.2))
+            .on('pointerup', () => {
+                EventBus.emit('uno-called');
+            });
         this.initEvents();
         EventBus.emit('current-scene-ready', this);
     }
@@ -96,6 +103,7 @@ export class Lobby extends Scene {
         EventBus.on('action-GAME_START', () => {
             this.waitText.setVisible(false);
             this.deckCard.setVisible(true);
+            this.unoButton.setVisible(true);
             Object.values(this.players).forEach(player => player.onGameStart());
         });
         EventBus.on('action-READY', packet => {
@@ -112,6 +120,9 @@ export class Lobby extends Scene {
         });
         EventBus.on('action-PUT_CARD', packet => {
             this.getPlayerFromPacket(packet, true)?.putAndRemoveCard();
+        });
+        EventBus.on('action-CALL_UNO', packet => {
+            this.getPlayerFromPacket(packet)?.callUNO();
         });
     }
     

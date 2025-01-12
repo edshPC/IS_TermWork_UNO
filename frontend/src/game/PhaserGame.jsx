@@ -42,6 +42,7 @@ function PhaserGameFunc({packetHandler, username, name}, ref) {
             newColor: card.newColor,
         }));
         EventBus.on('take-card', () => packetHandler.sendAction('TAKE_CARD'));
+        EventBus.on('uno-called', () => packetHandler.sendAction('CALL_UNO'));
 
         return () => {
             EventBus.removeListener('current-scene-ready');

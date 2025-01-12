@@ -81,6 +81,21 @@ export class Player extends GameObjects.Container {
         await Promise.all(promises);
     }
     
+    callUNO() {
+        const unoButton = this.scene.add.sprite(0, 0, 'uno_button')
+            .setScale(.3).setDepth(1);
+        this.add(unoButton);
+        this.scene.tweens.add({
+            targets: unoButton,
+            y: -300,
+            delay: 500,
+            ease: 'sine.inout',
+            onComplete: () => {
+                unoButton.destroy(true);
+            }
+        })
+    }
+    
     onGameStart() {
         this.readySprite.setVisible(false);
     }
