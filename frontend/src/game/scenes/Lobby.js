@@ -48,14 +48,12 @@ export class Lobby extends Scene {
                 this.createPlayer(packet.username, packet.inGameName, packet.ready);
         });
         EventBus.on('packet-GAME_STATE_PACKET', packet => {
-            if (this.activeCard) this.activeCard.destroy(true);
+            this.destroyAll();
             this.activeCard = Card.fromCardDTO(this, this.activeCardX, this.activeCardY, packet.currentCard);
             this.activeCard.setDepth(-1);
-            if (this.activeColor) this.activeColor.destroy(true);
             const current_color = packet.currentCard.newColor || packet.currentCard.color;
             this.activeColor = this.add.circle(this.centerX - 160, this.centerY, 45, CARD_COLORS[current_color]);
             this.activeColor.setStrokeStyle(5, 0xffffff);
-            if (this.loopArrows) this.loopArrows.destroy(true);
             this.loopArrows = this.add.sprite(this.centerX - 160, this.centerY, 'loop_arrows');
             this.loopArrows.setScale(.11);
             this.loopArrows.setFlipX(packet.orderReversed);
@@ -100,6 +98,15 @@ export class Lobby extends Scene {
                })
            } 
         });
+        EventBus.on('packet-GAME_OVER_PACKET',  async packet => {
+            const promises = [];
+            Object.values(this.players).forEach(player => promises.push(player.onGameOver()));
+            await Promise.all(promises);
+            this.destroyAll();
+            this.waitText.setVisible(true);
+            this.deckCard.setVisible(false);
+            this.unoButton.setVisible(false);
+        });
         EventBus.on('action-GAME_START', () => {
             this.waitText.setVisible(false);
             this.deckCard.setVisible(true);
@@ -133,8 +140,8 @@ export class Lobby extends Scene {
     }
     
     createPlayer(username, name, ready) {
-        let player = new Player(this, username, name);
-        if (ready) player.onReady();
+        const player = new Player(this, username, name);
+        player.onReady(ready);
         this.players[username] = player;
         this.rearrangePlayers();
     }
@@ -166,6 +173,15 @@ export class Lobby extends Scene {
         const pl = packet.username? this.players[packet.username] : this.mainPlayer;
         if (excludeMain && pl === this.mainPlayer) return null;
         return pl;
+    }
+    
+    destroyAll() {
+        this.activeCard?.destroy(true);
+        this.activeCard = null;
+        this.activeColor?.destroy(true);
+        this.activeColor = null;
+        this.loopArrows?.destroy(true);
+        this.loopArrows = null;        
     }
     
 }
