@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 
 import {PhaserGame} from './PhaserGame.jsx';
 import PacketHandler from "./network/PacketHandler.js";

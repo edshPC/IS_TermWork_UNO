@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
@@ -7,26 +9,67 @@ import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { loginSuccess } from "../../storage/authSlice";
 
-const LoginPage = ({ onLogin, onNavigateRegister }) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+const LoginPage = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        setError('');
-        onLogin(username, password, setError);
+        try {
+            const response = await fetch("http://localhost:8080/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json;charset=utf-8" },
+                body: JSON.stringify({ username, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                dispatch(loginSuccess({ username, token: data.token }));
+                navigate("/main");
+            } else {
+                setError(data.message || "Ошибка входа");
+            }
+        } catch (err) {
+            setError("Произошла ошибка");
+        }
     };
+    // const [username, setUsername] = useState('');
+    // const [password, setPassword] = useState('');
+    // const [error, setError] = useState('');
+    // const dispatch = useDispatch();
+    // const navigate = useNavigate();
+    //
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     setError('');
+    //     try {
+    //         const response = await fetch('http://localhost:8080/api/auth/login', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    //             body: JSON.stringify({ username, password }),
+    //         });
+    //         const data = await response.json();
+    //         if (response.ok) {
+    //             dispatch(setUsername(username));
+    //             dispatch(setToken(data.token));
+    //             navigate('/main');
+    //         } else {
+    //             setError(data.message || "Неправильный пароль");
+    //         }
+    //     } catch (err) {
+    //         setError("Произошла ошибка при входе");
+    //     }
+    // };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
             <Card className="w-full max-w-md">
-                <CardHeader
-                    title="Войти в UNO"
-                    subheader="Введите свои данные для входа в игру"
-                />
-                <form onSubmit={handleSubmit}>
+                <CardHeader title="Войти в UNO" subheader="Введите свои данные для входа в игру" />
+                <form onSubmit={handleLogin}>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <TextField
@@ -67,7 +110,7 @@ const LoginPage = ({ onLogin, onNavigateRegister }) => {
                             variant="outlined"
                             color="primary"
                             fullWidth
-                            onClick={onNavigateRegister}
+                            onClick={() => navigate('/register')}
                             endIcon={<ArrowForwardIcon />}
                         >
                             Зарегистрироваться

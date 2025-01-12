@@ -1,7 +1,7 @@
-import {useEffect, useRef, useState} from "react";
-import {EventBus} from "../EventBus.js";
+import React, { useEffect, useRef, useState } from "react";
+import { EventBus } from "../EventBus.js";
 
-export default function GameChat({packetHandler}) {
+export default function GameChat({ packetHandler }) {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
@@ -15,11 +15,11 @@ export default function GameChat({packetHandler}) {
         });
         return () => EventBus.removeListener('packet-TEXT_PACKET');
     }, [isOpen]);
-    
+
     useEffect(() => {
         if (containerRef.current) containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }, [messages]);
-    
+
     const sendMessage = () => {
         if (message) packetHandler.sendPacket({
             type: 'TEXT_PACKET',
@@ -36,24 +36,42 @@ export default function GameChat({packetHandler}) {
     }
 
     const messagesComponent = (
-        <div>
-            <ul ref={containerRef}>
+        <div className="flex flex-col h-64 w-96 bg-blue-700 p-4 rounded-lg shadow-lg">
+            <div className="flex-grow overflow-y-auto" ref={containerRef}>
                 {messages.map((message, i) => (
-                    <li key={i}>
+                    <div key={i} className="mb-2">
                         <b>{message.sender}</b> &gt; {message.text}
-                    </li>
+                    </div>
                 ))}
-            </ul>
-            <input className="input-select rounded box" type="text" placeholder="Сообщение"
-                   value={message} onChange={handleTyping} onKeyDown={onInputKey}/>
-            <button className="rounded margin padding" onClick={sendMessage}>Отправить</button>
+            </div>
+            <div className="flex mt-2">
+                <input
+                    className="flex-grow rounded-l-lg px-2 py-1 text-black"
+                    type="text"
+                    placeholder="Сообщение"
+                    value={message}
+                    onChange={handleTyping}
+                    onKeyDown={onInputKey}
+                />
+                <button
+                    className="bg-pink-700 text-white rounded-r-lg px-2 py-1"
+                    onClick={sendMessage}
+                >
+                    Отправить
+                </button>
+            </div>
         </div>
     );
 
-    return (<div className="container chat">
-        {isOpen && messagesComponent}
-        <button className={"rounded full " + (note ? "error" : "")}
-                onClick={openChat}>{isOpen ? "Закрыть" : "Открыть"} чат
-        </button>
-    </div>);
+    return (
+        <div className="fixed bottom-4 right-4">
+            {isOpen && messagesComponent}
+            <button
+                className={`bg-blue-700 text-white rounded-lg px-4 py-2 shadow-lg ${note ? "animate-bounce" : ""}`}
+                onClick={openChat}
+            >
+                {isOpen ? "Закрыть" : "Открыть"} чат
+            </button>
+        </div>
+    );
 }

@@ -1,98 +1,6 @@
-// import React, { useState } from 'react';
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-// import { Label } from "@/components/ui/label";
-// import { ArrowLeft } from 'lucide-react';
-//
-// const RegisterPage = ({ onRegister, onNavigateLogin }) => {
-//     const [username, setUsername] = useState('');
-//     const [password, setPassword] = useState('');
-//     const [confirmPassword, setConfirmPassword] = useState('');
-//     const [error, setError] = useState('');
-//
-//     const handleSubmit = (e) => {
-//         e.preventDefault();
-//         if (password.length < 3) {
-//             setError('Пароль должен быть не менее 3 символов');
-//             return;
-//         }
-//         if (password !== confirmPassword) {
-//             setError('Пароли не совпадают');
-//             return;
-//         }
-//         onRegister(username, password);
-//     };
-//
-//     return (
-//         <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
-//             <Card className="w-full max-w-md">
-//                 <CardHeader>
-//                     <CardTitle>Регистрация в UNO</CardTitle>
-//                 </CardHeader>
-//                 <form onSubmit={handleSubmit}>
-//                     <CardContent className="space-y-4">
-//                         <div className="space-y-2">
-//                             <Label htmlFor="username">Имя пользователя</Label>
-//                             <Input
-//                                 id="username"
-//                                 type="text"
-//                                 placeholder="Придумайте имя пользователя"
-//                                 value={username}
-//                                 onChange={(e) => setUsername(e.target.value)}
-//                                 required
-//                             />
-//                         </div>
-//                         <div className="space-y-2">
-//                             <Label htmlFor="password">Пароль</Label>
-//                             <Input
-//                                 id="password"
-//                                 type="password"
-//                                 placeholder="Придумайте пароль"
-//                                 value={password}
-//                                 onChange={(e) => setPassword(e.target.value)}
-//                                 required
-//                             />
-//                         </div>
-//                         <div className="space-y-2">
-//                             <Label htmlFor="confirmPassword">Подтвердите пароль</Label>
-//                             <Input
-//                                 id="confirmPassword"
-//                                 type="password"
-//                                 placeholder="Введите пароль ещё раз"
-//                                 value={confirmPassword}
-//                                 onChange={(e) => setConfirmPassword(e.target.value)}
-//                                 required
-//                             />
-//                         </div>
-//                         {error && (
-//                             <p className="text-red-500 text-sm">{error}</p>
-//                         )}
-//                     </CardContent>
-//                     <CardFooter className="flex flex-col space-y-2">
-//                         <Button type="submit" className="w-full">
-//                             Зарегистрироваться
-//                         </Button>
-//                         <Button
-//                             type="button"
-//                             variant="ghost"
-//                             className="w-full"
-//                             onClick={onNavigateLogin}
-//                         >
-//                             <ArrowLeft className="mr-2 h-4 w-4" />
-//                             Вернуться ко входу
-//                         </Button>
-//                     </CardFooter>
-//                 </form>
-//             </Card>
-//         </div>
-//     );
-// };
-//
-// export default RegisterPage;
-
-
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
@@ -100,33 +8,55 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { loginSuccess } from "../../storage/authSlice";
 
-const RegisterPage = ({ onRegister, onNavigateLogin }) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
+const RegisterPage = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
 
-    const handleSubmit = (e) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleRegister = async (e) => {
         e.preventDefault();
-        if (password.length < 3) {
-            setError('Пароль должен быть не менее 5 символов');
+        setError("");
+
+        if (password.length < 5) {
+            setError("Пароль должен быть не менее 5 символов");
             return;
         }
+
         if (password !== confirmPassword) {
-            setError('Пароли не совпадают');
+            setError("Пароли не совпадают");
             return;
         }
-        onRegister(username, password);
+
+        try {
+            const response = await fetch("http://localhost:8080/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json;charset=utf-8" },
+                body: JSON.stringify({ username, password }),
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                dispatch(loginSuccess({ username, token: data.token }));
+                navigate("/main");
+            } else {
+                setError(data.message || "Ошибка регистрации");
+            }
+        } catch (err) {
+            setError("Произошла ошибка");
+        }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
             <Card className="w-full max-w-md">
-                <CardHeader
-                    title="Регистрация в UNO"
-                />
-                <form onSubmit={handleSubmit}>
+                <CardHeader title="Регистрация в UNO" />
+                <form onSubmit={handleRegister}>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <TextField
@@ -177,7 +107,7 @@ const RegisterPage = ({ onRegister, onNavigateLogin }) => {
                             variant="outlined"
                             color="primary"
                             fullWidth
-                            onClick={onNavigateLogin}
+                            onClick={() => navigate('/login')}
                             startIcon={<ArrowBackIcon />}
                         >
                             Вернуться ко входу
