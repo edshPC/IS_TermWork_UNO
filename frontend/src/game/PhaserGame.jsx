@@ -1,6 +1,7 @@
 import {forwardRef, useEffect, useLayoutEffect, useRef} from 'react';
 import StartGame from './main';
 import {EventBus} from './EventBus';
+import GameChat from "./component/GameChat.jsx";
 
 export const TEXT_STYLE = {
     fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
@@ -52,7 +53,9 @@ function PhaserGameFunc({packetHandler, username, name}, ref) {
     }, [packetHandler, ref])
 
     return (
-        <div id="game-container"></div>
+        <div id="game-container">
+            <GameChat packetHandler={packetHandler} />
+        </div>
     );
 
 }
