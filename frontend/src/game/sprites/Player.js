@@ -12,7 +12,7 @@ export class Player extends GameObjects.Container {
         this.name = name || username;
 
         this.nameSprite = scene.add.text(0, 15, this.name, TEXT_STYLE).setOrigin();
-        this.readySprite = scene.add.text(0, 45, 'Не готов', TEXT_STYLE).setOrigin();
+        this.readySprite = scene.add.text(0, -15, 'Не готов', TEXT_STYLE).setOrigin();
 
         this.add([
             this.nameSprite,
@@ -42,7 +42,7 @@ export class Player extends GameObjects.Container {
         this.cards.push(card);
         this.add(card);
         card.setPosition(0, 0);
-        this.rearrangeCards();
+        await this.rearrangeCards();
         return card;
     }
     
@@ -56,10 +56,10 @@ export class Player extends GameObjects.Container {
         await card.move(this.scene.activeCardX, this.scene.activeCardY);
         this.cards.splice(this.cards.indexOf(card), 1);
         card.destroy(true);
-        this.rearrangeCards();
+        await this.rearrangeCards();
     }
     
-    rearrangeCards() {
+    async rearrangeCards() {
         const cardCount = this.cards.length;
         const minSpace = 20, maxSpace = 600
         const normLength = 300, maxLength = 1000;
@@ -67,9 +67,12 @@ export class Player extends GameObjects.Container {
         space = Math.min(Math.max(space, minSpace), maxSpace);
         if (space * cardCount > maxLength) space = maxLength / cardCount;
         let x = - (space * cardCount / 2);
+        const promises = [];
         this.cards.forEach(card => {
-           card.move(x); x += space;
+            promises.push(card.move(x));
+            x += space;
         });
+        await Promise.all(promises);
     }
     
     onGameStart() {

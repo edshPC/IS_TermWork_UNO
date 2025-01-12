@@ -3,8 +3,8 @@ import {useEffect, useState} from "react";
 
 export default function App() {
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("string");
+    const [password, setPassword] = useState("string");
     const [token, setToken] = useState(null);
     const [gameUUID, setGameUUID] = useState(null);
     const [privateUUID, setPrivateUUID] = useState(null);

@@ -32,9 +32,6 @@ export class Preloader extends Scene
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
-        // this.load.image('logo', 'logo.png');
-        // this.load.image('star', 'star.png');
-
         // Загрузка спрайт-листа с картами
         this.load.spritesheet('cards', 'cards.png', { frameWidth: 242, frameHeight: 362, spacing: -2 });
         this.load.image('card_back', 'card_back.png');

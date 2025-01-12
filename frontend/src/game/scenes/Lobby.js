@@ -45,17 +45,18 @@ export class Lobby extends Scene {
             this.activeCard.setDepth(-1);
             if (this.activeColor) this.activeColor.destroy(true);
             const current_color = packet.currentCard.newColor || packet.currentCard.color;
-            this.activeColor = this.add.circle(this.centerX - 160, this.centerY, 50, CARD_COLORS[current_color]);
+            this.activeColor = this.add.circle(this.centerX - 160, this.centerY, 45, CARD_COLORS[current_color]);
+            this.activeColor.setStrokeStyle(5, 0xffffff);
             if (this.loopArrows) this.loopArrows.destroy(true);
             this.loopArrows = this.add.sprite(this.centerX - 160, this.centerY, 'loop_arrows');
-            this.loopArrows.setScale(.125);
+            this.loopArrows.setScale(.11);
             this.loopArrows.setFlipX(packet.orderReversed);
             this.tweens.add({
                 targets: this.loopArrows,
                 angle: packet.orderReversed ? -360 : 360,
-                duration: 5000, // Время вращения (в миллисекундах)
-                repeat: -1, // Бесконечное повторение
-                ease: 'Linear' // Линейная анимация
+                duration: 5000,
+                repeat: -1,
+                ease: 'Linear'
             });
         });
         EventBus.on('packet-TAKE_CARD_PACKET', packet => {
@@ -101,10 +102,10 @@ export class Lobby extends Scene {
     }
     
     rearrangePlayers() {
-        const centerX = this.cameras.main.centerX;
-        const centerY = this.cameras.main.centerY;
+        const centerX = this.centerX;
+        const centerY = this.centerY + 50;
 
-        const radius = 250; // Радиус окружности
+        const radius = 220; // Радиус окружности
         const playerCount = Object.values(this.players).length;
         Object.values(this.players).forEach((pl, i) => {
             const angle = (i / playerCount) * (2 * Math.PI) + (Math.PI / 2); // Угол в радианах

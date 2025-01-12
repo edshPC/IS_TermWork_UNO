@@ -16,10 +16,10 @@ const TYPE_OFFSETS = {
     PLUS_FOUR: 27,
 };
 export const CARD_COLORS = {
-    RED: 0xff1111,
-    BLUE: 0x1111ff,
-    YELLOW: 0xffff11,
-    GREEN: 0x11ff11
+    RED: 0xff5555,
+    BLUE: 0x5555fd,
+    YELLOW: 0xffaa00,
+    GREEN: 0x55aa55
 };
 
 export class Card extends GameObjects.Sprite {
