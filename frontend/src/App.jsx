@@ -48,7 +48,7 @@
 //         </div>;
 // }
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
