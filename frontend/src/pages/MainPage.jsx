@@ -14,16 +14,46 @@ const MainPage = () => {
         navigate('/');
     };
 
-    const handleJoinGame = () => {
-        navigate('/game');
-    };
-
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 p-4">
-            <h1 className="text-4xl font-bold text-white mb-4">Добро пожаловать, {username}!</h1>
-            <p className="text-xl text-gray-300 mb-8">бла бла</p>
-            <Button onClick={handleJoinGame} variant="outline" className="mb-4">Зайти в игру</Button>
-            <Button onClick={handleLogout} variant="outline">Выйти</Button>
+        <div className="min-h-screen flex flex-col bg-gray-900 p-4">
+            <h1 className="text-4xl font-bold text-white text-center mb-4">Добро пожаловать, {username}!</h1>
+            <div className="flex-grow flex justify-center items-center">
+                <div className="grid grid-cols-2 gap-8">
+                    <Button
+                        variant="contained"
+                        className="w-64 h-32 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded"
+                    >
+                        Создать игровую комнату
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="w-64 h-32 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded"
+                    >
+                        Присоединиться к игровой комнате
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="w-64 h-32 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded"
+                    >
+                        Посмотреть статистику
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="w-64 h-32 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded"
+                    >
+                        Посмотреть достижения
+                    </Button>
+                </div>
+            </div>
+            <div className="flex-grow flex justify-center items-center">
+                <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="w-40 h-12 bg-transparent hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-center mt-auto"
+                >
+                    Выйти
+                </Button>
+            </div>
         </div>
     );
 };

@@ -1,33 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
-
-const initialState = {
-    username: "",
-    token: null,
-    gameUUID: null,
-    privateUUID: null,
-};
+import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
-    name: "auth",
-    initialState,
+    name: 'auth',
+    initialState: {
+        username: null,
+        token: null,
+    },
     reducers: {
-        loginSuccess(state, action) {
-            state.username = action.payload.username;
-            state.token = action.payload.token;
+        loginSuccess: (state, action) => {
+            state.username = action.payload.username; // Устанавливаем username
+            state.token = action.payload.token; // Устанавливаем токен
         },
-        logout(state) {
-            state.username = "";
+        logout: (state) => {
+            state.username = null;
             state.token = null;
-            state.gameUUID = null;
-            state.privateUUID = null;
-        },
-        joinGameSuccess(state, action) {
-            state.gameUUID = action.payload.gameUUID;
-            state.privateUUID = action.payload.privateUUID;
         },
     },
 });
 
-export const { loginSuccess, logout, joinGameSuccess } = authSlice.actions;
-export default authSlice.reducer;
+export const { loginSuccess, logout } = authSlice.actions;
 
+export default authSlice.reducer;
