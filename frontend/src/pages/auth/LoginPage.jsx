@@ -29,6 +29,7 @@ const LoginPage = () => {
             const data = await response.json();
             if (response.ok) {
                 dispatch(loginSuccess({ username, token: data.token }));
+                localStorage.setItem('token', data.token); // Сохраняем токен в localStorage
                 navigate("/main");
             } else {
                 setError(data.message || "Ошибка входа");
@@ -37,33 +38,6 @@ const LoginPage = () => {
             setError("Произошла ошибка");
         }
     };
-    // const [username, setUsername] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [error, setError] = useState('');
-    // const dispatch = useDispatch();
-    // const navigate = useNavigate();
-    //
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setError('');
-    //     try {
-    //         const response = await fetch('http://localhost:8080/api/auth/login', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    //             body: JSON.stringify({ username, password }),
-    //         });
-    //         const data = await response.json();
-    //         if (response.ok) {
-    //             dispatch(setUsername(username));
-    //             dispatch(setToken(data.token));
-    //             navigate('/main');
-    //         } else {
-    //             setError(data.message || "Неправильный пароль");
-    //         }
-    //     } catch (err) {
-    //         setError("Произошла ошибка при входе");
-    //     }
-    // };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
