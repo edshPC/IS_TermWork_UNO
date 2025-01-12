@@ -9,11 +9,13 @@ export default function GameChat({ packetHandler }) {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        EventBus.on('packet-TEXT_PACKET', (message) => {
+        const onMessage = (message) => {
+            if (message.textType !== 'PLAYER') return;
             setMessages(m => [...m, message]);
             if (!isOpen) setNote(true);
-        });
-        return () => EventBus.removeListener('packet-TEXT_PACKET');
+        };
+        EventBus.on('packet-TEXT_PACKET', onMessage);
+        return () => EventBus.removeListener('packet-TEXT_PACKET', onMessage);
     }, [isOpen]);
 
     useEffect(() => {
@@ -32,7 +34,7 @@ export default function GameChat({ packetHandler }) {
     const onInputKey = (e) => e.key === 'Enter' && sendMessage();
     const openChat = () => {
         setIsOpen(!isOpen);
-        if (isOpen) setNote(false);
+        if (!isOpen) setNote(false);
     }
 
     const messagesComponent = (
