@@ -1,6 +1,5 @@
 import {GameObjects} from "phaser";
 import {TEXT_STYLE} from "../PhaserGame.jsx";
-import {CARD_COLORS} from "./Card.js";
 
 export class Player extends GameObjects.Container {
 

@@ -29,6 +29,7 @@ export class Lobby extends Scene {
         this.deckCard.onClick = () => {
             EventBus.emit('take-card');
         }
+        this.deckCard.setDepth(1);
         this.deckCard.setVisible(false);
         this.initEvents();
         EventBus.emit('current-scene-ready', this);
@@ -67,6 +68,30 @@ export class Lobby extends Scene {
         });
         EventBus.on('packet-PUT_CARD_PACKET', packet => {
             this.mainPlayer.putAndRemoveCard(packet.cardId);
+        });
+        EventBus.on('packet-TEXT_PACKET', packet => {
+           if (packet.textType === 'SYSTEM') {
+               const txt = this.add.text(this.centerX, -50, packet.text, TEXT_STYLE);
+               txt.setColor('MAGENTA');
+               txt.setOrigin(.5);
+               txt.setDepth(10);
+               this.tweens.add({
+                   targets: txt,
+                   y: this.centerY,
+                   ease: 'sine.inout',
+                   onComplete: () => {
+                       this.tweens.add({
+                           targets: txt,
+                           y: -50,
+                           delay: 1000,
+                           ease: 'sine.inout',
+                           onComplete: () => {
+                                txt.destroy(true);
+                           }
+                       })
+                   }
+               })
+           } 
         });
         EventBus.on('action-GAME_START', () => {
             this.waitText.setVisible(false);
@@ -115,6 +140,7 @@ export class Lobby extends Scene {
             const y = centerY + radius * Math.sin(angle); // Вычисляем Y координату
             //pl.move(x, y, (angle - Math.PI/2));
             pl.move(x, y);
+            if (i > 0 && playerCount > 2) pl.setScale(1 / (1.1 ** playerCount));
         });
     }
 
