@@ -130,12 +130,6 @@ export default function App() {
         });
     };
 
-    useEffect(() => {
-        if (token) {
-            joinGame();
-        }
-    }, [token]);
-
     switch (currentPage) {
         case 'landing':
             return <LandingPage
