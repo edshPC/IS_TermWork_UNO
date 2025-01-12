@@ -38,6 +38,7 @@ export class Preloader extends Scene
         // Загрузка спрайт-листа с картами
         this.load.spritesheet('cards', 'cards.png', { frameWidth: 242, frameHeight: 362, spacing: -2 });
         this.load.image('card_back', 'card_back.png');
+        this.load.image('loop_arrows', 'loop_arrows.png');
 
     }
 

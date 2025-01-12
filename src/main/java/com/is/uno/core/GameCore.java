@@ -127,8 +127,8 @@ public class GameCore {
 
         switch (card.getType()) {
             case CHANGE_DIRECTION -> {
-                if (players.size() == 2) switchPlayer();
-                else state.reverseOrder();
+                state.reverseOrder();
+                if (players.size() > 2) switchPlayer();
             }
             case SKIP -> switchPlayer();
             case PLUS_TWO -> {

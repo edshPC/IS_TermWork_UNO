@@ -15,6 +15,12 @@ const TYPE_OFFSETS = {
     CHOOSE_COLOR: 13,
     PLUS_FOUR: 27,
 };
+export const CARD_COLORS = {
+    RED: 0xff1111,
+    BLUE: 0x1111ff,
+    YELLOW: 0xffff11,
+    GREEN: 0x11ff11
+};
 
 export class Card extends GameObjects.Sprite {
     newColor;
@@ -82,26 +88,18 @@ export class Card extends GameObjects.Sprite {
     async requestColor() {
         return new Promise(resolve => {
             // Создание черного квадратика
-            const blackSquare = this.scene.add.rectangle(640, 360, 200, 200, 0x111111);
+            const blackSquare = this.scene.add.rectangle(this.scene.centerX, this.scene.centerY, 200, 200, 0x111111);
             blackSquare.setOrigin(0.5, 0.5);
 
-            // Создание цветных квадратиков
-            const colors = {
-                RED: 0xff1111,
-                BLUE: 0x1111ff,
-                YELLOW: 0xffff11,
-                GREEN: 0x11ff11
-            };
-
             const colorPositions = [
-                { x: 590, y: 310 },
-                { x: 590, y: 410 },
-                { x: 690, y: 310 },
-                { x: 690, y: 410 }
+                { x: blackSquare.x - 50, y: blackSquare.y - 50 },
+                { x: blackSquare.x - 50, y: blackSquare.y + 50 },
+                { x: blackSquare.x + 50, y: blackSquare.y - 50 },
+                { x: blackSquare.x + 50, y: blackSquare.y + 50 }
             ];
             const squares = [blackSquare];
-            Object.keys(colors).forEach((color, index) => {
-                const colorSquare = this.scene.add.rectangle(colorPositions[index].x, colorPositions[index].y, 80, 80, colors[color]);
+            Object.keys(CARD_COLORS).forEach((color, index) => {
+                const colorSquare = this.scene.add.rectangle(colorPositions[index].x, colorPositions[index].y, 80, 80, CARD_COLORS[color]);
                 colorSquare.setOrigin(0.5, 0.5);
                 colorSquare.setInteractive({useHandCursor: true});
                 colorSquare.on('pointerover', () => colorSquare.setScale(1.1))

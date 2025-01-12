@@ -1,6 +1,5 @@
 import {GameObjects} from "phaser";
 import {TEXT_STYLE} from "../PhaserGame.jsx";
-import {Card} from "./Card.js";
 
 export class Player extends GameObjects.Container {
 
@@ -8,12 +7,12 @@ export class Player extends GameObjects.Container {
     cards = [];
 
     constructor(scene, username, name) {
-        super(scene, scene.cameras.main.centerX, scene.cameras.main.centerY);
+        super(scene, scene.centerX, scene.centerY);
         this.username = username;
         this.name = name || username;
 
-        this.nameSprite = scene.add.text(0, -15, this.name, TEXT_STYLE).setOrigin();
-        this.readySprite = scene.add.text(0, 15, 'Не готов', TEXT_STYLE).setOrigin();
+        this.nameSprite = scene.add.text(0, 15, this.name, TEXT_STYLE).setOrigin();
+        this.readySprite = scene.add.text(0, 45, 'Не готов', TEXT_STYLE).setOrigin();
 
         this.add([
             this.nameSprite,
@@ -42,7 +41,7 @@ export class Player extends GameObjects.Container {
         await card.move(this.x, this.y);
         this.cards.push(card);
         this.add(card);
-        card.setPosition(0, -30);
+        card.setPosition(0, 0);
         this.rearrangeCards();
         return card;
     }
