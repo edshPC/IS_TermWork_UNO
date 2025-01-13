@@ -21,7 +21,7 @@ public class GameScore implements Serializable {
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 

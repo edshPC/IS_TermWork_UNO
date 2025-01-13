@@ -3,6 +3,7 @@ package com.is.uno.service;
 import com.is.uno.core.GameCore;
 import com.is.uno.core.GameCoreProvider;
 import com.is.uno.core.GamePlayer;
+import com.is.uno.dao.GameRepository;
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.GameScoreRepository;
 import com.is.uno.dao.PlayerRepository;
@@ -31,10 +32,11 @@ public class GameRoomService {
     private final PasswordEncoder passwordEncoder;
     private final PlayerService playerService;
     private final StatisticsService statisticsService;
+    private final GameScoreRepository gameScoreRepository;
+    private final GameRepository gameRepository;
 
     @Setter(onMethod_ = {@Autowired, @Lazy})
     private GameCoreProvider gameCoreProvider;
-    private GameScoreRepository gameScoreRepository;
 
     public GameRoom findById(Long id) {
         return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
@@ -102,6 +104,7 @@ public class GameRoomService {
     }
 
     public List<GameStatDTO> onSingleGameOver(Game game, List<GameScore> scores) {
+        gameRepository.save(game);
         List<GameStatDTO> stats = new LinkedList<>();
         for (var score : scores) {
             stats.add(GameStatDTO.builder()
@@ -131,8 +134,4 @@ public class GameRoomService {
                 .build();
     }
 
-    @Autowired
-    public void setGameScoreRepository(GameScoreRepository gameScoreRepository) {
-        this.gameScoreRepository = gameScoreRepository;
-    }
 }
