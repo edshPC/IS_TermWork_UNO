@@ -28,4 +28,7 @@ public class GameScore implements Serializable {
     @Column(name = "score", nullable = false)
     @Min(value = 0, message = "Счет может быть 0 или больше")
     private Long score;
+
+    @Min(0)
+    private Long ratingGain;
 }

@@ -24,6 +24,9 @@ public class Game implements Serializable {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    private Long totalScore;
+    private Integer playerCount;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_id", nullable = false)
     private Player winner;

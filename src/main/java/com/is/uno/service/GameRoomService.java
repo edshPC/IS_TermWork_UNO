@@ -105,7 +105,10 @@ public class GameRoomService {
             stats.add(GameStatDTO.builder()
                     .username(score.getPlayer().getUser().getUsername())
                     .score(score.getScore())
-                    .totalScore(score.getScore()) // TODO счёт из БД
+                    .totalScore(
+                            score.getScore() +
+                            playerService.calculateTotalScore(score.getPlayer())
+                    )
                     .build());
             statisticsService.updatePlayerStatistics(score);
         }

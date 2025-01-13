@@ -209,13 +209,22 @@ public class GameCore {
         game.setEndTime(LocalDateTime.now());
         game.setWinner(winner.getPlayer());
         List<GameScore> scores = new LinkedList<>();
+        long totalScore = 0;
+        int playerCount = getPlayerCount();
         for (var player : players.values()) {
             var score = new GameScore();
             score.setGame(game);
             score.setPlayer(player.getPlayer());
             score.setScore(player.getTotalCardScore());
             scores.add(score);
+            totalScore += score.getScore();
             player.reset();
+        }
+        game.setTotalScore(totalScore);
+        game.setPlayerCount(playerCount);
+        for (var score : scores) {
+            long rating = totalScore - score.getScore() * playerCount;
+            score.setRatingGain(Math.max(0, rating));
         }
 
         var stats = gameRoomService.onSingleGameOver(game, scores);

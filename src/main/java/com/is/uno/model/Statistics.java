@@ -24,7 +24,7 @@ public class Statistics implements Serializable {
 
     @Column(name = "rating", nullable = false)
     @Min(value = 0, message = "Рейтинг может быть 0 или больше")
-    private Integer rating;
+    private Long rating;
 
     @Column(name = "playCount", nullable = false)
     @Min(value = 0, message = "Количество игр может быть 0 или больше")

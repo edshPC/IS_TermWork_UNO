@@ -38,15 +38,14 @@ public class StatisticsService {
         if (game.getWinner().equals(player)) statistics.setWinCount(statistics.getWinCount() + 1);
         Duration gameDuration = Duration.between(gameScore.getGame().getStartTime(), gameScore.getGame().getEndTime());
         statistics.setTimePlayed(statistics.getTimePlayed().plus(gameDuration));
-
-        // TODO RATING
+        statistics.setRating(statistics.getRating() + gameScore.getRatingGain());
 
         statisticsRepository.save(statistics);
     }
 
     private Statistics initializeStatistics(User user) {
         Statistics newStatistics = Statistics.builder()
-                .rating(0)
+                .rating(0L)
                 .playCount(0)
                 .winCount(0)
                 .timePlayed(Duration.ZERO)
