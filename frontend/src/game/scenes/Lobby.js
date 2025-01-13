@@ -24,6 +24,8 @@ export class Lobby extends Scene {
     constructor() {
         super('Lobby');
     }
+    
+    
 
     create() {
         this.waitText = this.add.text(this.centerX, this.centerY, 'Ожидание игроков...', TEXT_STYLE).setDepth(100).setOrigin(0.5);

@@ -35,6 +35,7 @@ function PhaserGameFunc({packetHandler, username, name}, ref) {
         EventBus.on('current-scene-ready', (currentScene) => {
             ref.current.scene = currentScene;
             currentScene.createMainPlayer(username, name);
+            packetHandler.sendAction('JOIN');
         });
         EventBus.on('ready-pressed', () => packetHandler.sendAction('READY'));
         EventBus.on('put-card', (card) => packetHandler.sendPacket({

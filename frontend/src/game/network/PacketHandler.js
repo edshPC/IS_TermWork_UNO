@@ -7,6 +7,7 @@ const origin = 'http://localhost:8080';
 export default class PacketHandler {
     stompClient = null;
     subscribers = {};
+    packetQueue = [];
 
     constructor(gameUUID, privateUUID, token) {
         this.gameUUID = gameUUID;
@@ -25,8 +26,9 @@ export default class PacketHandler {
             stompClient.subscribe('/topic/game/' + this.gameUUID, this.onUpdateRecieved);
             stompClient.subscribe('/topic/private/' + this.privateUUID, this.onUpdateRecieved);
             this.stompClient = stompClient;
-            this.sendAction('JOIN');
             window.addEventListener('beforeunload', this.disconnect);
+            this.packetQueue.forEach(this.sendPacket, this);
+            this.packetQueue = [];
         });
     }
     
@@ -39,7 +41,9 @@ export default class PacketHandler {
     }
     
     sendPacket(packet) {
-        this.stompClient.send("/app/game/" + this.gameUUID, {}, JSON.stringify(packet));
+        if (this.stompClient)
+            this.stompClient.send("/app/game/" + this.gameUUID, {}, JSON.stringify(packet));
+        else this.packetQueue.push(packet);
     }
     
     sendAction(action) {
