@@ -10,7 +10,7 @@ import java.time.Duration;
 @Builder(toBuilder = true)
 public class StatisticsDTO {
     private String username;
-    private Integer rating;
+    private Long rating;
     private Integer playCount;
     private Integer winCount;
     private Duration timePlayed;

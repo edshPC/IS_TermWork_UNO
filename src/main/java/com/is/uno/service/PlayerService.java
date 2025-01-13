@@ -1,5 +1,6 @@
 package com.is.uno.service;
 
+import com.is.uno.dao.GameScoreRepository;
 import com.is.uno.dao.PlayerRepository;
 import com.is.uno.dto.api.PlayerDTO;
 import com.is.uno.exception.PlayerNotFoundException;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PlayerService {
     private final PlayerRepository playerRepository;
+    private final GameScoreRepository gameScoreRepository;
 
     public Player findById(Long id) {
         return playerRepository.findById(id).orElseThrow(() ->
@@ -56,6 +58,11 @@ public class PlayerService {
         return playerRepository.countByCurrentRoom(gameRoom);
     }
 
+    public long calculateTotalScore(Player player) {
+        Long score = gameScoreRepository.calculatePlayerScore(player);
+        if (score == null) return 0;
+        return score;
+    }
 
     private PlayerDTO toPlayerDTO(Player player) {
         return PlayerDTO.builder()

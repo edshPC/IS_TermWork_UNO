@@ -3,14 +3,14 @@ package com.is.uno.service;
 import com.is.uno.core.GameCore;
 import com.is.uno.core.GameCoreProvider;
 import com.is.uno.core.GamePlayer;
+import com.is.uno.dao.GameRepository;
 import com.is.uno.dao.GameRoomRepository;
+import com.is.uno.dao.GameScoreRepository;
 import com.is.uno.dao.PlayerRepository;
 import com.is.uno.dto.api.*;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
-import com.is.uno.model.GameRoom;
-import com.is.uno.model.Player;
-import com.is.uno.model.User;
+import com.is.uno.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,8 @@ public class GameRoomService {
     private final PasswordEncoder passwordEncoder;
     private final PlayerService playerService;
     private final StatisticsService statisticsService;
+    private final GameScoreRepository gameScoreRepository;
+    private final GameRepository gameRepository;
 
     @Setter(onMethod_ = {@Autowired, @Lazy})
     private GameCoreProvider gameCoreProvider;
@@ -101,15 +103,20 @@ public class GameRoomService {
                 .collect(Collectors.toList());
     }
 
-    public List<GameStatDTO> onSingleGameOver(Player winner, Map<Player, Long> gameStats) {
-        // TODO statisticsService.updatePlayerStatistics();
+    public List<GameStatDTO> onSingleGameOver(Game game, List<GameScore> scores) {
+        gameRepository.save(game);
         List<GameStatDTO> stats = new LinkedList<>();
-        for (var entry : gameStats.entrySet()) {
+        for (var score : scores) {
             stats.add(GameStatDTO.builder()
-                    .username(entry.getKey().getUser().getUsername())
-                    .score(entry.getValue())
-                    .totalScore(entry.getValue()) // TODO счёт из БД
+                    .username(score.getPlayer().getUser().getUsername())
+                    .score(score.getScore())
+                    .totalScore(
+                            score.getScore() +
+                            playerService.calculateTotalScore(score.getPlayer())
+                    )
                     .build());
+            statisticsService.updatePlayerStatistics(score);
+            gameScoreRepository.save(score);
         }
         stats.sort(Comparator.comparingLong(GameStatDTO::getTotalScore));
         return stats;
@@ -126,4 +133,5 @@ public class GameRoomService {
                 .owner(gameRoom.getOwner().getUsername())
                 .build();
     }
+
 }

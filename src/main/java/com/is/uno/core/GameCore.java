@@ -2,10 +2,7 @@ package com.is.uno.core;
 
 import com.is.uno.dto.api.CardDTO;
 import com.is.uno.dto.packet.*;
-import com.is.uno.model.Color;
-import com.is.uno.model.GameRoom;
-import com.is.uno.model.Player;
-import com.is.uno.model.User;
+import com.is.uno.model.*;
 import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
 import com.is.uno.service.MessageService;
@@ -17,6 +14,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,6 +32,7 @@ public class GameCore {
     @Getter
     private PacketHandler packetHandler;
     private GameRoom room;
+    private Game game;
     private GameState state;
     @Getter
     private final UUID uuid = UUID.randomUUID();
@@ -202,22 +201,41 @@ public class GameCore {
             giveCardsToPlayer(state.getCurrentPlayer(), 1);
             switchPlayer();
         }
-
+        game = new Game();
+        game.setRoom(room);
     }
 
     private void gameOver(GamePlayer winner) {
-        Map<Player, Long> stats = new HashMap<>();
+        game.setEndTime(LocalDateTime.now());
+        game.setWinner(winner.getPlayer());
+        List<GameScore> scores = new LinkedList<>();
+        long totalScore = 0;
+        int playerCount = getPlayerCount();
         for (var player : players.values()) {
-            stats.put(player.getPlayer(), player.getTotalCardScore());
+            var score = new GameScore();
+            score.setGame(game);
+            score.setPlayer(player.getPlayer());
+            score.setScore(player.getTotalCardScore());
+            scores.add(score);
+            totalScore += score.getScore();
             player.reset();
         }
+        game.setTotalScore(totalScore);
+        game.setPlayerCount(playerCount);
+        for (var score : scores) {
+            long rating = totalScore - score.getScore() * playerCount;
+            score.setRatingGain(Math.max(0, rating));
+        }
+
+        var stats = gameRoomService.onSingleGameOver(game, scores);
 
         var pkt = new GameOverPacket();
         pkt.setWinner(winner.getUsername());
-        pkt.setStats(gameRoomService.onSingleGameOver(winner.getPlayer(), stats));
+        pkt.setStats(stats);
         packetHandler.sendPacketToAllPlayers(pkt);
 
         state = null;
+        game = null;
     }
 
     private void giveCardsToPlayer(GamePlayer player, int count) {

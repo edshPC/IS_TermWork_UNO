@@ -41,12 +41,13 @@ const JoinRoomPage = () => {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
+                const {data, message} = await response.json();
                 if (response.ok) {
-                    const {data} = await response.json();
                     setRooms(data);
                     setFilteredRooms(data); // Отображаем изначально все комнаты
                 } else {
-                    setError('Ошибка при загрузке комнат');
+                    setError('Ошибка при загрузке комнат: ' + message);
+                    if (message.includes('authentication')) navigate('/');
                 }
             } catch (err) {
                 setError('Ошибка при загрузке комнат');
