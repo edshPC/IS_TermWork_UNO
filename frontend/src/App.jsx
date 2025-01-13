@@ -8,6 +8,7 @@ import RegisterPage from "./pages/auth/RegisterPage";
 import MainPage from "./pages/MainPage";
 import GameApp from "./game/GameApp";
 import CreateRoomPage from './pages/CreateRoomPage';
+import JoinRoomPage from './pages/JoinRoomPage';
 
 export default function App() {
     return (
@@ -20,6 +21,7 @@ export default function App() {
                     <Route path="/main" element={<MainPage />} />
                     <Route path="/game" element={<GameApp />} />
                     <Route path="/create-room" element={<CreateRoomPage />} />
+                    <Route path="/join-room" element={<JoinRoomPage />} />
                 </Routes>
             </Router>
         </Provider>

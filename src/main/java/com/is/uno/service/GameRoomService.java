@@ -72,6 +72,12 @@ public class GameRoomService {
         }
         playerRepository.save(player);
 
+        long playerCount = playerService.countPlayersInRoom(gameRoom);
+        if (playerCount >= gameRoom.getMaxPlayers()) {
+            gameRoom.setVisible(false);
+            gameRoomRepository.save(gameRoom);
+        }
+
         GameCore game = gameCoreProvider.provideGameCore(gameRoom.getId());
         GamePlayer gamePlayer = game.getPlayerByUser(user);
 
@@ -90,8 +96,10 @@ public class GameRoomService {
 
     private GameRoomDTO toGameRoomDTO(GameRoom gameRoom) {
         return GameRoomDTO.builder()
+                .id(gameRoom.getId())
                 .roomName(gameRoom.getRoomName())
-                //.password(gameRoom.getPassword())
+                .password(gameRoom.getPassword())
+                .visible(gameRoom.getVisible())
                 .maxPlayers(gameRoom.getMaxPlayers())
                 .maxScore(gameRoom.getMaxScore())
                 .owner(gameRoom.getOwner().getUsername())

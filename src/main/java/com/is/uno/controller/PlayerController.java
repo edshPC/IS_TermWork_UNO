@@ -1,8 +1,10 @@
 package com.is.uno.controller;
 
 import com.is.uno.dto.DataResponse;
+import com.is.uno.dto.api.GameRoomDTO;
 import com.is.uno.dto.api.PlayerDTO;
 import com.is.uno.dto.SimpleResponse;
+import com.is.uno.model.GameRoom;
 import com.is.uno.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

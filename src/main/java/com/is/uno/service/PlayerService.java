@@ -52,6 +52,11 @@ public class PlayerService {
                 .collect(Collectors.toList());
     }
 
+    public long countPlayersInRoom(GameRoom gameRoom) {
+        return playerRepository.countByCurrentRoom(gameRoom);
+    }
+
+
     private PlayerDTO toPlayerDTO(Player player) {
         return PlayerDTO.builder()
                 .inGameName(player.getInGameName())
