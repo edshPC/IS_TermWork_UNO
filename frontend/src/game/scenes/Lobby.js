@@ -183,11 +183,19 @@ export class Lobby extends Scene {
         this.animationInProcess = false;
     }
 
-    changeScene() {
+    close() {
         EventBus.removeListener('packet-PLAYER_JOIN_PACKET');
+        EventBus.removeListener('packet-GAME_STATE_PACKET');
+        EventBus.removeListener('packet-TAKE_CARD_PACKET');
+        EventBus.removeListener('packet-PUT_CARD_PACKET');
+        EventBus.removeListener('packet-TEXT_PACKET')
+        EventBus.removeListener('packet-GAME_OVER_PACKET');
+        EventBus.removeListener('action-GAME_START');
         EventBus.removeListener('action-READY');
-
-        this.scene.start('Game');
+        EventBus.removeListener('action-LEAVE');
+        EventBus.removeListener('action-TAKE_CARD');
+        EventBus.removeListener('action-PUT_CARD');
+        EventBus.removeListener('action-CALL_UNO');        
     }
     
     getPlayerFromPacket = (packet, excludeMain) => {

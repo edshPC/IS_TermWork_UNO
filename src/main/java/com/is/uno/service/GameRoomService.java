@@ -5,10 +5,7 @@ import com.is.uno.core.GameCoreProvider;
 import com.is.uno.core.GamePlayer;
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.PlayerRepository;
-import com.is.uno.dto.api.CreateGameRoomDTO;
-import com.is.uno.dto.api.GameRoomDTO;
-import com.is.uno.dto.api.JoinGameRoomDTO;
-import com.is.uno.dto.api.JoinRoomResponse;
+import com.is.uno.dto.api.*;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
 import com.is.uno.model.GameRoom;
@@ -21,7 +18,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +31,7 @@ public class GameRoomService {
     private final PlayerRepository playerRepository;
     private final PasswordEncoder passwordEncoder;
     private final PlayerService playerService;
+    private final StatisticsService statisticsService;
 
     @Setter(onMethod_ = {@Autowired, @Lazy})
     private GameCoreProvider gameCoreProvider;
@@ -95,6 +96,20 @@ public class GameRoomService {
         return gameRooms.stream()
                 .map(this::toGameRoomDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<GameStatDTO> onSingleGameOver(Player winner, Map<Player, Long> gameStats) {
+        // TODO statisticsService.updatePlayerStatistics();
+        List<GameStatDTO> stats = new LinkedList<>();
+        for (var entry : gameStats.entrySet()) {
+            stats.add(GameStatDTO.builder()
+                    .username(entry.getKey().getUser().getUsername())
+                    .score(entry.getValue())
+                    .totalScore(entry.getValue()) // TODO счёт из БД
+                    .build());
+        }
+        stats.sort(Comparator.comparingLong(GameStatDTO::getTotalScore));
+        return stats;
     }
 
     private GameRoomDTO toGameRoomDTO(GameRoom gameRoom) {

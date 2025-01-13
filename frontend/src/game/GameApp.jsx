@@ -1,9 +1,10 @@
-import {useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 
 import {PhaserGame} from './PhaserGame.jsx';
 import PacketHandler from "./network/PacketHandler.js";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import GameOverPopup from "./component/GameOverPopup.jsx";
 
 export default function GameApp() {
     const username = useSelector(state => state.auth.username);
@@ -24,23 +25,22 @@ export default function GameApp() {
         new PacketHandler(gameUUID, privateUUID, token), [gameUUID, privateUUID, token]);
 
     useEffect(() => {
+        packetHandler.onDisconnect = () => navigate('/main');
         return () => packetHandler.disconnect();
     }, [packetHandler]);
-
-    const changeScene = () => {
-        const scene = phaserRef.current.scene;
-        if (scene) {
-            scene.changeScene();
-        }
-    }
-
+    
     return (
         <div id="app">
             <PhaserGame ref={phaserRef} packetHandler={packetHandler} username={username} name={username}/>
-            <div>
-                <div>
-                </div>
+            <div className="fixed top-4 right-4">
+                <button
+                    className={`bg-blue-700 text-white rounded-lg px-4 py-2 shadow-lg`}
+                    onClick={packetHandler.disconnect}
+                >
+                    Покинуть игру
+                </button>
             </div>
+            <GameOverPopup />
         </div>
     )
 }

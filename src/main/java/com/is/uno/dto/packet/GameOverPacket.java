@@ -1,15 +1,16 @@
 package com.is.uno.dto.packet;
 
+import com.is.uno.dto.api.GameStatDTO;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Setter
 public class GameOverPacket extends Packet {
 
-    private Map<String, Long> stats; // Player username -> Score
+    private List<GameStatDTO> stats; // Player username -> Score
     private String winner;
 
     public GameOverPacket() {

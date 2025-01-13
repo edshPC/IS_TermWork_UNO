@@ -2,6 +2,7 @@ import React, {forwardRef, useEffect, useLayoutEffect, useRef} from 'react';
 import StartGame from './main';
 import {EventBus} from './EventBus';
 import GameChat from "./component/GameChat.jsx";
+import GameOverPopup from "./component/GameOverPopup.jsx";
 
 export const TEXT_STYLE = {
     fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
@@ -49,6 +50,10 @@ function PhaserGameFunc({packetHandler, username, name}, ref) {
         return () => {
             EventBus.removeListener('current-scene-ready');
             EventBus.removeListener('ready-pressed');
+            EventBus.removeListener('put-card');
+            EventBus.removeListener('take-card');
+            EventBus.removeListener('uno-called');
+            ref.current?.scene?.close();
         }
         
     }, [packetHandler, ref])

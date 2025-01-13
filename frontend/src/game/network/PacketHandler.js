@@ -37,8 +37,11 @@ export default class PacketHandler {
         this.sendAction('LEAVE');
         this.stompClient.disconnect();
         this.stompClient = null;
+        this.onDisconnect();
         return true;
     }
+    
+    onDisconnect = () => {}
     
     sendPacket(packet) {
         if (this.stompClient)
@@ -52,6 +55,7 @@ export default class PacketHandler {
 
     onUpdateRecieved = (update) => {
         const packet = JSON.parse(update.body);
+        if (packet.error) return this.disconnect();
         EventBus.emit('packet-' + packet.type, packet);
         if (packet.type.includes('ACTION_PACKET'))
             EventBus.emit('action-' + packet.action, packet);

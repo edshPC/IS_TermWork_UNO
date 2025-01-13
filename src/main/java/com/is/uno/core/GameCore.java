@@ -4,6 +4,7 @@ import com.is.uno.dto.api.CardDTO;
 import com.is.uno.dto.packet.*;
 import com.is.uno.model.Color;
 import com.is.uno.model.GameRoom;
+import com.is.uno.model.Player;
 import com.is.uno.model.User;
 import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
@@ -205,15 +206,15 @@ public class GameCore {
     }
 
     private void gameOver(GamePlayer winner) {
-        Map<String, Long> stats = new HashMap<>();
+        Map<Player, Long> stats = new HashMap<>();
         for (var player : players.values()) {
-            stats.put(player.getUsername(), player.getTotalCardScore());
+            stats.put(player.getPlayer(), player.getTotalCardScore());
             player.reset();
         }
 
         var pkt = new GameOverPacket();
         pkt.setWinner(winner.getUsername());
-        pkt.setStats(stats);
+        pkt.setStats(gameRoomService.onSingleGameOver(winner.getPlayer(), stats));
         packetHandler.sendPacketToAllPlayers(pkt);
 
         state = null;
