@@ -104,6 +104,7 @@ export class Lobby extends Scene {
             const promises = [];
             Object.values(this.players).forEach(player => promises.push(player.onGameOver()));
             await Promise.all(promises);
+            Object.values(this.players).forEach(player => player.cards.forEach(c => c.destroy(true)));
             this.destroyAll();
             this.waitText.setVisible(true);
             this.deckCard.setVisible(false);

@@ -73,11 +73,11 @@ public class GameRoomService {
         }
         playerRepository.save(player);
 
-//        long playerCount = playerService.countPlayersInRoom(gameRoom);
-//        if (playerCount >= gameRoom.getMaxPlayers()) {
-//            gameRoom.setVisible(false);
-//            gameRoomRepository.save(gameRoom);
-//        }
+        long playerCount = playerService.countPlayersInRoom(gameRoom);
+        if (playerCount >= gameRoom.getMaxPlayers()) {
+            gameRoom.setVisible(false);
+            gameRoomRepository.save(gameRoom);
+        }
 
         GameCore game = gameCoreProvider.provideGameCore(gameRoom.getId());
         GamePlayer gamePlayer = game.getPlayerByUser(user);

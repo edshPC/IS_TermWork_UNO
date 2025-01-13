@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     List<Player> findByUserUsername(String name);
     Optional<Player> findByUserAndCurrentRoom(User user, GameRoom currentRoom);
-    @Query("SELECT COUNT(*) FROM Player p WHERE p.currentRoom.id = :currentRoom")
+    //@Query("SELECT COUNT(*) FROM Player p WHERE p.currentRoom.id = :currentRoom")
     long countByCurrentRoom(GameRoom currentRoom);
 }

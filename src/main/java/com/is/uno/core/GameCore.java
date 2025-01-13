@@ -69,10 +69,6 @@ public class GameCore {
     public void onPlayerPreJoin(GamePlayer player) {
         if (state != null) throw new IllegalStateException("Игра уже идёт");
         players.put(player.getUsername(), player);
-        var pkt = new PlayerJoinPacket();
-        pkt.setUsername(player.getUsername());
-        pkt.setInGameName(player.getInGameName());
-        packetHandler.sendPacketToAllPlayers(pkt);
     }
 
     public void onPlayerJoin(GamePlayer player) {
@@ -85,10 +81,15 @@ public class GameCore {
             packetHandler.sendPacketToPlayer(pkt, player);
         }
         playerOrder.add(player);
+        var pkt = new PlayerJoinPacket();
+        pkt.setUsername(player.getUsername());
+        pkt.setInGameName(player.getInGameName());
+        packetHandler.sendPacketToAllPlayers(pkt);
         player.setLoaded(true);
     }
 
     public void onPlayerLeave(GamePlayer player) {
+        player.setLoaded(false);
         players.remove(player.getUsername());
         if (players.isEmpty()) {
             return;
