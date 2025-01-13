@@ -54,12 +54,12 @@ export class Card extends GameObjects.Sprite {
         }
     }
 
-    move(x, y = this.y, angle = 0) {
+    move(x, y = this.y, angle = 0, duration_mult = 1) {
         return new Promise(resolve => {
             this.scene.tweens.add({
                 targets: this,
                 x, y, angle: angle / Math.PI * 180,
-                duration: 200,
+                duration: 200 * duration_mult,
                 onComplete: resolve,
             });
         });

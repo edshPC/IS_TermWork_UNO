@@ -67,7 +67,6 @@ public class GameRoomService {
             !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
             throw new ForbiddenException("Incorrect password");
         }
-        if (!gameRoom.getVisible()) throw new ForbiddenException("The room is full");
 
         Player player = playerService.findByRoomAndUserOrCreate(gameRoom, user);
         if (joinGameRoomDTO.getInGameName() != null) {
@@ -76,6 +75,10 @@ public class GameRoomService {
         playerRepository.save(player);
 
         long playerCount = playerService.countPlayersInRoom(gameRoom);
+        if (playerCount > gameRoom.getMaxPlayers()) {
+            playerRepository.delete(player);
+            throw new ForbiddenException("The room is full");
+        }
         if (playerCount >= gameRoom.getMaxPlayers()) {
             gameRoom.setVisible(false);
             gameRoomRepository.save(gameRoom);

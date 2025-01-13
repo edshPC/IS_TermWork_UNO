@@ -25,8 +25,6 @@ export class Lobby extends Scene {
         super('Lobby');
     }
     
-    
-
     create() {
         this.waitText = this.add.text(this.centerX, this.centerY, 'Ожидание игроков...', TEXT_STYLE).setDepth(100).setOrigin(0.5);
         this.deckCard = new Card(this, this.deckCardX, this.deckCardY)
@@ -35,7 +33,7 @@ export class Lobby extends Scene {
         this.deckCard.onClick = () => {
             EventBus.emit('take-card');
         }
-        this.unoButton = this.add.sprite(this.deckCardX + 140, this.centerY, 'uno_button')
+        this.unoButton = this.add.sprite(this.deckCardX + 150, this.centerY, 'uno_button')
             .setScale(.2).setVisible(false).setInteractive({useHandCursor: true})
             .on('pointerover', () => this.unoButton.setScale(.25))
             .on('pointerout', () => this.unoButton.setScale(.2))
@@ -155,12 +153,12 @@ export class Lobby extends Scene {
         const centerX = this.centerX;
         const centerY = this.centerY + 50;
 
-        const radius = 220; // Радиус окружности
+        const radiusY = 220, radiusX = 400; // Радиус окружности
         const playerCount = Object.values(this.players).length;
         Object.values(this.players).forEach((pl, i) => {
             const angle = (i / playerCount) * (2 * Math.PI) + (Math.PI / 2); // Угол в радианах
-            const x = centerX + radius * Math.cos(angle); // Вычисляем X координату
-            const y = centerY + radius * Math.sin(angle); // Вычисляем Y координату
+            const x = centerX + radiusX * Math.cos(angle); // Вычисляем X координату
+            const y = centerY + radiusY * Math.sin(angle); // Вычисляем Y координату
             //pl.move(x, y, (angle - Math.PI/2));
             pl.move(x, y);
             if (i > 0 && playerCount > 2) pl.setScale(1 / (1.1 ** playerCount));

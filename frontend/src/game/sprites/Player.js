@@ -44,7 +44,7 @@ export class Player extends GameObjects.Container {
     }
     
     async giveCard(card) {
-        await card.move(this.x, this.y);
+        await card.move(this.x, this.y, 0, this.scale || 1);
         this.cards.push(card);
         this.add(card);
         card.setPosition(0, 0);
@@ -75,7 +75,7 @@ export class Player extends GameObjects.Container {
         let x = - (space * cardCount / 2);
         const promises = [];
         this.cards.forEach(card => {
-            promises.push(card.move(x));
+            promises.push(card.move(x, card.y, 0, this.scale || 1));
             x += space;
         });
         await Promise.all(promises);
@@ -83,7 +83,7 @@ export class Player extends GameObjects.Container {
     
     callUNO() {
         const unoButton = this.scene.add.sprite(0, 0, 'uno_button')
-            .setScale(.3).setDepth(1);
+            .setScale(.3).setDepth(5);
         this.add(unoButton);
         this.scene.tweens.add({
             targets: unoButton,
