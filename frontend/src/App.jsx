@@ -1,5 +1,6 @@
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import {Provider} from "react-redux";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Provider } from "react-redux";
 import store from "./storage/store";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -8,8 +9,9 @@ import MainPage from "./pages/MainPage";
 import GameApp from "./game/GameApp";
 import CreateRoomPage from './pages/CreateRoomPage';
 import JoinRoomPage from './pages/JoinRoomPage';
+import StatisticsPage from './pages/StatisticsPage';
 
-export default function App() {    
+export default function App() {
     return (
         <Provider store={store}>
             <Router>
@@ -21,6 +23,7 @@ export default function App() {
                     <Route path="/game" element={<GameApp />} />
                     <Route path="/create-room" element={<CreateRoomPage />} />
                     <Route path="/join-room" element={<JoinRoomPage />} />
+                    <Route path="/statistics" element={<StatisticsPage />} />
                 </Routes>
             </Router>
         </Provider>

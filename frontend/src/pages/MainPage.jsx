@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -22,6 +23,10 @@ const MainPage = () => {
         navigate('/join-room');
     };
 
+    const handleViewStatistics = () => {
+        navigate('/statistics');
+    };
+
     return (
         <div className="min-h-screen flex flex-col bg-gray-900 p-4">
             <h1 className="text-4xl font-bold text-white text-center mb-4">Добро пожаловать, {username}!</h1>
@@ -44,6 +49,7 @@ const MainPage = () => {
                     <Button
                         variant="contained"
                         className="w-64 h-32 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded"
+                        onClick={handleViewStatistics}
                     >
                         Посмотреть статистику
                     </Button>
