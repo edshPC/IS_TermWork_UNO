@@ -10,8 +10,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TableSortLabel from '@mui/material/TableSortLabel';
+import {useAuthCheck} from "../storage/authSlice.jsx";
 
 const StatisticsPage = () => {
+    useAuthCheck();
     const [statistics, setStatistics] = useState([]);
     const [error, setError] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: 'rating', direction: 'desc' });
@@ -28,8 +30,8 @@ const StatisticsPage = () => {
                     },
                 });
                 if (response.ok) {
-                    const data = await response.json();
-                    setStatistics(data.data);
+                    const {data} = await response.json();
+                    setStatistics(data);
                 } else {
                     const errorData = await response.json();
                     setError(errorData.message || 'Ошибка при загрузке статистики');
@@ -136,9 +138,9 @@ const StatisticsPage = () => {
 };
 
 const formatDuration = (duration) => {
-    const hours = Math.floor(duration.toSeconds() / 3600);
-    const minutes = Math.floor((duration.toSeconds() % 3600) / 60);
-    const seconds = duration.toSeconds() % 60;
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = Math.floor(duration % 60);
     return `${hours}ч ${minutes}м ${seconds}с`;
 };
 
