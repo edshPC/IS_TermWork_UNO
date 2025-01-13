@@ -59,7 +59,9 @@ public class PlayerService {
     }
 
     public long calculateTotalScore(Player player) {
-        return gameScoreRepository.calculatePlayerScore(player);
+        Long score = gameScoreRepository.calculatePlayerScore(player);
+        if (score == null) return 0;
+        return score;
     }
 
     private PlayerDTO toPlayerDTO(Player player) {

@@ -4,6 +4,7 @@ import com.is.uno.core.GameCore;
 import com.is.uno.core.GameCoreProvider;
 import com.is.uno.core.GamePlayer;
 import com.is.uno.dao.GameRoomRepository;
+import com.is.uno.dao.GameScoreRepository;
 import com.is.uno.dao.PlayerRepository;
 import com.is.uno.dto.api.*;
 import com.is.uno.exception.ForbiddenException;
@@ -33,6 +34,7 @@ public class GameRoomService {
 
     @Setter(onMethod_ = {@Autowired, @Lazy})
     private GameCoreProvider gameCoreProvider;
+    private GameScoreRepository gameScoreRepository;
 
     public GameRoom findById(Long id) {
         return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
@@ -111,6 +113,7 @@ public class GameRoomService {
                     )
                     .build());
             statisticsService.updatePlayerStatistics(score);
+            gameScoreRepository.save(score);
         }
         stats.sort(Comparator.comparingLong(GameStatDTO::getTotalScore));
         return stats;
@@ -126,5 +129,10 @@ public class GameRoomService {
                 .maxScore(gameRoom.getMaxScore())
                 .owner(gameRoom.getOwner().getUsername())
                 .build();
+    }
+
+    @Autowired
+    public void setGameScoreRepository(GameScoreRepository gameScoreRepository) {
+        this.gameScoreRepository = gameScoreRepository;
     }
 }

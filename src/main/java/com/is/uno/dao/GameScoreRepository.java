@@ -12,5 +12,5 @@ import java.util.List;
 public interface GameScoreRepository extends JpaRepository<GameScore, Long> {
     List<GameScore> findByGameId(Long gameId);
     @Query("SELECT SUM(s.score) FROM GameScore s WHERE s.player = :player")
-    long calculatePlayerScore(Player player);
+    Long calculatePlayerScore(Player player);
 }
