@@ -18,10 +18,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 const JoinRoomPage = () => {
     const [rooms, setRooms] = useState([]);
+    const [filteredRooms, setFilteredRooms] = useState([]);
     const [password, setPassword] = useState('');
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [error, setError] = useState('');
     const [open, setOpen] = useState(false);
+    const [searchOwner, setSearchOwner] = useState('');
     const token = useSelector((state) => state.auth.token) || localStorage.getItem('token');
     const navigate = useNavigate();
 
@@ -36,8 +38,8 @@ const JoinRoomPage = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    // console.log('Комнаты:', data.data);
                     setRooms(data.data);
+                    setFilteredRooms(data.data); // Отображаем изначально все комнаты
                 } else {
                     setError('Ошибка при загрузке комнат');
                 }
@@ -48,6 +50,13 @@ const JoinRoomPage = () => {
 
         fetchRooms();
     }, [token]);
+
+    const handleSearch = () => {
+        const filtered = rooms.filter((room) =>
+            room.owner.toLowerCase().includes(searchOwner.toLowerCase())
+        );
+        setFilteredRooms(filtered);
+    };
 
     const handleJoin = (room) => {
         setSelectedRoom(room);
@@ -101,6 +110,24 @@ const JoinRoomPage = () => {
     return (
         <div className="min-h-screen flex flex-col items-center bg-gray-900 p-4">
             <h1 className="text-3xl font-bold text-white mb-4">Список игровых комнат</h1>
+            
+            <div className="mb-4 flex justify-center gap-4 w-full max-w-4xl">
+                <TextField
+                    label="Поиск по владельцу"
+                    variant="outlined"
+                    fullWidth
+                    value={searchOwner}
+                    onChange={(e) => setSearchOwner(e.target.value)}
+                    placeholder="Введите имя владельца"
+                    InputProps={{
+                        style: { backgroundColor: 'white' },
+                    }}
+                />
+                <Button variant="contained" color="primary" onClick={handleSearch}>
+                    Найти
+                </Button>
+            </div>
+
             <TableContainer component={Paper} className="w-full max-w-4xl">
                 <Table>
                     <TableHead>
@@ -114,7 +141,7 @@ const JoinRoomPage = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rooms.filter(room => room.visible).map((room) => (
+                        {filteredRooms.map((room) => (
                             <TableRow key={room.id}>
                                 <TableCell>{room.roomName}</TableCell>
                                 <TableCell align="center">{room.maxPlayers}</TableCell>
