@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
+import Button from "@mui/material/Button";
 
 const AchievementsPage = () => {
     const [achievements, setAchievements] = useState([]);
@@ -37,6 +38,10 @@ const AchievementsPage = () => {
         fetchAchievements();
     }, [token, username]);
 
+    const handleLogout = () => {
+        navigate('/main');
+    };
+
     return (
         <div className="min-h-screen flex flex-col items-center bg-gray-900 p-4">
             <h1 className="text-3xl font-bold text-white mb-4">Достижения</h1>
@@ -57,6 +62,15 @@ const AchievementsPage = () => {
                 ))}
             </Grid>
             {error && <p className="text-red-500 mt-4">{error}</p>}
+            <div className="flex-grow flex justify-center items-center">
+                <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="w-40 h-12 bg-transparent hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-center mt-auto"
+                >
+                    Выйти
+                </Button>
+            </div>
         </div>
     );
 };

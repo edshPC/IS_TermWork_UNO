@@ -52,10 +52,14 @@ const CreateRoomPage = () => {
         }
     };
 
+    const handleLogout = () => {
+        navigate('/main');
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
             <Card className="w-full max-w-md">
-                <CardHeader title="Создать игровую комнату" />
+                <CardHeader title="Создать игровую комнату"/>
                 <form onSubmit={handleSubmit}>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
@@ -115,6 +119,15 @@ const CreateRoomPage = () => {
                         </Button>
                     </CardActions>
                 </form>
+                <div className="flex-grow flex justify-center items-center">
+                    <Button
+                        onClick={handleLogout}
+                        variant="outline"
+                        className="w-40 h-12 bg-transparent hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-center mt-auto"
+                    >
+                        Выйти
+                    </Button>
+                </div>
             </Card>
         </div>
     );

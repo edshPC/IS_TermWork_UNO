@@ -42,6 +42,10 @@ const StatisticsPage = () => {
         fetchStatistics();
     }, [token]);
 
+    const handleLogout = () => {
+        navigate('/main');
+    };
+
     const handleSortRequest = (key) => {
         let direction = 'asc';
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -118,6 +122,15 @@ const StatisticsPage = () => {
                 </Table>
             </TableContainer>
             {error && <p className="text-red-500 mt-4">{error}</p>}
+            <div className="flex-grow flex justify-center items-center">
+                <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="w-40 h-12 bg-transparent hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-center mt-auto"
+                >
+                    Выйти
+                </Button>
+            </div>
         </div>
     );
 };
