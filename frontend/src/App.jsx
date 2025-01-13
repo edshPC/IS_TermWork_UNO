@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Provider } from "react-redux";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import {Provider} from "react-redux";
 import store from "./storage/store";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -9,7 +9,7 @@ import GameApp from "./game/GameApp";
 import CreateRoomPage from './pages/CreateRoomPage';
 import JoinRoomPage from './pages/JoinRoomPage';
 
-export default function App() {
+export default function App() {    
     return (
         <Provider store={store}>
             <Router>

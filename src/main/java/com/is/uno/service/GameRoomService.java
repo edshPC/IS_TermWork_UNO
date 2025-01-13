@@ -49,7 +49,7 @@ public class GameRoomService {
                 .owner(owner)
                 .visible(true)
                 .build();
-        if (createGameRoomDTO.getPassword() != null) {
+        if (createGameRoomDTO.getPassword() != null && !createGameRoomDTO.getPassword().isEmpty()) {
             gameRoom.setPassword(passwordEncoder.encode(createGameRoomDTO.getPassword()));
         }
 

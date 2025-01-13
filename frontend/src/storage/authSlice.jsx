@@ -1,4 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 const initialState = {
     username: localStorage.getItem('username') || null,
@@ -28,3 +31,10 @@ export const { loginSuccess, logout } = authSlice.actions;
 
 export default authSlice.reducer;
 
+export function useAuthCheck() {
+    const token = useSelector(state => state.auth.token);
+    const navigate = useNavigate();
+    useEffect(() => {
+        token || navigate('/');
+    }, [token, navigate]);
+}

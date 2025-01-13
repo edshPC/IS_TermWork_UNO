@@ -1,10 +1,10 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import { logout } from '../storage/authSlice';
+import {logout, useAuthCheck} from '../storage/authSlice';
 
 const MainPage = () => {
+    useAuthCheck();
     const username = useSelector((state) => state.auth.username);
     const dispatch = useDispatch();
     const navigate = useNavigate();

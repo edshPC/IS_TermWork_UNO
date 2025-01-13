@@ -8,8 +8,10 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import {joinGame} from "../storage/gameSlice.jsx";
+import {useAuthCheck} from "../storage/authSlice.jsx";
 
 const CreateRoomPage = () => {
+    useAuthCheck();
     const [roomName, setRoomName] = useState('');
     const [password, setPassword] = useState('');
     const [maxPlayers, setMaxPlayers] = useState('');

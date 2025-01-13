@@ -14,10 +14,12 @@ export default function GameApp() {
     const phaserRef = useRef();
     const navigate = useNavigate();
     
-    if (!username || !token || !gameUUID || !privateUUID) {
-        navigate('/main');
-    }
-
+    useEffect(() => {
+        if (!username || !token || !gameUUID || !privateUUID) {
+            navigate('/main');
+        }
+    }, [username, token, gameUUID, privateUUID, navigate]);
+    
     const packetHandler = useMemo(() =>
         new PacketHandler(gameUUID, privateUUID, token), [gameUUID, privateUUID, token]);
 

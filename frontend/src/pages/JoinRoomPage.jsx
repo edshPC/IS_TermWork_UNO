@@ -16,8 +16,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {joinGame} from "../storage/gameSlice.jsx";
+import {useAuthCheck} from "../storage/authSlice.jsx";
 
 const JoinRoomPage = () => {
+    useAuthCheck();
     const [rooms, setRooms] = useState([]);
     const [filteredRooms, setFilteredRooms] = useState([]);
     const [password, setPassword] = useState('');
