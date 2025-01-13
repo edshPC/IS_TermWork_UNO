@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,8 +28,26 @@ public class AchievementService {
 
     public void addAchievementToUser(String username, Achievement achievement) {
         User user = userService.findByUsername(username);
-        user.getAchievements().add(achievement);
-        userRepository.save(user);
+        Achievement finalAchievement = achievement;
+        Optional<Achievement> existingAchievement = user.getAchievements().stream()
+                .filter(a -> a.getName().equals(finalAchievement.getName()))
+                .findFirst();
+
+        if (existingAchievement.isEmpty()) {
+            achievement = achievementRepository.save(achievement); // Сохраняем достижение перед добавлением в коллекцию
+            user.getAchievements().add(achievement);
+            userRepository.save(user);
+        }
+    }
+
+    public Optional<AchievementDTO> addViewStatisticsAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement viewStatisticsAchievement = Achievement.builder()
+                .name("Просмотр статистики")
+                .description("Просмотрел статистику")
+                .build();
+        addAchievementToUser(username, viewStatisticsAchievement);
+        return Optional.of(toAchievementDTO(viewStatisticsAchievement));
     }
 
     private AchievementDTO toAchievementDTO(Achievement achievement) {

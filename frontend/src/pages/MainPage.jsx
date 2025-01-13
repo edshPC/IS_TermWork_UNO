@@ -27,6 +27,10 @@ const MainPage = () => {
         navigate('/statistics');
     };
 
+    const handleViewAchievements = () => {
+        navigate('/achievements');
+    };
+
     return (
         <div className="min-h-screen flex flex-col bg-gray-900 p-4">
             <h1 className="text-4xl font-bold text-white text-center mb-4">Добро пожаловать, {username}!</h1>
@@ -56,6 +60,7 @@ const MainPage = () => {
                     <Button
                         variant="contained"
                         className="w-64 h-32 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded"
+                        onClick={handleViewAchievements}
                     >
                         Посмотреть достижения
                     </Button>

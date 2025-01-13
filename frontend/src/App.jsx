@@ -10,6 +10,7 @@ import GameApp from "./game/GameApp";
 import CreateRoomPage from './pages/CreateRoomPage';
 import JoinRoomPage from './pages/JoinRoomPage';
 import StatisticsPage from './pages/StatisticsPage';
+import AchievementsPage from './pages/AchievementsPage'
 
 export default function App() {
     return (
@@ -24,6 +25,7 @@ export default function App() {
                     <Route path="/create-room" element={<CreateRoomPage />} />
                     <Route path="/join-room" element={<JoinRoomPage />} />
                     <Route path="/statistics" element={<StatisticsPage />} />
+                    <Route path="/achievements" element={<AchievementsPage />} />
                 </Routes>
             </Router>
         </Provider>
