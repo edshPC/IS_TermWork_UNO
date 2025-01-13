@@ -1,11 +1,22 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 
 import {PhaserGame} from './PhaserGame.jsx';
 import PacketHandler from "./network/PacketHandler.js";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
-export default function GameApp({gameUUID, privateUUID, token, username}) {
-    //  References to the PhaserGame component (game and scene are exposed)
+export default function GameApp() {
+    const username = useSelector(state => state.auth.username);
+    const token = useSelector(state => state.auth.token);
+    const gameUUID = useSelector(state => state.game.gameUUID);
+    const privateUUID = useSelector(state => state.game.privateUUID);
+    
     const phaserRef = useRef();
+    const navigate = useNavigate();
+    
+    if (!username || !token || !gameUUID || !privateUUID) {
+        navigate('/main');
+    }
 
     const packetHandler = useMemo(() =>
         new PacketHandler(gameUUID, privateUUID, token), [gameUUID, privateUUID, token]);

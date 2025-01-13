@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -15,6 +15,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import {joinGame} from "../storage/gameSlice.jsx";
 
 const JoinRoomPage = () => {
     const [rooms, setRooms] = useState([]);
@@ -26,6 +27,7 @@ const JoinRoomPage = () => {
     const [searchOwner, setSearchOwner] = useState('');
     const token = useSelector((state) => state.auth.token) || localStorage.getItem('token');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchRooms = async () => {
@@ -37,9 +39,9 @@ const JoinRoomPage = () => {
                     },
                 });
                 if (response.ok) {
-                    const data = await response.json();
-                    setRooms(data.data);
-                    setFilteredRooms(data.data); // Отображаем изначально все комнаты
+                    const {data} = await response.json();
+                    setRooms(data);
+                    setFilteredRooms(data); // Отображаем изначально все комнаты
                 } else {
                     setError('Ошибка при загрузке комнат');
                 }
@@ -85,8 +87,9 @@ const JoinRoomPage = () => {
                 }),
             });
             if (response.ok) {
-                const data = await response.json();
-                navigate('/game', { state: { gameUUID: data.gameUUID, privateUUID: data.privateUUID } });
+                const {data} = await response.json();
+                await dispatch(joinGame(data));
+                navigate('/game');
             } else {
                 const errorData = await response.json();
                 setError(errorData.message || 'Ошибка при подключении к комнате');

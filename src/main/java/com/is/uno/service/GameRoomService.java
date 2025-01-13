@@ -41,7 +41,7 @@ public class GameRoomService {
         ));
     }
 
-    public void createGameRoom(CreateGameRoomDTO createGameRoomDTO, User owner) {
+    public JoinRoomResponse createGameRoom(CreateGameRoomDTO createGameRoomDTO, User owner) {
         GameRoom gameRoom = GameRoom.builder()
                 .roomName(createGameRoomDTO.getRoomName())
                 .maxPlayers(createGameRoomDTO.getMaxPlayers())
@@ -54,7 +54,7 @@ public class GameRoomService {
         }
 
         gameRoom = gameRoomRepository.save(gameRoom);
-        joinGameRoom(JoinGameRoomDTO.builder()
+        return joinGameRoom(JoinGameRoomDTO.builder()
                 .roomId(gameRoom.getId())
                 .password(createGameRoomDTO.getPassword())
                 .build(), owner);
@@ -83,6 +83,7 @@ public class GameRoomService {
         GamePlayer gamePlayer = game.getPlayerByUser(user);
 
         return JoinRoomResponse.builder()
+                .roomId(gameRoom.getId())
                 .gameUUID(game.getUuid())
                 .privateUUID(gamePlayer.getUuid())
                 .build();

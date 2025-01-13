@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
+import {joinGame} from "../storage/gameSlice.jsx";
 
 const CreateRoomPage = () => {
     const [roomName, setRoomName] = useState('');
@@ -14,11 +15,10 @@ const CreateRoomPage = () => {
     const [maxPlayers, setMaxPlayers] = useState('');
     const [maxScore, setMaxScore] = useState('');
     const [error, setError] = useState('');
-    const [gameUUID, setGameUUID] = useState(null);
-    const [privateUUID, setPrivateUUID] = useState(null);
     const navigate = useNavigate();
     const token = useSelector((state) => state.auth.token) || localStorage.getItem('token');
-
+    const dispatch = useDispatch();
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -37,37 +37,15 @@ const CreateRoomPage = () => {
                 }),
             });
             if (response.ok) {
-                const data = await response.json();
-                const roomId = data.id;
-                joinGame(roomId);
+                const {data} = await response.json();
+                await dispatch(joinGame(data));
+                navigate('/game');
             } else {
                 const data = await response.json();
                 setError(data.message || "Ошибка при создании комнаты");
             }
         } catch (err) {
             setError("Произошла ошибка при создании комнаты");
-        }
-    };
-
-    const joinGame = async (roomId) => {
-        if (!token) return;
-        try {
-            const response = await fetch('http://localhost:8080/api/room/join', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    roomId: roomId
-                }),
-            });
-            const data = await response.json();
-            setGameUUID(data.gameUUID);
-            setPrivateUUID(data.privateUUID);
-            navigate('/game');
-        } catch (err) {
-            setError("Произошла ошибка при присоединении к комнате");
         }
     };
 

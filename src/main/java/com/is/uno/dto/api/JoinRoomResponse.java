@@ -12,6 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class JoinRoomResponse {
+    private Long roomId;
     private UUID gameUUID;
     private UUID privateUUID;
 }
