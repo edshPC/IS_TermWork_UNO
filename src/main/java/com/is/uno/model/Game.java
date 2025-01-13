@@ -19,7 +19,7 @@ public class Game implements Serializable {
     private Long id;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private LocalDateTime startTime = LocalDateTime.now();
 
     @Column(name = "end_time")
     private LocalDateTime endTime;

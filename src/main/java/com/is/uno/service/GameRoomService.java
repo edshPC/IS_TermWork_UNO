@@ -8,9 +8,7 @@ import com.is.uno.dao.PlayerRepository;
 import com.is.uno.dto.api.*;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
-import com.is.uno.model.GameRoom;
-import com.is.uno.model.Player;
-import com.is.uno.model.User;
+import com.is.uno.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,15 +99,15 @@ public class GameRoomService {
                 .collect(Collectors.toList());
     }
 
-    public List<GameStatDTO> onSingleGameOver(Player winner, Map<Player, Long> gameStats) {
-        // TODO statisticsService.updatePlayerStatistics();
+    public List<GameStatDTO> onSingleGameOver(Game game, List<GameScore> scores) {
         List<GameStatDTO> stats = new LinkedList<>();
-        for (var entry : gameStats.entrySet()) {
+        for (var score : scores) {
             stats.add(GameStatDTO.builder()
-                    .username(entry.getKey().getUser().getUsername())
-                    .score(entry.getValue())
-                    .totalScore(entry.getValue()) // TODO счёт из БД
+                    .username(score.getPlayer().getUser().getUsername())
+                    .score(score.getScore())
+                    .totalScore(score.getScore()) // TODO счёт из БД
                     .build());
+            statisticsService.updatePlayerStatistics(score);
         }
         stats.sort(Comparator.comparingLong(GameStatDTO::getTotalScore));
         return stats;

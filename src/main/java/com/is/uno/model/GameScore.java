@@ -21,11 +21,11 @@ public class GameScore implements Serializable {
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
     @Column(name = "score", nullable = false)
     @Min(value = 0, message = "Счет может быть 0 или больше")
-    private Integer score;
+    private Long score;
 }

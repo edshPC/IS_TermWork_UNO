@@ -2,9 +2,7 @@ package com.is.uno.service;
 
 import com.is.uno.dao.StatisticsRepository;
 import com.is.uno.dto.api.StatisticsDTO;
-import com.is.uno.model.GameScore;
-import com.is.uno.model.Statistics;
-import com.is.uno.model.User;
+import com.is.uno.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +28,19 @@ public class StatisticsService {
                 .collect(Collectors.toList());
     }
 
-    public void updatePlayerStatistics(String username, GameScore gameScore) {
-        User user = userService.findByUsername(username);
+    public void updatePlayerStatistics(GameScore gameScore) {
+        Player player = gameScore.getPlayer();
+        User user = player.getUser();
         Statistics statistics = findByUser(user);
+        Game game = gameScore.getGame();
 
         statistics.setPlayCount(statistics.getPlayCount() + 1);
-        statistics.setWinCount(statistics.getWinCount() + (gameScore.getScore() > 0 ? 1 : 0));
+        if (game.getWinner().equals(player)) statistics.setWinCount(statistics.getWinCount() + 1);
         Duration gameDuration = Duration.between(gameScore.getGame().getStartTime(), gameScore.getGame().getEndTime());
         statistics.setTimePlayed(statistics.getTimePlayed().plus(gameDuration));
+
+        // TODO RATING
+
         statisticsRepository.save(statistics);
     }
 
