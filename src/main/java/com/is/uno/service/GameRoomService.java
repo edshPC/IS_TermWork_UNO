@@ -67,7 +67,7 @@ public class GameRoomService {
         GameRoom gameRoom = findById(joinGameRoomDTO.getRoomId());
         if (gameRoom.getPassword() != null &&
             !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
-            throw new ForbiddenException("Incorrect password");
+            throw new ForbiddenException("Неверный пароль комнаты");
         }
 
         Player player = playerService.findByRoomAndUserOrCreate(gameRoom, user);
@@ -79,7 +79,7 @@ public class GameRoomService {
         long playerCount = playerService.countPlayersInRoom(gameRoom);
         if (playerCount > gameRoom.getMaxPlayers()) {
             playerRepository.delete(player);
-            throw new ForbiddenException("The room is full");
+            throw new ForbiddenException("Комната заполнена");
         }
         if (playerCount >= gameRoom.getMaxPlayers()) {
             gameRoom.setVisible(false);
@@ -99,13 +99,14 @@ public class GameRoomService {
     public List<GameRoomDTO> getAllGameRooms() {
         List<GameRoom> gameRooms = gameRoomRepository.findAll();
         return gameRooms.stream()
+                .filter(GameRoom::getVisible)
                 .map(this::toGameRoomDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<GameStatDTO> onSingleGameOver(Game game, List<GameScore> scores) {
+    public LinkedList<GameStatDTO> onSingleGameOver(Game game, List<GameScore> scores) {
         gameRepository.save(game);
-        List<GameStatDTO> stats = new LinkedList<>();
+        LinkedList<GameStatDTO> stats = new LinkedList<>();
         for (var score : scores) {
             stats.add(GameStatDTO.builder()
                     .username(score.getPlayer().getUser().getUsername())
@@ -119,6 +120,11 @@ public class GameRoomService {
             gameScoreRepository.save(score);
         }
         stats.sort(Comparator.comparingLong(GameStatDTO::getTotalScore));
+        if (game.getRoom().getMaxScore() > 0 &&
+            stats.getLast().getTotalScore() >= game.getRoom().getMaxScore()) {
+            game.getRoom().setVisible(false);
+            gameRoomRepository.save(game.getRoom());
+        }
         return stats;
     }
 

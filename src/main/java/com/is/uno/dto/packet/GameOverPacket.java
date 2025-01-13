@@ -12,6 +12,7 @@ public class GameOverPacket extends Packet {
 
     private List<GameStatDTO> stats; // Player username -> Score
     private String winner;
+    private boolean gameOver;
 
     public GameOverPacket() {
         super(PacketType.GAME_OVER_PACKET);

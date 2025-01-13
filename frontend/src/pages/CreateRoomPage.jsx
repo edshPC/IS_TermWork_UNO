@@ -102,7 +102,7 @@ const CreateRoomPage = () => {
                                 id="maxScore"
                                 label="Максимальный счет"
                                 type="number"
-                                placeholder="Введите максимальный счет"
+                                placeholder="Введите максимальный счет (0 - бесконечно)"
                                 value={maxScore}
                                 onChange={(e) => setMaxScore(e.target.value)}
                                 required

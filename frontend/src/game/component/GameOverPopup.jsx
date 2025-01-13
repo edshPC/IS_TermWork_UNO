@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import { EventBus } from "../EventBus.js";
+import {useNavigate} from "react-router-dom";
 
-export default function GameOverPopup() {
+export default function GameOverPopup({packetHandler}) {
     const [isVisible, setIsVisible] = useState(false);
     const [info, setInfo] = useState({stats: []});
 
     useEffect(() => {
         const onPacket = (packet) => {
             setIsVisible(true);
-            setInfo(packet)
+            setInfo(packet);
         };
         EventBus.on('packet-GAME_OVER_PACKET', onPacket);
         return () => EventBus.removeListener('packet-GAME_OVER_PACKET', onPacket);
     }, []);
+    
+    const onClose = () => {
+        if (info.gameOver) packetHandler.disconnect();
+        else setIsVisible(false);
+    }
+    
     
     const statisticsComponent = (
         <div className="flex flex-col h-64 w-96 bg-blue-700 p-4 rounded-lg shadow-lg">
@@ -26,16 +33,19 @@ export default function GameOverPopup() {
                     </p>
                 ))}
             </div>
+            {info.gameOver && (
+                <p><b>Достигнуто максимальное количество очков: Игра завершена</b></p>
+            )}
             <button
                 className="bg-pink-700 text-white rounded px-2 py-1"
-                onClick={() => setIsVisible(false)}
+                onClick={onClose}
             >
                 Закрыть
             </button>
         </div>
     );
 
-    return ( // TODO по центру?
+    return ( 
         <div className="fixed">
             {isVisible && statisticsComponent}
         </div>

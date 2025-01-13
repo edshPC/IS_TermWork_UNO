@@ -40,7 +40,7 @@ export default function GameApp() {
                     Покинуть игру
                 </button>
             </div>
-            <GameOverPopup />
+            <GameOverPopup packetHandler={packetHandler} />
         </div>
     )
 }

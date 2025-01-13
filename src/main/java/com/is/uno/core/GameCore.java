@@ -232,6 +232,8 @@ public class GameCore {
         var pkt = new GameOverPacket();
         pkt.setWinner(winner.getUsername());
         pkt.setStats(stats);
+        pkt.setGameOver(room.getMaxScore() > 0 &&
+                        stats.getLast().getTotalScore() >= room.getMaxScore());
         packetHandler.sendPacketToAllPlayers(pkt);
 
         state = null;
