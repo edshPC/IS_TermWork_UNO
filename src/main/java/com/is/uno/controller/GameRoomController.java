@@ -1,6 +1,7 @@
 package com.is.uno.controller;
 
 import com.is.uno.dto.DataResponse;
+import com.is.uno.dto.api.CreateGameRoomDTO;
 import com.is.uno.dto.api.GameRoomDTO;
 import com.is.uno.dto.api.JoinGameRoomDTO;
 import com.is.uno.dto.SimpleResponse;
@@ -19,9 +20,9 @@ public class GameRoomController {
     private final GameRoomService gameRoomService;
 
     @PostMapping
-    public ResponseEntity<?> createGameRoom(@RequestBody GameRoomDTO gameRoomDTO,
+    public ResponseEntity<?> createGameRoom(@RequestBody CreateGameRoomDTO createGameRoomDTO,
                                             @AuthenticationPrincipal User user) {
-        gameRoomService.createGameRoom(gameRoomDTO, user);
+        gameRoomService.createGameRoom(createGameRoomDTO, user);
         return SimpleResponse.success();
     }
 

@@ -5,6 +5,7 @@ import com.is.uno.core.GameCoreProvider;
 import com.is.uno.core.GamePlayer;
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.PlayerRepository;
+import com.is.uno.dto.api.CreateGameRoomDTO;
 import com.is.uno.dto.api.GameRoomDTO;
 import com.is.uno.dto.api.JoinGameRoomDTO;
 import com.is.uno.dto.api.JoinRoomResponse;
@@ -40,22 +41,22 @@ public class GameRoomService {
         ));
     }
 
-    public void createGameRoom(GameRoomDTO gameRoomDTO, User owner) {
+    public void createGameRoom(CreateGameRoomDTO createGameRoomDTO, User owner) {
         GameRoom gameRoom = GameRoom.builder()
-                .roomName(gameRoomDTO.getRoomName())
-                .maxPlayers(gameRoomDTO.getMaxPlayers())
-                .maxScore(gameRoomDTO.getMaxScore())
+                .roomName(createGameRoomDTO.getRoomName())
+                .maxPlayers(createGameRoomDTO.getMaxPlayers())
+                .maxScore(createGameRoomDTO.getMaxScore())
                 .owner(owner)
                 .visible(true)
                 .build();
-        if (gameRoomDTO.getPassword() != null) {
-            gameRoom.setPassword(passwordEncoder.encode(gameRoomDTO.getPassword()));
+        if (createGameRoomDTO.getPassword() != null) {
+            gameRoom.setPassword(passwordEncoder.encode(createGameRoomDTO.getPassword()));
         }
 
         gameRoom = gameRoomRepository.save(gameRoom);
         joinGameRoom(JoinGameRoomDTO.builder()
                 .roomId(gameRoom.getId())
-                .password(gameRoomDTO.getPassword())
+                .password(createGameRoomDTO.getPassword())
                 .build(), owner);
     }
 
