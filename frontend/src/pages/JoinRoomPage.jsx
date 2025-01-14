@@ -121,15 +121,6 @@ const JoinRoomPage = () => {
     return (
         <div className="min-h-screen flex flex-col items-center bg-gray-900 p-4">
             <h1 className="text-3xl font-bold text-white mb-4">Список игровых комнат</h1>
-            <div className="flex-grow flex justify-center items-center">
-                <Button
-                    onClick={handleLogout}
-                    variant="outline"
-                    className="w-40 h-12 bg-transparent hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-center mt-auto"
-                >
-                    Выйти
-                </Button>
-            </div>
             <div className="mb-4 flex justify-center gap-4 w-full max-w-4xl">
                 <TextField
                     label="Поиск по владельцу"
@@ -210,6 +201,15 @@ const JoinRoomPage = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <div className="flex-grow flex justify-center items-center">
+                <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="w-40 h-12 bg-transparent hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-center mt-auto"
+                >
+                    Выйти
+                </Button>
+            </div>
         </div>
     );
 };
