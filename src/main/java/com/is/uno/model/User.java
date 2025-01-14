@@ -29,7 +29,7 @@ public class User implements UserDetails {
     @Column(name = "registration_date", nullable = false)
     private LocalDateTime registrationDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_achievements",
             joinColumns = @JoinColumn(name = "username"),
