@@ -1,11 +1,12 @@
 package com.is.uno.service;
 
-import com.is.uno.dao.*;
-import com.is.uno.dto.*;
+import com.is.uno.dao.UserRepository;
+import com.is.uno.dto.AuthResponse;
 import com.is.uno.dto.api.LoginUserDTO;
 import com.is.uno.dto.api.RegisterUserDTO;
-import com.is.uno.exception.*;
-import com.is.uno.model.*;
+import com.is.uno.exception.AuthenticationException;
+import com.is.uno.exception.UserAlreadyExistException;
+import com.is.uno.model.User;
 import com.is.uno.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,10 +48,15 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginUserDTO loginUserDto) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginUserDto.getUsername(), loginUserDto.getPassword())
+            );
+        } catch (Exception e) {
+            throw new AuthenticationException("Неверное имя пользователя или пароль");
+        }
+
         User user = userService.findByUsername(loginUserDto.getUsername());
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginUserDto.getUsername(), loginUserDto.getPassword())
-        );
 
         String token = jwtUtils.generateJwtToken(user.getUsername());
         return new AuthResponse(

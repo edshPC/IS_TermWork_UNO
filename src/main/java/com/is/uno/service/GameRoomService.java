@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +44,10 @@ public class GameRoomService {
     }
 
     public JoinRoomResponse createGameRoom(CreateGameRoomDTO createGameRoomDTO, User owner) {
+        if (createGameRoomDTO.getMaxPlayers() < 2) {
+            throw new IllegalArgumentException("Минимальное количество игроков: 2");
+        }
+
         GameRoom gameRoom = GameRoom.builder()
                 .roomName(createGameRoomDTO.getRoomName())
                 .maxPlayers(createGameRoomDTO.getMaxPlayers())
@@ -66,7 +69,7 @@ public class GameRoomService {
     public JoinRoomResponse joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
         GameRoom gameRoom = findById(joinGameRoomDTO.getRoomId());
         if (gameRoom.getPassword() != null &&
-            !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
+                !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
             throw new ForbiddenException("Неверный пароль комнаты");
         }
 
@@ -113,7 +116,7 @@ public class GameRoomService {
                     .score(score.getScore())
                     .totalScore(
                             score.getScore() +
-                            playerService.calculateTotalScore(score.getPlayer())
+                                    playerService.calculateTotalScore(score.getPlayer())
                     )
                     .build());
             statisticsService.updatePlayerStatistics(score);
@@ -121,7 +124,7 @@ public class GameRoomService {
         }
         stats.sort(Comparator.comparingLong(GameStatDTO::getTotalScore));
         if (game.getRoom().getMaxScore() > 0 &&
-            stats.getLast().getTotalScore() >= game.getRoom().getMaxScore()) {
+                stats.getLast().getTotalScore() >= game.getRoom().getMaxScore()) {
             game.getRoom().setVisible(false);
             gameRoomRepository.save(game.getRoom());
         }
@@ -139,5 +142,4 @@ public class GameRoomService {
                 .owner(gameRoom.getOwner().getUsername())
                 .build();
     }
-
 }
