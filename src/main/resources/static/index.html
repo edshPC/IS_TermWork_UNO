@@ -1,76 +1,18 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>WebSocket Chat</title>
-  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./main.css">
+    <title>Phaser React Template</title>
+  <script type="module" crossorigin src="./assets/index-Fy0z4B7z.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/phaser-Cv0jxUxO.js">
+  <link rel="stylesheet" crossorigin href="./assets/index-CX3x7_AZ.css">
 </head>
+
 <body>
-<ul id="messages"></ul>
-<form onsubmit="connect(); return false;">
-  <input id="username" autocomplete="off" />
-  <input id="password" autocomplete="off" /><button>connect</button>
-</form>
-<form onsubmit="return setId();">
-  <input id="setid" autocomplete="off" /><button>setid</button>
-</form>
-<form onsubmit="return sendMessage();">
-  <input id="message" autocomplete="off" /><button>Send</button>
-</form>
-
-<script>
-  var stompClient = null;
-  var id = 0;
-
-  async function connect() {
-    stompClient?.disconnect();
-    let res = await fetch('api/auth/login', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json;charset=utf-8'},
-      body: JSON.stringify({
-        username: document.getElementById('username').value,
-        password: document.getElementById('password').value,
-      }),
-    });
-    res = await res.json();
-    let token = res.token;
-
-    var socket = new SockJS('/ws?token=' + token);
-    stompClient = Stomp.over(socket);
-    stompClient.connect({
-      Authorization: 'Bearer ' + token
-    }, function (frame) {
-      stompClient.subscribe('/topic/room/' + id, function (update) {
-        let packet = JSON.parse(update.body);
-        showMessage(packet);
-      });
-    });
-  }
-
-  function sendMessage() {
-    var message = document.getElementById('message').value;
-    var packet = {
-      type: 'TEXT_PACKET',
-      text: message
-    };
-    stompClient.send("/app/room/" + id, {}, JSON.stringify(packet));
-    document.getElementById('message').value = '';
-    return false;
-  }
-
-  function setId() {
-    id = +document.getElementById('setid').value;
-    connect();
-    return false;
-  }
-
-  function showMessage(packet) {
-    var item = document.createElement('li');
-    item.textContent = `${packet.sender}: ${packet.text}`;
-    document.getElementById('messages').appendChild(item);
-  }
-
-  //connect();
-</script>
+    <div id="root"></div>
 </body>
 </html>
