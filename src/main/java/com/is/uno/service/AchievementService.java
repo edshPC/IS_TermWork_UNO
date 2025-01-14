@@ -60,6 +60,16 @@ public class AchievementService {
         return Optional.of(toAchievementDTO(registrationAchievement));
     }
 
+    public Optional<AchievementDTO> addFirstRoomCreationAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement firstRoomCreationAchievement = Achievement.builder()
+                .name("Создание первой комнаты")
+                .description("Создал первую игровую комнату")
+                .build();
+        addAchievementToUser(username, firstRoomCreationAchievement);
+        return Optional.of(toAchievementDTO(firstRoomCreationAchievement));
+    }
+
     private AchievementDTO toAchievementDTO(Achievement achievement) {
         return AchievementDTO.builder()
                 .name(achievement.getName())

@@ -6,6 +6,7 @@ import com.is.uno.dto.api.GameRoomDTO;
 import com.is.uno.dto.api.JoinGameRoomDTO;
 import com.is.uno.dto.SimpleResponse;
 import com.is.uno.model.User;
+import com.is.uno.service.AchievementService;
 import com.is.uno.service.GameRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/room")
 public class GameRoomController {
     private final GameRoomService gameRoomService;
+    private final AchievementService achievementService;
 
     @PostMapping
     public ResponseEntity<?> createGameRoom(@RequestBody CreateGameRoomDTO createGameRoomDTO,
                                             @AuthenticationPrincipal User user) {
         var response = gameRoomService.createGameRoom(createGameRoomDTO, user);
+        achievementService.addFirstRoomCreationAchievement(user.getUsername());
         return DataResponse.success(response);
     }
 
