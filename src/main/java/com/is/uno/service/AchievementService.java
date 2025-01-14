@@ -50,6 +50,16 @@ public class AchievementService {
         return Optional.of(toAchievementDTO(viewStatisticsAchievement));
     }
 
+    public Optional<AchievementDTO> addRegistrationAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement registrationAchievement = Achievement.builder()
+                .name("Регистрация")
+                .description("Зарегистрировался в игре")
+                .build();
+        addAchievementToUser(username, registrationAchievement);
+        return Optional.of(toAchievementDTO(registrationAchievement));
+    }
+
     private AchievementDTO toAchievementDTO(Achievement achievement) {
         return AchievementDTO.builder()
                 .name(achievement.getName())
