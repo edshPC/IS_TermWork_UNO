@@ -36,6 +36,15 @@ public class StatisticsService {
         Game game = gameScore.getGame();
 
         statistics.setPlayCount(statistics.getPlayCount() + 1);
+        if (statistics.getPlayCount() == 1) {
+            achievementService.addFirstPlayAchievement(user.getUsername());
+        }
+        if (statistics.getPlayCount() == 5) {
+            achievementService.addFivePlayAchievement(user.getUsername());
+        }
+        if (statistics.getPlayCount() == 10) {
+            achievementService.addTenPlayAchievement(user.getUsername());
+        }
         if (game.getWinner().equals(player)) {
             statistics.setWinCount(statistics.getWinCount() + 1);
             if (statistics.getWinCount() == 1) {

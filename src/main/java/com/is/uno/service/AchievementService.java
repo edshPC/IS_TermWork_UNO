@@ -100,6 +100,36 @@ public class AchievementService {
         return Optional.of(toAchievementDTO(firstWinAchievement));
     }
 
+    public Optional<AchievementDTO> addFirstPlayAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement firstWinAchievement = Achievement.builder()
+                .name("Первая игра")
+                .description("Сыграл первую игру")
+                .build();
+        addAchievementToUser(username, firstWinAchievement);
+        return Optional.of(toAchievementDTO(firstWinAchievement));
+    }
+
+    public Optional<AchievementDTO> addFivePlayAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement firstWinAchievement = Achievement.builder()
+                .name("Пятая игра")
+                .description("Сыграл пять игр")
+                .build();
+        addAchievementToUser(username, firstWinAchievement);
+        return Optional.of(toAchievementDTO(firstWinAchievement));
+    }
+
+    public Optional<AchievementDTO> addTenPlayAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement firstWinAchievement = Achievement.builder()
+                .name("Десятая игра")
+                .description("Сыграл десять игр")
+                .build();
+        addAchievementToUser(username, firstWinAchievement);
+        return Optional.of(toAchievementDTO(firstWinAchievement));
+    }
+
     private AchievementDTO toAchievementDTO(Achievement achievement) {
         return AchievementDTO.builder()
                 .name(achievement.getName())
