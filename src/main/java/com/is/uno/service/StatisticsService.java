@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class StatisticsService {
     private final StatisticsRepository statisticsRepository;
     private final UserService userService;
+    private final AchievementService achievementService;
 
     private Statistics findByUser(User user) {
         return statisticsRepository.findByUserUsername(user.getUsername())
@@ -35,7 +36,18 @@ public class StatisticsService {
         Game game = gameScore.getGame();
 
         statistics.setPlayCount(statistics.getPlayCount() + 1);
-        if (game.getWinner().equals(player)) statistics.setWinCount(statistics.getWinCount() + 1);
+        if (game.getWinner().equals(player)) {
+            statistics.setWinCount(statistics.getWinCount() + 1);
+            if (statistics.getWinCount() == 1) {
+                achievementService.addFirstWinAchievement(user.getUsername());
+            }
+            if (statistics.getWinCount() == 5) {
+                achievementService.addFiveWinAchievement(user.getUsername());
+            }
+            if (statistics.getWinCount() == 10) {
+                achievementService.addTenWinAchievement(user.getUsername());
+            }
+        }
         Duration gameDuration = Duration.between(gameScore.getGame().getStartTime(), gameScore.getGame().getEndTime());
         statistics.setTimePlayed(statistics.getTimePlayed().plus(gameDuration));
         statistics.setRating(statistics.getRating() + gameScore.getRatingGain());

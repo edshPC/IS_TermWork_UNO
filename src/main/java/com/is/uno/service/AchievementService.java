@@ -70,6 +70,36 @@ public class AchievementService {
         return Optional.of(toAchievementDTO(firstRoomCreationAchievement));
     }
 
+    public Optional<AchievementDTO> addFirstWinAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement firstWinAchievement = Achievement.builder()
+                .name("Первая победа")
+                .description("Одержал первую победу")
+                .build();
+        addAchievementToUser(username, firstWinAchievement);
+        return Optional.of(toAchievementDTO(firstWinAchievement));
+    }
+
+    public Optional<AchievementDTO> addFiveWinAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement firstWinAchievement = Achievement.builder()
+                .name("Пять побед")
+                .description("Одержал пять побед")
+                .build();
+        addAchievementToUser(username, firstWinAchievement);
+        return Optional.of(toAchievementDTO(firstWinAchievement));
+    }
+
+    public Optional<AchievementDTO> addTenWinAchievement(String username) {
+        User user = userService.findByUsername(username);
+        Achievement firstWinAchievement = Achievement.builder()
+                .name("Десять побед")
+                .description("Одержал десять побед")
+                .build();
+        addAchievementToUser(username, firstWinAchievement);
+        return Optional.of(toAchievementDTO(firstWinAchievement));
+    }
+
     private AchievementDTO toAchievementDTO(Achievement achievement) {
         return AchievementDTO.builder()
                 .name(achievement.getName())
