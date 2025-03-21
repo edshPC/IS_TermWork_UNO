@@ -10,6 +10,7 @@ import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import {joinGame} from "../storage/gameSlice.jsx";
 import {useAuthCheck} from "../storage/authSlice.jsx";
+import {origin} from "../App.jsx";
 
 const CreateRoomPage = () => {
     useAuthCheck();
@@ -26,7 +27,7 @@ const CreateRoomPage = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:8080/api/room', {
+            const response = await fetch(origin + '/api/room', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',

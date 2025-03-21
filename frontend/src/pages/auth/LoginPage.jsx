@@ -10,6 +10,7 @@ import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { loginSuccess } from "../../storage/authSlice";
+import {origin} from "../../App.jsx";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -21,7 +22,7 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/api/auth/login", {
+            const response = await fetch(origin + '/api/auth/login', {
                 method: "POST",
                 headers: { "Content-Type": "application/json;charset=utf-8" },
                 body: JSON.stringify({ username, password }),

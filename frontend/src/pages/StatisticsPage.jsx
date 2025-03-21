@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import {useAuthCheck} from "../storage/authSlice.jsx";
+import {origin} from "../App.jsx";
 
 const StatisticsPage = () => {
     useAuthCheck();
@@ -23,7 +24,7 @@ const StatisticsPage = () => {
     useEffect(() => {
         const fetchStatistics = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/statistics', {
+                const response = await fetch(origin + '/api/statistics', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

@@ -1,8 +1,7 @@
 import SockJS from 'sockjs-client/dist/sockjs'
 import Stomp from 'stompjs'
 import {EventBus} from "../EventBus.js";
-
-const origin = 'http://localhost:8080';
+import {origin} from "../../App.jsx";
 
 export default class PacketHandler {
     stompClient = null;

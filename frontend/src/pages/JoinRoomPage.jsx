@@ -18,6 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {joinGame} from "../storage/gameSlice.jsx";
 import {useAuthCheck} from "../storage/authSlice.jsx";
+import {origin} from "../App.jsx";
 
 const JoinRoomPage = () => {
     useAuthCheck();
@@ -35,7 +36,7 @@ const JoinRoomPage = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/room', {
+                const response = await fetch(origin + '/api/room', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -79,7 +80,7 @@ const JoinRoomPage = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:8080/api/room/join', {
+            const response = await fetch(origin + '/api/room/join', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

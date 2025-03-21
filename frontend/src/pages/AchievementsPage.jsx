@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Button from "@mui/material/Button";
+import {origin} from "../App.jsx";
 
 const AchievementsPage = () => {
     const [achievements, setAchievements] = useState([]);
@@ -17,7 +18,7 @@ const AchievementsPage = () => {
     useEffect(() => {
         const fetchAchievements = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/achievement/get-all', {
+                const response = await fetch(origin + '/api/achievement/get-all', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
