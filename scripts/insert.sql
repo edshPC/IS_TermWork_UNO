@@ -33,7 +33,7 @@ VALUES (1, 1, 50),
        (6, 2, 100),
        (7, 2, 120);
 
-INSERT INTO uno_card (type_of_card, color_of_card, value)
+INSERT INTO "uno_card" ("type_of_card", "color_of_card", "value")
 VALUES ('NUMBER', 'RED', 0),
        ('NUMBER', 'RED', 1),
        ('NUMBER', 'RED', 2),
@@ -92,7 +92,7 @@ VALUES ('NUMBER', 'RED', 0),
 alter sequence uno_card_id_seq start with 1;
 delete from uno_card;
 
-INSERT INTO uno_deck (card_id, weight)
+INSERT INTO "uno_deck" ("card_id", "weight")
 VALUES (1, 1.0),
        (2, 2.0),
        (3, 2.0),

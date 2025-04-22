@@ -27,6 +27,6 @@ public class Card implements Serializable {
     private Color color_of_card;
 
     @Min(value = 0, message = "Цифра карты может быть 0 или больше")
-    @Max(value = 9, message = "Цифра карты может быть 9 или меньше")
+    @Max(value = 50, message = "Цифра карты может быть 50 или меньше")
     private Integer value;
 }

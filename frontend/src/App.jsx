@@ -12,7 +12,7 @@ import JoinRoomPage from './pages/JoinRoomPage';
 import StatisticsPage from './pages/StatisticsPage';
 import AchievementsPage from './pages/AchievementsPage'
 
-export const origin = 'http://localhost:80';
+export const origin = '';
 
 export default function App() {
     return (
