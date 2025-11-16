@@ -1,0 +1,236 @@
+game:
+  active-deck: main
+  decks:
+    main:
+      cards:
+        # Красные цифровые карты (0-9)
+        - type: NUMBER
+          color: RED
+          value: 0
+          weight: 1.0
+        - type: NUMBER
+          color: RED
+          value: 1
+          weight: 2.0
+        - type: NUMBER
+          color: RED
+          value: 2
+          weight: 2.0
+        - type: NUMBER
+          color: RED
+          value: 3
+          weight: 2.0
+        - type: NUMBER
+          color: RED
+          value: 4
+          weight: 2.0
+        - type: NUMBER
+          color: RED
+          value: 5
+          weight: 2.0
+        - type: NUMBER
+          color: RED
+          value: 6
+          weight: 2.0
+        - type: NUMBER
+          color: RED
+          value: 7
+          weight: 2.0
+        - type: NUMBER
+          color: RED
+          value: 8
+          weight: 2.0
+        - type: NUMBER
+          color: RED
+          value: 9
+          weight: 2.0
+
+        # Синие цифровые карты (0-9)
+        - type: NUMBER
+          color: BLUE
+          value: 0
+          weight: 1.0
+        - type: NUMBER
+          color: BLUE
+          value: 1
+          weight: 2.0
+        - type: NUMBER
+          color: BLUE
+          value: 2
+          weight: 2.0
+        - type: NUMBER
+          color: BLUE
+          value: 3
+          weight: 2.0
+        - type: NUMBER
+          color: BLUE
+          value: 4
+          weight: 2.0
+        - type: NUMBER
+          color: BLUE
+          value: 5
+          weight: 2.0
+        - type: NUMBER
+          color: BLUE
+          value: 6
+          weight: 2.0
+        - type: NUMBER
+          color: BLUE
+          value: 7
+          weight: 2.0
+        - type: NUMBER
+          color: BLUE
+          value: 8
+          weight: 2.0
+        - type: NUMBER
+          color: BLUE
+          value: 9
+          weight: 2.0
+
+        # Зеленые цифровые карты (0-9)
+        - type: NUMBER
+          color: GREEN
+          value: 0
+          weight: 1.0
+        - type: NUMBER
+          color: GREEN
+          value: 1
+          weight: 2.0
+        - type: NUMBER
+          color: GREEN
+          value: 2
+          weight: 2.0
+        - type: NUMBER
+          color: GREEN
+          value: 3
+          weight: 2.0
+        - type: NUMBER
+          color: GREEN
+          value: 4
+          weight: 2.0
+        - type: NUMBER
+          color: GREEN
+          value: 5
+          weight: 2.0
+        - type: NUMBER
+          color: GREEN
+          value: 6
+          weight: 2.0
+        - type: NUMBER
+          color: GREEN
+          value: 7
+          weight: 2.0
+        - type: NUMBER
+          color: GREEN
+          value: 8
+          weight: 2.0
+        - type: NUMBER
+          color: GREEN
+          value: 9
+          weight: 2.0
+
+        # Желтые цифровые карты (0-9)
+        - type: NUMBER
+          color: YELLOW
+          value: 0
+          weight: 1.0
+        - type: NUMBER
+          color: YELLOW
+          value: 1
+          weight: 2.0
+        - type: NUMBER
+          color: YELLOW
+          value: 2
+          weight: 2.0
+        - type: NUMBER
+          color: YELLOW
+          value: 3
+          weight: 2.0
+        - type: NUMBER
+          color: YELLOW
+          value: 4
+          weight: 2.0
+        - type: NUMBER
+          color: YELLOW
+          value: 5
+          weight: 2.0
+        - type: NUMBER
+          color: YELLOW
+          value: 6
+          weight: 2.0
+        - type: NUMBER
+          color: YELLOW
+          value: 7
+          weight: 2.0
+        - type: NUMBER
+          color: YELLOW
+          value: 8
+          weight: 2.0
+        - type: NUMBER
+          color: YELLOW
+          value: 9
+          weight: 2.0
+
+        # Карты +2 (все цвета)
+        - type: PLUS_TWO
+          color: RED
+          value: 20
+          weight: 2.0
+        - type: PLUS_TWO
+          color: BLUE
+          value: 20
+          weight: 2.0
+        - type: PLUS_TWO
+          color: GREEN
+          value: 20
+          weight: 2.0
+        - type: PLUS_TWO
+          color: YELLOW
+          value: 20
+          weight: 2.0
+
+        # Карты смены направления (все цвета)
+        - type: CHANGE_DIRECTION
+          color: RED
+          value: 20
+          weight: 2.0
+        - type: CHANGE_DIRECTION
+          color: BLUE
+          value: 20
+          weight: 2.0
+        - type: CHANGE_DIRECTION
+          color: GREEN
+          value: 20
+          weight: 2.0
+        - type: CHANGE_DIRECTION
+          color: YELLOW
+          value: 20
+          weight: 2.0
+
+        # Карты пропуска хода (все цвета)
+        - type: SKIP
+          color: RED
+          value: 20
+          weight: 2.0
+        - type: SKIP
+          color: BLUE
+          value: 20
+          weight: 2.0
+        - type: SKIP
+          color: GREEN
+          value: 20
+          weight: 2.0
+        - type: SKIP
+          color: YELLOW
+          value: 20
+          weight: 2.0
+
+        # Специальные черные карты
+        - type: CHOOSE_COLOR
+          color: BLACK
+          value: 50
+          weight: 4.0
+        - type: PLUS_FOUR
+          color: BLACK
+          value: 50
+          weight: 4.0

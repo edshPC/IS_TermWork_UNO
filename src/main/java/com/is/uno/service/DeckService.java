@@ -1,19 +1,23 @@
 package com.is.uno.service;
 
-import com.is.uno.dao.DeckRepository;
-import com.is.uno.model.Deck;
+import com.is.uno.config.Deck;
+import com.is.uno.config.GameConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
+@EnableConfigurationProperties(GameConfig.class)
 public class DeckService {
-    private final DeckRepository deckRepository;
 
-    public List<Deck> getActualDeck() {
-        return deckRepository.findAll();
+    private final GameConfig gameConfig;
+
+    public Deck getActualDeck() {
+        String activeDeck = gameConfig.getActiveDeck();
+        return gameConfig.getDecks().get(activeDeck);
     }
 
 }
