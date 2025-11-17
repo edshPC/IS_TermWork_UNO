@@ -6,7 +6,7 @@ import com.is.uno.core.GamePlayer;
 import com.is.uno.dao.GameRepository;
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.GameScoreRepository;
-import com.is.uno.dao.PlayerRepository;
+import com.is.uno.dao.UserRepository;
 import com.is.uno.dto.api.*;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GameRoomService {
     private final GameRoomRepository gameRoomRepository;
-    private final PlayerRepository playerRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final PlayerService playerService;
+    private final UserService userService;
     private final StatisticsService statisticsService;
     private final GameScoreRepository gameScoreRepository;
     private final GameRepository gameRepository;
@@ -73,15 +73,14 @@ public class GameRoomService {
             throw new ForbiddenException("Неверный пароль комнаты");
         }
 
-        Player player = playerService.findByRoomAndUserOrCreate(gameRoom, user);
         if (joinGameRoomDTO.getInGameName() != null) {
-            player.setInGameName(joinGameRoomDTO.getInGameName());
+            user.setInGameName(joinGameRoomDTO.getInGameName());
         }
-        playerRepository.save(player);
+      // playerRepository.save(user);
 
-        long playerCount = playerService.countPlayersInRoom(gameRoom);
+        long playerCount = userService.countPlayersInRoom(gameRoom);
         if (playerCount > gameRoom.getMaxPlayers()) {
-            playerRepository.delete(player);
+          //  userRepository.delete(user);
             throw new ForbiddenException("Комната заполнена");
         }
         if (playerCount >= gameRoom.getMaxPlayers()) {
@@ -112,11 +111,11 @@ public class GameRoomService {
         LinkedList<GameStatDTO> stats = new LinkedList<>();
         for (var score : scores) {
             stats.add(GameStatDTO.builder()
-                    .username(score.getPlayer().getUser().getUsername())
+                    .username(score.getUser().getUsername())
                     .score(score.getScore())
                     .totalScore(
                             score.getScore() +
-                                    playerService.calculateTotalScore(score.getPlayer())
+                                    userService.calculateTotalScore(score.getUser())
                     )
                     .build());
             statisticsService.updatePlayerStatistics(score);

@@ -30,8 +30,7 @@ public class StatisticsService {
     }
 
     public void updatePlayerStatistics(GameScore gameScore) {
-        Player player = gameScore.getPlayer();
-        User user = player.getUser();
+        User user = gameScore.getUser();
         Statistics statistics = findByUser(user);
         Game game = gameScore.getGame();
 
@@ -45,7 +44,7 @@ public class StatisticsService {
         if (statistics.getPlayCount() == 10) {
             achievementService.addTenPlayAchievement(user.getUsername());
         }
-        if (game.getWinner().equals(player)) {
+        if (game.getWinner().equals(user)) {
             statistics.setWinCount(statistics.getWinCount() + 1);
             if (statistics.getWinCount() == 1) {
                 achievementService.addFirstWinAchievement(user.getUsername());

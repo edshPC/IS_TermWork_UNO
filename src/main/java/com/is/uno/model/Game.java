@@ -28,8 +28,8 @@ public class Game implements Serializable {
     private Integer playerCount;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "player_id", nullable = false)
-    private Player winner;
+    @JoinColumn(name = "username", nullable = false)
+    private User winner;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_id", nullable = false)

@@ -3,7 +3,7 @@ package com.is.uno.core;
 import com.is.uno.dto.api.CardDTO;
 import com.is.uno.dto.packet.Action;
 import com.is.uno.dto.packet.PlayerActionPacket;
-import com.is.uno.model.Player;
+import com.is.uno.model.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,9 +14,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
-public class GamePlayer extends Player {
+public class GamePlayer extends User {
     @Getter
-    private final Player player;
+    private final User player;
 
     @Getter
     private final UUID uuid = UUID.randomUUID();
@@ -99,7 +99,7 @@ public class GamePlayer extends Player {
     }
 
     public String getUsername() {
-        return player.getUser().getUsername();
+        return player.getUsername();
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.is.uno.dto.packet.*;
 import com.is.uno.model.*;
 import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
-import com.is.uno.service.PlayerService;
+import com.is.uno.service.UserService;
 import com.is.uno.socket.PacketHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class GameCore {
     private final Long roomId;
     private final SimpMessagingTemplate messagingTemplate;
     private final GameRoomService gameRoomService;
-    private final PlayerService playerService;
+    private final UserService userService;
     private final DeckService deckService;
 
     @Getter
@@ -54,7 +54,7 @@ public class GameCore {
         if (players.containsKey(user.getUsername())) {
             return players.get(user.getUsername());
         }
-        GamePlayer player = new GamePlayer(playerService.findByRoomAndUserOrCreate(room, user));
+        GamePlayer player = new GamePlayer(user);
         onPlayerPreJoin(player);
         return player;
     }
@@ -209,7 +209,7 @@ public class GameCore {
         for (var player : players.values()) {
             var score = new GameScore();
             score.setGame(game);
-            score.setPlayer(player.getPlayer());
+            score.setUser(player.getPlayer());
             score.setScore(player.getTotalCardScore());
             scores.add(score);
             totalScore += score.getScore();

@@ -5,7 +5,7 @@ import com.is.uno.dto.api.GameRoomDTO;
 import com.is.uno.dto.api.PlayerDTO;
 import com.is.uno.dto.SimpleResponse;
 import com.is.uno.model.GameRoom;
-import com.is.uno.service.PlayerService;
+import com.is.uno.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/player")
 public class PlayerController {
-    private final PlayerService playerService;
+    private final UserService userService;
 
-    @PutMapping("/{id}/inGameName")
-    public ResponseEntity<?> updatePlayerInGameName(@PathVariable Long id, @RequestBody String newInGameName) {
-        playerService.updatePlayerInGameName(id, newInGameName);
+    @PutMapping("/{username}/inGameName")
+    public ResponseEntity<?> updatePlayerInGameName(@PathVariable String username, @RequestBody String newInGameName) {
+        userService.updatePlayerInGameName(username, newInGameName);
         return SimpleResponse.success();
     }
 
-    @GetMapping("/{username}")
+    /*@GetMapping("/{username}")
     public ResponseEntity<?> getPlayerByUsername(@PathVariable String username) {
-        var player = playerService.getPlayerByUsername(username);
+        var player = userService.getPlayerByUsername(username);
         return DataResponse.success(player);
-    }
+    }*/
 }
