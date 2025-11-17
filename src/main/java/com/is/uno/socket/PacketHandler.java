@@ -38,7 +38,6 @@ public class PacketHandler {
     public void handle(TextPacket packet, GamePlayer player) {
         packet.setSender(player.getInGameName());
         sendPacketToAllPlayers(packet);
-        game.saveMessage(player, packet.getText());
     }
 
     public void handle(ActionPacket packet, GamePlayer player) {

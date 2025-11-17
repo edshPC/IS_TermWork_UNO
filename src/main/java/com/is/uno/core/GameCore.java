@@ -5,7 +5,6 @@ import com.is.uno.dto.packet.*;
 import com.is.uno.model.*;
 import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
-import com.is.uno.service.MessageService;
 import com.is.uno.service.PlayerService;
 import com.is.uno.socket.PacketHandler;
 import lombok.AccessLevel;
@@ -25,7 +24,6 @@ public class GameCore {
     private final Long roomId;
     private final SimpMessagingTemplate messagingTemplate;
     private final GameRoomService gameRoomService;
-    private final MessageService messageService;
     private final PlayerService playerService;
     private final DeckService deckService;
 
@@ -177,9 +175,6 @@ public class GameCore {
         packetHandler.sendPacketToAllPlayers(state.getGameStatePacket());
     }
 
-    public void saveMessage(GamePlayer player, String message) {
-        messageService.saveMessage(roomId, player.getPlayer(), message);
-    }
 
     public int getPlayerCount() {
         return players.size();

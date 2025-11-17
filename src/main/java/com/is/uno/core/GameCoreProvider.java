@@ -2,7 +2,6 @@ package com.is.uno.core;
 
 import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
-import com.is.uno.service.MessageService;
 import com.is.uno.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,7 +19,6 @@ public class GameCoreProvider {
     private final PlayerService playerService;
     private final GameRoomService gameRoomService;
     private final DeckService deckService;
-    private final MessageService messageService;
 
     // ID -> game
     private final Map<Long, GameCore> gameCoreIds = new ConcurrentHashMap<>();
@@ -33,7 +31,6 @@ public class GameCoreProvider {
                     id,
                     messagingTemplate,
                     gameRoomService,
-                    messageService,
                     playerService,
                     deckService
             );
