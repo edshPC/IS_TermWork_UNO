@@ -8,15 +8,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
-public class GamePlayer extends User {
+public class GamePlayer {
     @Getter
-    private final User player;
+    private final User user;
 
     @Getter
     private final UUID uuid = UUID.randomUUID();
@@ -93,13 +92,12 @@ public class GamePlayer extends User {
         return false;
     }
 
-    @Override
     public String getInGameName() {
-        return player.getInGameName();
+        return user.getInGameName() != null ? user.getInGameName() : user.getUsername();
     }
 
     public String getUsername() {
-        return player.getUsername();
+        return user.getUsername();
     }
 
     @Override

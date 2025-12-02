@@ -1,8 +1,10 @@
 package com.is.uno.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,7 +30,7 @@ public class Game implements Serializable {
     private Integer playerCount;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "username", nullable = false)
+    @JoinColumn(name = "winner", nullable = false)
     private User winner;
 
     @ManyToOne(fetch = FetchType.EAGER)

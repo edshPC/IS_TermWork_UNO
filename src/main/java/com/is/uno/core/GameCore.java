@@ -14,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
@@ -202,14 +205,14 @@ public class GameCore {
 
     private void gameOver(GamePlayer winner) {
         game.setEndTime(LocalDateTime.now());
-        game.setWinner(winner.getPlayer());
+        game.setWinner(winner.getUser());
         List<GameScore> scores = new LinkedList<>();
         long totalScore = 0;
         int playerCount = getPlayerCount();
         for (var player : players.values()) {
             var score = new GameScore();
             score.setGame(game);
-            score.setUser(player.getPlayer());
+            score.setUser(player.getUser());
             score.setScore(player.getTotalCardScore());
             scores.add(score);
             totalScore += score.getScore();
