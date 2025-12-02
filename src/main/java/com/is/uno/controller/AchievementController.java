@@ -17,7 +17,7 @@ public class AchievementController {
     private final AchievementService achievementService;
 
     @GetMapping
-    public ResponseEntity<?> getPlayerAchievements(@AuthenticationPrincipal User user) {
+    public ResponseEntity<?> getUserAchievements(@AuthenticationPrincipal User user) {
         var achievements = achievementService.getPlayerAchievements(user.getUsername());
         return DataResponse.success(achievements);
     }

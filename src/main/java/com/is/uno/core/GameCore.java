@@ -5,7 +5,6 @@ import com.is.uno.dto.packet.*;
 import com.is.uno.model.*;
 import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
-import com.is.uno.service.UserService;
 import com.is.uno.socket.PacketHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +26,6 @@ public class GameCore {
     private final Long roomId;
     private final SimpMessagingTemplate messagingTemplate;
     private final GameRoomService gameRoomService;
-    private final UserService userService;
     private final DeckService deckService;
 
     @Getter
@@ -95,7 +93,7 @@ public class GameCore {
         if (players.isEmpty()) {
             return;
         }
-        if(state != null && state.getCurrentPlayer().equals(player)) switchPlayer();
+        if (state != null && state.getCurrentPlayer().equals(player)) switchPlayer();
         playerOrder.remove(player);
         if (state != null) playerOrder.startFrom(state.getCurrentPlayer());
         packetHandler.sendPacketToAllPlayers(player.getActionPacket(Action.LEAVE));
@@ -253,6 +251,5 @@ public class GameCore {
         var nextPlayer = state.isOrderReversed() ? playerOrder.previous() : playerOrder.next();
         state.setCurrentPlayer(nextPlayer);
     }
-
 
 }

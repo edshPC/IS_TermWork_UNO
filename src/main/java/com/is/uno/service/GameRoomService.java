@@ -7,7 +7,6 @@ import com.is.uno.core.UserEvent;
 import com.is.uno.dao.GameRepository;
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.GameScoreRepository;
-import com.is.uno.dao.UserRepository;
 import com.is.uno.dto.api.*;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
@@ -32,16 +31,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GameRoomService {
     private final GameRoomRepository gameRoomRepository;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final StatisticsService statisticsService;
     private final GameScoreRepository gameScoreRepository;
     private final GameRepository gameRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Setter(onMethod_ = {@Autowired, @Lazy})
     private GameCoreProvider gameCoreProvider;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public GameRoom findById(Long id) {
         return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
@@ -76,18 +74,16 @@ public class GameRoomService {
     public JoinRoomResponse joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
         GameRoom gameRoom = findById(joinGameRoomDTO.getRoomId());
         if (gameRoom.getPassword() != null &&
-                !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
+            !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
             throw new ForbiddenException("Неверный пароль комнаты");
         }
 
         if (joinGameRoomDTO.getInGameName() != null) {
             user.setInGameName(joinGameRoomDTO.getInGameName());
         }
-      // playerRepository.save(user);
 
         long playerCount = userService.countPlayersInRoom(gameRoom);
         if (playerCount > gameRoom.getMaxPlayers()) {
-          //  userRepository.delete(user);
             throw new ForbiddenException("Комната заполнена");
         }
         if (playerCount >= gameRoom.getMaxPlayers()) {
@@ -122,7 +118,7 @@ public class GameRoomService {
                     .score(score.getScore())
                     .totalScore(
                             score.getScore() +
-                                    userService.calculateTotalScore(score.getUser())
+                            userService.calculateTotalScore(score.getUser())
                     )
                     .build());
             statisticsService.updatePlayerStatistics(score);
@@ -130,7 +126,7 @@ public class GameRoomService {
         }
         stats.sort(Comparator.comparingLong(GameStatDTO::getTotalScore));
         if (game.getRoom().getMaxScore() > 0 &&
-                stats.getLast().getTotalScore() >= game.getRoom().getMaxScore()) {
+            stats.getLast().getTotalScore() >= game.getRoom().getMaxScore()) {
             game.getRoom().setVisible(false);
             gameRoomRepository.save(game.getRoom());
         }
@@ -149,8 +145,4 @@ public class GameRoomService {
                 .build();
     }
 
-    @Autowired
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
 }

@@ -56,10 +56,6 @@ public class GamePlayer {
         return sum;
     }
 
-    public boolean hasCard(Long id) {
-        return cards.containsKey(id);
-    }
-
     public CardDTO getCard(Long id) {
         return cards.get(id);
     }

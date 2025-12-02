@@ -2,14 +2,11 @@ package com.is.uno.service;
 
 import com.is.uno.dao.GameScoreRepository;
 import com.is.uno.dao.UserRepository;
-import com.is.uno.dto.api.PlayerDTO;
 import com.is.uno.model.GameRoom;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +29,6 @@ public class UserService {
         userRepository.save(player);
     }
 
-   /* public List<PlayerDTO> getPlayerByUsername(String username) {
-        List<User> players = findByUsername(username);
-        return players.stream()
-                .map(this::toPlayerDTO)
-                .collect(Collectors.toList());
-    }*/
-
     public long countPlayersInRoom(GameRoom gameRoom) {
         return userRepository.countByCurrentRoom(gameRoom);
     }
@@ -49,11 +39,4 @@ public class UserService {
         return score;
     }
 
-    private PlayerDTO toPlayerDTO(User player) {
-        return PlayerDTO.builder()
-                .inGameName(player.getInGameName())
-                .username(player.getUsername())
-                .roomId(player.getCurrentRoom().getId())
-                .build();
-    }
 }
