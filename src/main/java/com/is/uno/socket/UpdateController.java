@@ -21,7 +21,7 @@ public class UpdateController {
     private final GameCoreProvider gameCoreProvider;
 
     //@SendTo("/topic/updates/{roomId}")
-    @MessageMapping("/game/{uuid}")
+    @MessageMapping("/games/{uuid}")
     public void handlePacket(@DestinationVariable UUID uuid,
                              SimpMessageHeaderAccessor headerAccessor,
                              Packet packet) {

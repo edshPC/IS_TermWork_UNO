@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/room")
+@RequestMapping("/api/v1/rooms")
 public class GameRoomController {
     private final GameRoomService gameRoomService;
 
@@ -23,9 +23,11 @@ public class GameRoomController {
         return DataResponse.success(response);
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<?> joinGameRoom(@RequestBody JoinGameRoomDTO joinGameRoomDTO,
+    @PostMapping("/{id}/join")
+    public ResponseEntity<?> joinGameRoom(@PathVariable Long id,
+                                          @RequestBody JoinGameRoomDTO joinGameRoomDTO,
                                           @AuthenticationPrincipal User user) {
+        joinGameRoomDTO.setRoomId(id);
         var response = gameRoomService.joinGameRoom(joinGameRoomDTO, user);
         return DataResponse.success(response);
     }

@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Button from "@mui/material/Button";
+import {BASE_URL} from "../App.jsx";
 
 const AchievementsPage = () => {
     const [achievements, setAchievements] = useState([]);
@@ -17,7 +18,7 @@ const AchievementsPage = () => {
     useEffect(() => {
         const fetchAchievements = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/achievement/get-all', {
+                const response = await fetch(BASE_URL + '/achievements', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/statistics")
+@RequestMapping("/api/v1/statistics")
 public class StatisticsController {
     private final StatisticsService statisticsService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> getGlobalStatistics(@AuthenticationPrincipal User user) {
         applicationEventPublisher.publishEvent(new UserEvent(user.getUsername(), UserEvent.Type.VIEW_STATISTICS));
         var stats = statisticsService.getGlobalStatistics();

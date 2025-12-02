@@ -1,6 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Provider } from "react-redux";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import {Provider} from "react-redux";
 import store from "./storage/store";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -11,6 +11,9 @@ import CreateRoomPage from './pages/CreateRoomPage';
 import JoinRoomPage from './pages/JoinRoomPage';
 import StatisticsPage from './pages/StatisticsPage';
 import AchievementsPage from './pages/AchievementsPage'
+
+export const ORIGIN = "http://localhost:8080";
+export const BASE_URL = ORIGIN + "/api/v1";
 
 export default function App() {
     return (
