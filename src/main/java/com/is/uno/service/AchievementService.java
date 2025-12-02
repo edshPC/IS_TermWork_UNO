@@ -1,5 +1,6 @@
 package com.is.uno.service;
 
+import com.is.uno.core.UserEvent;
 import com.is.uno.dao.AchievementRepository;
 import com.is.uno.dao.UserRepository;
 import com.is.uno.dto.api.AchievementDTO;
@@ -7,6 +8,7 @@ import com.is.uno.model.Achievement;
 import com.is.uno.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public class AchievementService {
                 .collect(Collectors.toList());
     }
 
-    public void addAchievementToUser(String username, String achievementId) {
+    public void tryAddAchievementToUser(String username, String achievementId) {
         User user = userService.findByUsername(username);
 
         boolean alreadyHasAchievement = user.getAchievements()
@@ -46,40 +48,29 @@ public class AchievementService {
         userRepository.save(user);
     }
 
-    public void addViewStatisticsAchievement(String username) {
-        addAchievementToUser(username, "view_statistics");
-    }
+    @EventListener
+    public void onUserEvent(UserEvent event) {
+        String achievement = switch (event.getType()) {
+            case REGISTER -> "registration";
+            case VIEW_STATISTICS -> "view_statistics";
+            case CREATE_ROOM -> "first_room_creation";
+            case WIN -> switch (event.getValue()) {
+                case 1 -> "first_win";
+                case 5 -> "five_wins";
+                case 10 -> "ten_wins";
+                default -> null;
+            };
+            case PLAY -> switch (event.getValue()) {
+                case 1 -> "first_play";
+                case 5 -> "five_plays";
+                case 10 -> "ten_plays";
+                default -> null;
+            };
+        };
 
-    public void addRegistrationAchievement(String username) {
-        addAchievementToUser(username, "registration");
-    }
-
-    public void addFirstRoomCreationAchievement(String username) {
-        addAchievementToUser(username, "first_room_creation");
-    }
-
-    public void addFirstWinAchievement(String username) {
-        addAchievementToUser(username, "first_win");
-    }
-
-    public void addFiveWinAchievement(String username) {
-        addAchievementToUser(username, "five_wins");
-    }
-
-    public void addTenWinAchievement(String username) {
-        addAchievementToUser(username, "ten_wins");
-    }
-
-    public void addFirstPlayAchievement(String username) {
-        addAchievementToUser(username, "first_play");
-    }
-
-    public void addFivePlayAchievement(String username) {
-        addAchievementToUser(username, "five_plays");
-    }
-
-    public void addTenPlayAchievement(String username) {
-        addAchievementToUser(username, "ten_plays");
+        if (achievement != null) {
+            tryAddAchievementToUser(event.getUsername(), achievement);
+        }
     }
 
     private AchievementDTO toAchievementDTO(Achievement achievement) {

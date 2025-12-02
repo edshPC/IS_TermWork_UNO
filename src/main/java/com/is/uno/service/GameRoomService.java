@@ -3,6 +3,7 @@ package com.is.uno.service;
 import com.is.uno.core.GameCore;
 import com.is.uno.core.GameCoreProvider;
 import com.is.uno.core.GamePlayer;
+import com.is.uno.core.UserEvent;
 import com.is.uno.dao.GameRepository;
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.GameScoreRepository;
@@ -10,10 +11,14 @@ import com.is.uno.dao.UserRepository;
 import com.is.uno.dto.api.*;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
-import com.is.uno.model.*;
+import com.is.uno.model.Game;
+import com.is.uno.model.GameRoom;
+import com.is.uno.model.GameScore;
+import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +41,7 @@ public class GameRoomService {
 
     @Setter(onMethod_ = {@Autowired, @Lazy})
     private GameCoreProvider gameCoreProvider;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public GameRoom findById(Long id) {
         return gameRoomRepository.findById(id).orElseThrow(() -> new GameRoomNotFoundException(
@@ -60,6 +66,7 @@ public class GameRoomService {
         }
 
         gameRoom = gameRoomRepository.save(gameRoom);
+        applicationEventPublisher.publishEvent(new UserEvent(owner.getUsername(), UserEvent.Type.CREATE_ROOM));
         return joinGameRoom(JoinGameRoomDTO.builder()
                 .roomId(gameRoom.getId())
                 .password(createGameRoomDTO.getPassword())
@@ -140,5 +147,10 @@ public class GameRoomService {
                 .maxScore(gameRoom.getMaxScore())
                 .owner(gameRoom.getOwner().getUsername())
                 .build();
+    }
+
+    @Autowired
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }
