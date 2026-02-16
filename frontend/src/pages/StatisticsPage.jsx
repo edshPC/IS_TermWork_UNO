@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useMemo, useState} from 'react';
+import {useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import {useAuthCheck} from "../storage/authSlice.jsx";
+import {BASE_URL} from "../App.jsx";
 
 const StatisticsPage = () => {
     useAuthCheck();
@@ -23,7 +24,7 @@ const StatisticsPage = () => {
     useEffect(() => {
         const fetchStatistics = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/statistics', {
+                const response = await fetch(BASE_URL + '/statistics', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

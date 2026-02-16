@@ -29,6 +29,13 @@ public class User implements UserDetails {
     @Column(name = "registration_date", nullable = false)
     private LocalDateTime registrationDate;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "game_room_id")
+    private GameRoom currentRoom;
+
+    @Column(name = "in_game_name")
+    private String inGameName;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_achievements",

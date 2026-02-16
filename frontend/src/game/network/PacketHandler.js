@@ -1,8 +1,7 @@
 import SockJS from 'sockjs-client/dist/sockjs'
 import Stomp from 'stompjs'
 import {EventBus} from "../EventBus.js";
-
-const origin = 'http://localhost:8080';
+import {ORIGIN} from "../../App.jsx";
 
 export default class PacketHandler {
     stompClient = null;
@@ -18,13 +17,13 @@ export default class PacketHandler {
 
     connect() {
         this.disconnect();
-        var socket = new SockJS(origin + '/ws?token=' + this.token);
+        var socket = new SockJS(ORIGIN + '/ws?token=' + this.token);
         let stompClient = Stomp.over(socket);
         stompClient.connect({
             Authorization: 'Bearer ' + this.token
         }, () => {
-            stompClient.subscribe('/topic/game/' + this.gameUUID, this.onUpdateRecieved);
-            stompClient.subscribe('/topic/private/' + this.privateUUID, this.onUpdateRecieved);
+            stompClient.subscribe('/topics/games/' + this.gameUUID, this.onUpdateRecieved);
+            stompClient.subscribe('/topics/private/' + this.privateUUID, this.onUpdateRecieved);
             this.stompClient = stompClient;
             window.addEventListener('beforeunload', this.disconnect);
             this.packetQueue.forEach(this.sendPacket, this);
@@ -45,7 +44,7 @@ export default class PacketHandler {
     
     sendPacket(packet) {
         if (this.stompClient)
-            this.stompClient.send("/app/game/" + this.gameUUID, {}, JSON.stringify(packet));
+            this.stompClient.send("/app/games/" + this.gameUUID, {}, JSON.stringify(packet));
         else this.packetQueue.push(packet);
     }
     

@@ -3,14 +3,11 @@ package com.is.uno.security.jwt;
 import com.is.uno.security.service.AuthUserDetailsService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -72,7 +69,6 @@ public class JwtUtils {
     }
 
     public String parseJwt(String authHeader) {
-        //String headerAuth = request.getHeader("Authorization");
         String bearerPrefix = "Bearer ";
         if (StringUtils.hasText(authHeader) && authHeader.startsWith(bearerPrefix)) {
             return authHeader.substring(bearerPrefix.length());

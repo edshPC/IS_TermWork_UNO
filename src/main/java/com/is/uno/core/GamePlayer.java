@@ -3,20 +3,19 @@ package com.is.uno.core;
 import com.is.uno.dto.api.CardDTO;
 import com.is.uno.dto.packet.Action;
 import com.is.uno.dto.packet.PlayerActionPacket;
-import com.is.uno.model.Player;
+import com.is.uno.model.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
-public class GamePlayer extends Player {
+public class GamePlayer {
     @Getter
-    private final Player player;
+    private final User user;
 
     @Getter
     private final UUID uuid = UUID.randomUUID();
@@ -57,10 +56,6 @@ public class GamePlayer extends Player {
         return sum;
     }
 
-    public boolean hasCard(Long id) {
-        return cards.containsKey(id);
-    }
-
     public CardDTO getCard(Long id) {
         return cards.get(id);
     }
@@ -93,13 +88,12 @@ public class GamePlayer extends Player {
         return false;
     }
 
-    @Override
     public String getInGameName() {
-        return player.getInGameName();
+        return user.getInGameName() != null ? user.getInGameName() : user.getUsername();
     }
 
     public String getUsername() {
-        return player.getUser().getUsername();
+        return user.getUsername();
     }
 
     @Override

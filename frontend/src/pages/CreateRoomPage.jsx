@@ -1,6 +1,5 @@
-import React from 'react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,6 +9,7 @@ import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import {joinGame} from "../storage/gameSlice.jsx";
 import {useAuthCheck} from "../storage/authSlice.jsx";
+import {BASE_URL} from "../App.jsx";
 
 const CreateRoomPage = () => {
     useAuthCheck();
@@ -26,7 +26,7 @@ const CreateRoomPage = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:8080/api/room', {
+            const response = await fetch(BASE_URL + '/rooms', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',

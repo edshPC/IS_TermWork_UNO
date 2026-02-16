@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
@@ -9,7 +9,8 @@ import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { loginSuccess } from "../../storage/authSlice";
+import {loginSuccess} from "../../storage/authSlice";
+import {BASE_URL} from "../../App.jsx";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -21,7 +22,7 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/api/auth/login", {
+            const response = await fetch(BASE_URL + '/users/auth/login', {
                 method: "POST",
                 headers: { "Content-Type": "application/json;charset=utf-8" },
                 body: JSON.stringify({ username, password }),

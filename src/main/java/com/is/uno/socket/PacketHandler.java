@@ -2,7 +2,10 @@ package com.is.uno.socket;
 
 import com.is.uno.core.GameCore;
 import com.is.uno.core.GamePlayer;
-import com.is.uno.dto.packet.*;
+import com.is.uno.dto.packet.ActionPacket;
+import com.is.uno.dto.packet.Packet;
+import com.is.uno.dto.packet.PutCardPacket;
+import com.is.uno.dto.packet.TextPacket;
 import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,11 +17,11 @@ public class PacketHandler {
     private final GameCore game;
 
     public void sendPacketToAllPlayers(Packet packet) {
-        messagingTemplate.convertAndSend("/topic/game/" + game.getUuid(), packet);
+        messagingTemplate.convertAndSend("/topics/games/" + game.getUuid(), packet);
     }
 
     public void sendPacketToPlayer(Packet packet, GamePlayer player) {
-        messagingTemplate.convertAndSend("/topic/private/" + player.getUuid(), packet);
+        messagingTemplate.convertAndSend("/topics/private/" + player.getUuid(), packet);
     }
 
     public void handle(Packet packet, User user) {
@@ -38,7 +41,6 @@ public class PacketHandler {
     public void handle(TextPacket packet, GamePlayer player) {
         packet.setSender(player.getInGameName());
         sendPacketToAllPlayers(packet);
-        game.saveMessage(player, packet.getText());
     }
 
     public void handle(ActionPacket packet, GamePlayer player) {

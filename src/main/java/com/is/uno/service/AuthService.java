@@ -1,5 +1,6 @@
 package com.is.uno.service;
 
+import com.is.uno.core.UserEvent;
 import com.is.uno.dao.UserRepository;
 import com.is.uno.dto.AuthResponse;
 import com.is.uno.dto.api.LoginUserDTO;
@@ -9,6 +10,7 @@ import com.is.uno.exception.UserAlreadyExistException;
 import com.is.uno.model.User;
 import com.is.uno.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public AuthResponse register(RegisterUserDTO registerUserDto) {
         if (userRepository.existsByUsername(registerUserDto.getUsername()))
@@ -38,6 +41,7 @@ public class AuthService {
                 .build();
 
         user = userRepository.save(user);
+        applicationEventPublisher.publishEvent(new UserEvent(user.getUsername(), UserEvent.Type.REGISTER));
 
         String token = jwtUtils.generateJwtToken(user.getUsername());
         return new AuthResponse(

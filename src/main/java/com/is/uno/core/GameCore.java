@@ -5,8 +5,6 @@ import com.is.uno.dto.packet.*;
 import com.is.uno.model.*;
 import com.is.uno.service.DeckService;
 import com.is.uno.service.GameRoomService;
-import com.is.uno.service.MessageService;
-import com.is.uno.service.PlayerService;
 import com.is.uno.socket.PacketHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,7 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
@@ -25,8 +26,6 @@ public class GameCore {
     private final Long roomId;
     private final SimpMessagingTemplate messagingTemplate;
     private final GameRoomService gameRoomService;
-    private final MessageService messageService;
-    private final PlayerService playerService;
     private final DeckService deckService;
 
     @Getter
@@ -56,7 +55,7 @@ public class GameCore {
         if (players.containsKey(user.getUsername())) {
             return players.get(user.getUsername());
         }
-        GamePlayer player = new GamePlayer(playerService.findByRoomAndUserOrCreate(room, user));
+        GamePlayer player = new GamePlayer(user);
         onPlayerPreJoin(player);
         return player;
     }
@@ -94,7 +93,7 @@ public class GameCore {
         if (players.isEmpty()) {
             return;
         }
-        if(state != null && state.getCurrentPlayer().equals(player)) switchPlayer();
+        if (state != null && state.getCurrentPlayer().equals(player)) switchPlayer();
         playerOrder.remove(player);
         if (state != null) playerOrder.startFrom(state.getCurrentPlayer());
         packetHandler.sendPacketToAllPlayers(player.getActionPacket(Action.LEAVE));
@@ -177,9 +176,6 @@ public class GameCore {
         packetHandler.sendPacketToAllPlayers(state.getGameStatePacket());
     }
 
-    public void saveMessage(GamePlayer player, String message) {
-        messageService.saveMessage(roomId, player.getPlayer(), message);
-    }
 
     public int getPlayerCount() {
         return players.size();
@@ -207,14 +203,14 @@ public class GameCore {
 
     private void gameOver(GamePlayer winner) {
         game.setEndTime(LocalDateTime.now());
-        game.setWinner(winner.getPlayer());
+        game.setWinner(winner.getUser());
         List<GameScore> scores = new LinkedList<>();
         long totalScore = 0;
         int playerCount = getPlayerCount();
         for (var player : players.values()) {
             var score = new GameScore();
             score.setGame(game);
-            score.setPlayer(player.getPlayer());
+            score.setUser(player.getUser());
             score.setScore(player.getTotalCardScore());
             scores.add(score);
             totalScore += score.getScore();
@@ -255,6 +251,5 @@ public class GameCore {
         var nextPlayer = state.isOrderReversed() ? playerOrder.previous() : playerOrder.next();
         state.setCurrentPlayer(nextPlayer);
     }
-
 
 }

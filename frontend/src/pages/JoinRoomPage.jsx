@@ -1,7 +1,6 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Table from '@mui/material/Table';
@@ -18,6 +17,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {joinGame} from "../storage/gameSlice.jsx";
 import {useAuthCheck} from "../storage/authSlice.jsx";
+import {BASE_URL} from "../App.jsx";
 
 const JoinRoomPage = () => {
     useAuthCheck();
@@ -35,7 +35,7 @@ const JoinRoomPage = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/room', {
+                const response = await fetch(BASE_URL + '/rooms', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -79,7 +79,7 @@ const JoinRoomPage = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:8080/api/room/join', {
+            const response = await fetch(BASE_URL + `/rooms/${roomId}/join`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

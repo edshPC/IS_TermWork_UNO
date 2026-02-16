@@ -3,17 +3,21 @@ package com.is.uno.service;
 import com.is.uno.core.GameCore;
 import com.is.uno.core.GameCoreProvider;
 import com.is.uno.core.GamePlayer;
+import com.is.uno.core.UserEvent;
 import com.is.uno.dao.GameRepository;
 import com.is.uno.dao.GameRoomRepository;
 import com.is.uno.dao.GameScoreRepository;
-import com.is.uno.dao.PlayerRepository;
 import com.is.uno.dto.api.*;
 import com.is.uno.exception.ForbiddenException;
 import com.is.uno.exception.GameRoomNotFoundException;
-import com.is.uno.model.*;
+import com.is.uno.model.Game;
+import com.is.uno.model.GameRoom;
+import com.is.uno.model.GameScore;
+import com.is.uno.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,12 +31,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GameRoomService {
     private final GameRoomRepository gameRoomRepository;
-    private final PlayerRepository playerRepository;
     private final PasswordEncoder passwordEncoder;
-    private final PlayerService playerService;
+    private final UserService userService;
     private final StatisticsService statisticsService;
     private final GameScoreRepository gameScoreRepository;
     private final GameRepository gameRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Setter(onMethod_ = {@Autowired, @Lazy})
     private GameCoreProvider gameCoreProvider;
@@ -60,6 +64,7 @@ public class GameRoomService {
         }
 
         gameRoom = gameRoomRepository.save(gameRoom);
+        applicationEventPublisher.publishEvent(new UserEvent(owner.getUsername(), UserEvent.Type.CREATE_ROOM));
         return joinGameRoom(JoinGameRoomDTO.builder()
                 .roomId(gameRoom.getId())
                 .password(createGameRoomDTO.getPassword())
@@ -69,19 +74,16 @@ public class GameRoomService {
     public JoinRoomResponse joinGameRoom(JoinGameRoomDTO joinGameRoomDTO, User user) {
         GameRoom gameRoom = findById(joinGameRoomDTO.getRoomId());
         if (gameRoom.getPassword() != null &&
-                !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
+            !passwordEncoder.matches(joinGameRoomDTO.getPassword(), gameRoom.getPassword())) {
             throw new ForbiddenException("Неверный пароль комнаты");
         }
 
-        Player player = playerService.findByRoomAndUserOrCreate(gameRoom, user);
         if (joinGameRoomDTO.getInGameName() != null) {
-            player.setInGameName(joinGameRoomDTO.getInGameName());
+            user.setInGameName(joinGameRoomDTO.getInGameName());
         }
-        playerRepository.save(player);
 
-        long playerCount = playerService.countPlayersInRoom(gameRoom);
+        long playerCount = userService.countPlayersInRoom(gameRoom);
         if (playerCount > gameRoom.getMaxPlayers()) {
-            playerRepository.delete(player);
             throw new ForbiddenException("Комната заполнена");
         }
         if (playerCount >= gameRoom.getMaxPlayers()) {
@@ -112,11 +114,11 @@ public class GameRoomService {
         LinkedList<GameStatDTO> stats = new LinkedList<>();
         for (var score : scores) {
             stats.add(GameStatDTO.builder()
-                    .username(score.getPlayer().getUser().getUsername())
+                    .username(score.getUser().getUsername())
                     .score(score.getScore())
                     .totalScore(
                             score.getScore() +
-                                    playerService.calculateTotalScore(score.getPlayer())
+                            userService.calculateTotalScore(score.getUser())
                     )
                     .build());
             statisticsService.updatePlayerStatistics(score);
@@ -124,7 +126,7 @@ public class GameRoomService {
         }
         stats.sort(Comparator.comparingLong(GameStatDTO::getTotalScore));
         if (game.getRoom().getMaxScore() > 0 &&
-                stats.getLast().getTotalScore() >= game.getRoom().getMaxScore()) {
+            stats.getLast().getTotalScore() >= game.getRoom().getMaxScore()) {
             game.getRoom().setVisible(false);
             gameRoomRepository.save(game.getRoom());
         }
@@ -142,4 +144,5 @@ public class GameRoomService {
                 .owner(gameRoom.getOwner().getUsername())
                 .build();
     }
+
 }
